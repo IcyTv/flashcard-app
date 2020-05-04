@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "de.icytv.flashcard_app",
   "appName": "flashcard-app",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
