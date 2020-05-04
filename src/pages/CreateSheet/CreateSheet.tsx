@@ -1,5 +1,6 @@
 import { createClient } from "@buttercup/googledrive-client";
-import { IonContent, IonItem, IonList } from "@ionic/react";
+import { IonButton, IonContent, IonIcon, IonItem, IonList } from "@ionic/react";
+import { addOutline, createOutline } from "ionicons/icons";
 import React, { useState } from "react";
 import { useStore } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -18,6 +19,10 @@ const getFilesByType = (files: any, type: string) => {
 	}
 
 	return retFiles.concat(childFiles).flat();
+};
+
+const openInNewTab = (url: string) => {
+	window.open(url, "_blank");
 };
 
 export const CreateSheet: React.FC = (props) => {
@@ -60,7 +65,7 @@ export const CreateSheet: React.FC = (props) => {
 		return <Loading>Loading Sheets from drive</Loading>;
 	}
 
-	const onClick = (index: number) => (ev: React.MouseEvent<HTMLIonItemElement, MouseEvent>) => {
+	const onClick = (index: number) => (ev: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) => {
 		console.log(files[index]);
 		database.ref("/user/" + auth.firebase.user.uid + "/sheets/" + files[index].id).set({
 			name: files[index].filename,
@@ -70,12 +75,23 @@ export const CreateSheet: React.FC = (props) => {
 
 	return (
 		<IonContent>
-			<IonList>
+			<IonList className="create-list">
 				{files &&
 					files.map((v, i) => {
 						return (
-							<IonItem onClick={onClick(i)} key={"file-" + i}>
-								{v.filename}
+							<IonItem key={"file-" + i}>
+								<p>{v.filename}</p>
+								<div>
+									<IonButton
+										onClick={() => openInNewTab(`https://docs.google.com/spreadsheets/d/${v.id}`)}
+										className="edit"
+									>
+										<IonIcon icon={createOutline} />
+									</IonButton>
+									<IonButton onClick={onClick(i)} className="add">
+										<IonIcon icon={addOutline} />
+									</IonButton>
+								</div>
 							</IonItem>
 						);
 					})}

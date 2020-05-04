@@ -1,0 +1,33 @@
+ion-list.sheet-list {
+    ion-item {
+        p {
+            cursor: pointer;
+        }
+
+        div {
+            margin-left: auto;
+
+            ion-button {
+                &.delete {
+                    --color-hover: red;
+                    --color-focused: red;
+                    --color-activated: darkred;
+                }
+
+                &.edit {
+                    --color-hover: lightGreen;
+                    --color-focused: lightGreen;
+                    --color-activated: green;
+                }
+
+                margin-left: auto;
+                --background: transparent;
+                --background-hover: none;
+                --box-shadow: none;
+                --background-activated: none;
+                --background-activated-opacity: 0;
+                --background-focused: none;
+            }
+        }
+    }
+}

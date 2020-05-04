@@ -1,0 +1,26 @@
+ion-list.create-list {
+    div {
+        margin-left: auto;
+
+        ion-button {
+            &.add {
+                --color-hover: blue;
+                --color-focused: blue;
+                --color-activated: darkblue;
+            }
+
+            &.edit {
+                --color-hover: lightGreen;
+                --color-focused: lightGreen;
+                --color-activated: green;
+            }
+
+            --background: transparent;
+            --background-hover: none;
+            --box-shadow: none;
+            --background-activated: none;
+            --background-activated-opacity: 0;
+            --background-focused: none;
+        }
+    }
+}
