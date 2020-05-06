@@ -33,10 +33,10 @@ export const FlashCard: React.FC<FlashCardProps> = (props) => {
 				<IonButton onClick={() => setFlipped(!flipped)}>{props.back}</IonButton>
 			</ReactCardFlip>
 			{showNew && [
-				<IonButton key="submit-wrong" onClick={onClick(false)}>
+				<IonButton className="wrong" key="submit-wrong" onClick={onClick(false)}>
 					Wrong
 				</IonButton>,
-				<IonButton key="submit-right" onClick={onClick(true)}>
+				<IonButton className="right" key="submit-right" onClick={onClick(true)}>
 					Right
 				</IonButton>,
 			]}

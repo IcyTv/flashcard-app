@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
 // import "firebase/analytics";
 import "firebase/auth";
 import "firebase/database";
@@ -18,4 +18,4 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 auth.useDeviceLanguage();
 export const database = firebase.database();
-// export const analytics = firebase.analytics();
+// export const analytics = firebase.analytics().setAnalyticsCollectionEnabled();

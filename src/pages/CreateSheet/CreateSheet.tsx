@@ -33,7 +33,7 @@ export const CreateSheet: React.FC = (props) => {
 	const [redirectTo, setRedirectTo] = useState("");
 
 	if (redirectTo !== "") {
-		return <Redirect to={redirectTo} />;
+		return <Redirect to={redirectTo} push />;
 	}
 
 	if (!auth) {

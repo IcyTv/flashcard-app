@@ -1,11 +1,12 @@
-import { IonSpinner } from "@ionic/react";
 import React from "react";
+import SyncLoader from "react-spinners/SyncLoader";
 import "./Loading.scss";
 
 export const Loading: React.FC = (props) => {
 	return (
 		<div className="loading">
-			<IonSpinner color="primary" />
+			<SyncLoader size={15} margin={5} color="var(--ion-color-primary)" loading />
+			<br />
 			{props.children}
 		</div>
 	);

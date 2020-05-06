@@ -20,18 +20,23 @@ import { AnyAction, createStore, Reducer } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import storage from "redux-persist/lib/storage";
+import { Loading } from "./components/Loading/Loading";
 import { CreateSheet } from "./pages/CreateSheet/CreateSheet";
 import { FlashCardsPage } from "./pages/FlashCardsPage/FlashCardsPage";
 import { Login } from "./pages/Login/Login";
+import { Logout } from "./pages/Logout/Logout";
 import { SelectSheet } from "./pages/SelectSheet/SelectSheet";
 /* Theme variables */
 import "./theme/variables.css";
 
-const reducer: Reducer<{ auth: Auth }> = (state, { type, payload }) => {
+const reducer: Reducer<{ auth: Auth } | { refresh_token: string }> = (state, { type, payload }) => {
+	console.log(type, payload);
 	if (type === "UPDATE_AUTH") {
 		return { ...state, auth: payload };
 	} else if (type === "DELETE_AUTH") {
 		return { ...state, auth: null };
+	} else if (type === "REFRESH_TOKEN") {
+		return { ...state, refresh_token: payload };
 	} else {
 		return state;
 	}
@@ -42,8 +47,8 @@ const App: React.FC = () => {
 		key: "redux",
 		storage,
 	};
-	const persistedReducer = persistReducer<{ auth: Auth }>(persistConf, reducer);
-	const store = createStore<{ auth: Auth }, AnyAction, any, any>(persistedReducer, {
+	const persistedReducer = persistReducer<{ auth: Auth } | { refresh_token: string }>(persistConf, reducer);
+	const store = createStore<{ auth?: Auth; refresh_token?: string }, AnyAction, any, any>(persistedReducer, {
 		auth: null,
 	});
 
@@ -63,14 +68,8 @@ const App: React.FC = () => {
 							<Route path="/select" component={SelectSheet} exact />
 							<Route path="/flashcard" component={FlashCardsPage} exact />
 							<Route path="/login" component={Login} exact />
-							<Route
-								path="/logout"
-								render={() => {
-									store.dispatch({ type: "DELETE_AUTH" });
-									return <Redirect to="/" />;
-								}}
-								exact
-							/>
+							<Route path="/debug/spinner" component={Loading} exact />
+							<Route path="/logout" component={Logout} exact />
 							<Route path="/" render={() => <Redirect to="/login" />} exact={true} />
 						</PersistGate>
 					</Provider>

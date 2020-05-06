@@ -1,7 +1,63 @@
 /// <reference types="react-scripts" />
+
+interface GoogleAuth {
+	Ca: string;
+	tc: {
+		token_type: string;
+		access_token: string;
+		scope: string;
+		login_hint: string;
+		expires_in: number;
+		id_token: string;
+		session_state: {
+			extraQueryParams: {
+				authuser: string;
+			};
+		};
+		first_issued_at: number;
+		expires_at: number;
+		idpId: string;
+	};
+	Pt: {
+		MU: string;
+		Ad: string;
+		pW: string;
+		qU: string;
+		QK: string;
+		yu: string;
+	};
+	googleId: string;
+	tokenObj: {
+		token_type: string;
+		access_token: string;
+		scope: string;
+		login_hint: string;
+		expires_in: number;
+		id_token: string;
+		session_state: {
+			extraQueryParams: {
+				authuser: string;
+			};
+		};
+		first_issued_at: number;
+		expires_at: number;
+		idpId: string;
+	};
+	tokenId: string;
+	accessToken: string;
+	profileObj: {
+		googleId: string;
+		imageUrl: string;
+		email: string;
+		name: string;
+		givenName: string;
+		familyName: string;
+	};
+}
+
 interface Auth {
 	firebase: firebase.auth.UserCredential;
-	google: any;
+	google: GoogleAuth;
 }
 
 declare module "google-spreadsheet" {
@@ -335,7 +391,7 @@ declare module "google-spreadsheet" {
 		resize(props: GoogleSpreadsheetWorksheetBase["gridProperties"]): Promise<any>;
 		updateGridProperties(props: GoogleSpreadsheetWorksheetBase["gridProperties"]): Promise<any>;
 		updateDimensionProperties(
-			columnsOrRows: "COLUMNS" | "ROWS",
+			columnsOrRows: "COLUMN" | "ROW",
 			props: DimensionProperties,
 			bounds?: {
 				startIndex?: number;

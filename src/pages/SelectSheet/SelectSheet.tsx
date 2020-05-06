@@ -1,5 +1,6 @@
 import { IonButton, IonContent, IonIcon, IonItem, IonList } from "@ionic/react";
 import { createOutline, trashOutline } from "ionicons/icons";
+import "rc-tooltip/assets/bootstrap_white.css";
 import React, { useState } from "react";
 import { useStore } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -31,7 +32,7 @@ export const SelectSheet: React.FC = () => {
 	const [redirectTo, setRedirectTo] = useState("");
 
 	if (redirectTo !== "") {
-		return <Redirect to={redirectTo} />;
+		return <Redirect to={redirectTo} push />;
 	}
 
 	if (!auth) {
@@ -43,11 +44,11 @@ export const SelectSheet: React.FC = () => {
 		database.ref("/user/" + auth.firebase.user.uid + "/sheets").on("value", (a) => {
 			setSheets(parseSheets(a.toJSON() as any));
 		});
-		return <Loading>Saving to database</Loading>;
+		return <Loading>Loading from database</Loading>;
 	}
 
 	if (selectedSheet) {
-		return <Redirect to={{ pathname: "/flashcard", state: selectedSheet }} />;
+		return <Redirect to={{ pathname: "/flashcard", state: selectedSheet }} push />;
 	}
 
 	const onClick = (id: string, name: string) => (ev: any) => {
@@ -60,7 +61,7 @@ export const SelectSheet: React.FC = () => {
 	const onDelete = (id: string, name: string, index: number) => (ev: any) => {
 		database.ref("/user/" + auth.firebase.user.uid + "/sheets/" + id).remove();
 		let tmp = sheets.slice();
-		tmp.splice(index);
+		tmp.splice(index, 1);
 		setSheets(tmp);
 	};
 
