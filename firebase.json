@@ -1,27 +1,49 @@
 {
-  "database": {
-    "rules": "database.rules.json"
-  },
-  "hosting": {
-    "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }]
-  },
-  "headers": [{
-    "source": "/**",
-    "headers": [{
-      "key": "Cache-Control",
-      "value": "public, max-age=31536000"
-    }]
-  }],
-  "functions": {
-    "predeploy": []
-  }
+	"database": {
+		"rules": "database.rules.json"
+	},
+	"hosting": {
+		"public": "build",
+		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+		"rewrites": [
+			{
+				"source": "/api/**",
+				"function": "googleAuth"
+			},
+			{
+				"source": "/pay",
+				"function": "payment"
+			},
+			{
+				"source": "**",
+				"destination": "/index.html"
+			}
+		]
+	},
+	"headers": [
+		{
+			"source": "/**",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=31536000"
+				}
+			]
+		}
+	],
+	"functions": {
+		"predeploy": [],
+		"source": "functions"
+	},
+	"emulators": {
+		"functions": {
+			"port": 5001
+		},
+		"database": {
+			"port": 9000
+		},
+		"hosting": {
+			"port": 5000
+		}
+	}
 }

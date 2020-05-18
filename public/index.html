@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Flashcards</title>
 
-<head>
-  <meta charset="utf-8" />
-  <title>Flashcards</title>
+		<base href="/" />
 
-  <base href="/" />
+		<meta name="color-scheme" content="light dark" />
+		<meta
+			name="viewport"
+			content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
 
-  <meta name="color-scheme" content="light dark" />
-  <meta name="viewport"
-    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="msapplication-tap-highlight" content="no" />
+		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+		<link rel="shortcut icon" type="image/svg+xml" href="%PUBLIC_URL%/assets/icon/favicon.svg" />
 
-  <link rel="shortcut icon" type="image/svg+xml" href="%PUBLIC_URL%/assets/icon/favicon.svg" />
+		<!-- add to homescreen for ios -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="Flashcards" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-  <!-- add to homescreen for ios -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Flashcards" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-</head>
+		<script defer id="gapi" src="https://apis.google.com/js/api.js"></script>
+		<script async defer src="https://js.stripe.com/v3/"></script>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<script
+			data-ad-client="ca-pub-8416850325225336"
+			async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+		></script>
+		<script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
+	</head>
 
-<body>
-  <div id="root"></div>
-</body>
-
+	<body>
+		<div id="root"></div>
+		<noscript style="color: red; font-size: xx-large;"
+			>You don't have javascript enabled! Please enable it and reaload this page to use</noscript
+		>
+	</body>
 </html>

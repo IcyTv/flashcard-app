@@ -1,0 +1,17 @@
+$rccs-size: 40vw !default;
+
+.input-feedback {
+	color: red;
+	margin-top: 0.25rem;
+}
+
+form {
+	margin: 30px auto 0;
+	max-width: 400px;
+}
+
+.form-actions {
+	margin-top: 15px;
+}
+
+@import 'react-credit-cards/lib/styles.scss';

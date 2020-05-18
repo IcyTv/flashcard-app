@@ -1,0 +1,28 @@
+ion-menu {
+	ion-content {
+		--padding-top: 0px;
+	}
+
+	ion-button.main-btn {
+		width: 100%;
+		border-radius: 0px;
+		border-width: 0px;
+		--background: inherit;
+		--background-activated: inherit;
+		--background-focused: inherit;
+		--background-hover: inherit;
+		--box-shadow: none;
+		* {
+			--color: var(--ion-color-light-contrast) !important;
+			color: var(--ion-color-light-contrast) !important;
+		}
+	}
+
+	ion-footer.menu-footer {
+		// --background: inherit;
+		cursor: pointer;
+		ion-list * {
+			--background: inherit;
+		}
+	}
+}

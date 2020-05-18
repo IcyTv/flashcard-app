@@ -26,3 +26,8 @@ googleapis_config.json
 *.cache
 *.log
 *.ai
+.yarn/
+.idea
+.firebase
+.settings
+!AndroidManifest.xml

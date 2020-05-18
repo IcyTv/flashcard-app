@@ -1,81 +1,124 @@
-import { IonApp, IonRouterOutlet } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
+import { IonApp, IonRouterOutlet, isPlatform, createAnimation } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 /* Core CSS required for Ionic components to work properly */
-import "@ionic/react/css/core.css";
-import "@ionic/react/css/display.css";
-import "@ionic/react/css/flex-utils.css";
-import "@ionic/react/css/float-elements.css";
+import '@ionic/react/css/core.css';
+import '@ionic/react/css/display.css';
+import '@ionic/react/css/flex-utils.css';
+import '@ionic/react/css/float-elements.css';
 /* Basic CSS for apps built with Ionic */
-import "@ionic/react/css/normalize.css";
+import '@ionic/react/css/normalize.css';
 /* Optional CSS utils that can be commented out */
-import "@ionic/react/css/padding.css";
-import "@ionic/react/css/structure.css";
-import "@ionic/react/css/text-alignment.css";
-import "@ionic/react/css/text-transformation.css";
-import "@ionic/react/css/typography.css";
-import React from "react";
-import { Provider } from "react-redux";
-import { Redirect, Route } from "react-router-dom";
-import { AnyAction, createStore, Reducer } from "redux";
-import { persistReducer, persistStore } from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
-import storage from "redux-persist/lib/storage";
-import { Loading } from "./components/Loading/Loading";
-import { CreateSheet } from "./pages/CreateSheet/CreateSheet";
-import { FlashCardsPage } from "./pages/FlashCardsPage/FlashCardsPage";
-import { Login } from "./pages/Login/Login";
-import { Logout } from "./pages/Logout/Logout";
-import { SelectSheet } from "./pages/SelectSheet/SelectSheet";
+import '@ionic/react/css/padding.css';
+import '@ionic/react/css/structure.css';
+import '@ionic/react/css/text-alignment.css';
+import '@ionic/react/css/text-transformation.css';
+import '@ionic/react/css/typography.css';
+import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { createFirestoreInstance } from 'redux-firestore';
+import { PersistGate } from 'redux-persist/integration/react';
+import './App.scss';
+import AppUrlListener from './components/AppUrlListener';
+import { Header } from './components/Header/Header';
+import { Loading } from './components/Loading/Loading';
+import StoreLoading from './components/StoreLoading';
+import StripePayment from './components/StripePayment';
+import CreateSheetWithPicker from './pages/CreateSheetWithPicker';
+import { FlashCardsPage } from './pages/FlashCardsPage/FlashCardsPage';
+import { Login } from './pages/Login/Login';
+import { Logout } from './pages/Logout/Logout';
+import NotFound from './pages/NotFound';
+import PaymentCancel from './pages/PaymentCancel';
+import PaymentSuccess from './pages/PaymentSuccess';
+import ProtectedRoute from './pages/ProtectedRoute';
+import { SelectSheet } from './pages/SelectSheet/SelectSheet';
+import firebase, { analytics, auth } from './services/firebase';
+import createStore from './services/store/createStore';
+import { AnimatedSwitch } from 'react-router-transition';
 /* Theme variables */
-import "./theme/variables.css";
-
-const reducer: Reducer<{ auth: Auth } | { refresh_token: string }> = (state, { type, payload }) => {
-	console.log(type, payload);
-	if (type === "UPDATE_AUTH") {
-		return { ...state, auth: payload };
-	} else if (type === "DELETE_AUTH") {
-		return { ...state, auth: null };
-	} else if (type === "REFRESH_TOKEN") {
-		return { ...state, refresh_token: payload };
-	} else {
-		return state;
-	}
-};
+import './theme/variables.css';
+import Test from './components/Test';
+import Menu from './components/Menu';
 
 const App: React.FC = () => {
-	const persistConf = {
-		key: "redux",
-		storage,
+	// console.log("RERENDERING APP", store.getState())
+
+	// const auth = store.getState().auth;
+
+	useEffect(() => {
+		auth.onAuthStateChanged((user) => {
+			if (user) {
+				analytics.setUserId(user.uid);
+			}
+		});
+	}, []);
+
+	const { persistor, store } = createStore({});
+
+	const fbProvConf = {
+		userProfile: 'users',
 	};
-	const persistedReducer = persistReducer<{ auth: Auth } | { refresh_token: string }>(persistConf, reducer);
-	const store = createStore<{ auth?: Auth; refresh_token?: string }, AnyAction, any, any>(persistedReducer, {
-		auth: null,
-	});
 
-	const persistor = persistStore(store);
-
-	console.log("RERENDERING APP", store.getState());
-
-	const auth = store.getState().auth;
+	const rrfProps = {
+		firebase: firebase,
+		config: fbProvConf,
+		dispatch: store.dispatch,
+		createFirestoreInstance,
+	};
 
 	return (
-		<IonApp>
-			<IonReactRouter>
-				<IonRouterOutlet>
-					<Provider store={store}>
-						<PersistGate loading={<p>Loading...</p>} persistor={persistor}>
-							<Route path="/create" component={CreateSheet} exact />
-							<Route path="/select" component={SelectSheet} exact />
-							<Route path="/flashcard" component={FlashCardsPage} exact />
-							<Route path="/login" component={Login} exact />
-							<Route path="/debug/spinner" component={Loading} exact />
-							<Route path="/logout" component={Logout} exact />
-							<Route path="/" render={() => <Redirect to="/login" />} exact={true} />
-						</PersistGate>
-					</Provider>
-				</IonRouterOutlet>
-			</IonReactRouter>
-		</IonApp>
+		<Provider store={store}>
+			<PersistGate loading={<StoreLoading />} persistor={persistor}>
+				<ReactReduxFirebaseProvider {...rrfProps}>
+					<IonApp>
+						<Menu />
+						<IonReactRouter>
+							{/* <Route component={Header} path="/" /> */}
+							<Header />
+							<AppUrlListener />
+							<IonRouterOutlet id="main-content" animated>
+								{/* <Route component={Header} /> */}
+								<Switch>
+									<ProtectedRoute path="/create" exact>
+										<CreateSheetWithPicker />
+									</ProtectedRoute>
+									<ProtectedRoute path="/select" exact>
+										<SelectSheet />
+									</ProtectedRoute>
+									<ProtectedRoute path="/flashcard" exact>
+										<FlashCardsPage />
+									</ProtectedRoute>
+									<Route path="/login" component={Login} exact />
+									<Route path="/debug/spinner" component={Loading} exact />
+									<ProtectedRoute path="/logout" exact>
+										<Logout />
+									</ProtectedRoute>
+									{/* <Route path="/payment/creditcard" component={StripePayment} /> */}
+									<Route path="/payment/success" component={PaymentSuccess} exact />
+									<Route path="/payment/cancel" component={PaymentCancel} exact />
+									<Route path="/payment" component={StripePayment} exact />
+									<Route path="/" render={(): JSX.Element => <Redirect to="/login" />} exact={true} />
+									<Route
+										path="/app"
+										render={(): JSX.Element => {
+											if (isPlatform('mobileweb')) {
+												window.close();
+											}
+											return null;
+										}}
+									/>
+									<Route component={NotFound} />
+								</Switch>
+								{/* <Route path="/refresh" component={Refresh} /> */}
+								<Route path="/test" component={Test} />
+							</IonRouterOutlet>
+						</IonReactRouter>
+					</IonApp>
+				</ReactReduxFirebaseProvider>
+			</PersistGate>
+		</Provider>
 	);
 };
 

@@ -5,6 +5,10 @@ div.loading {
 	justify-content: center;
 	height: 100%;
 	animation: random 8s infinite;
+
+	.loading-content {
+		--color: var(--ion-text-color);
+	}
 }
 
 @keyframes random {

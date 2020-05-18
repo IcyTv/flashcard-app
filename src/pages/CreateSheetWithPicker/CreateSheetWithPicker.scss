@@ -1,0 +1,17 @@
+iframe.picker-frame * {
+	background-color: var(--ion-color-primary) !important;
+}
+
+div.create-page {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	ion-header {
+		position: fixed;
+		top: 0;
+	}
+}

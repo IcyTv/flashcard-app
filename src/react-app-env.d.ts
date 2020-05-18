@@ -1,58 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /// <reference types="react-scripts" />
-
 interface GoogleAuth {
-	Ca: string;
-	tc: {
-		token_type: string;
-		access_token: string;
-		scope: string;
-		login_hint: string;
-		expires_in: number;
-		id_token: string;
-		session_state: {
-			extraQueryParams: {
-				authuser: string;
-			};
-		};
-		first_issued_at: number;
-		expires_at: number;
-		idpId: string;
-	};
-	Pt: {
-		MU: string;
-		Ad: string;
-		pW: string;
-		qU: string;
-		QK: string;
-		yu: string;
-	};
-	googleId: string;
-	tokenObj: {
-		token_type: string;
-		access_token: string;
-		scope: string;
-		login_hint: string;
-		expires_in: number;
-		id_token: string;
-		session_state: {
-			extraQueryParams: {
-				authuser: string;
-			};
-		};
-		first_issued_at: number;
-		expires_at: number;
-		idpId: string;
-	};
-	tokenId: string;
 	accessToken: string;
-	profileObj: {
-		googleId: string;
-		imageUrl: string;
-		email: string;
-		name: string;
-		givenName: string;
-		familyName: string;
-	};
+	tokenId: string;
 }
 
 interface Auth {
@@ -60,7 +10,41 @@ interface Auth {
 	google: GoogleAuth;
 }
 
-declare module "google-spreadsheet" {
+interface ReduxState {
+	firebase?: any;
+	firestore?: any;
+	download?: {
+		[id: string]: {
+			done: number[];
+			data: string[][];
+			name: string;
+		};
+	};
+	savedSheets?: {
+		names: string[];
+	};
+	google?: {
+		accessToken: string;
+		tokenId: string;
+		expiresIn: number;
+	};
+	history?: any;
+}
+
+declare namespace JSX {
+	interface IntrinsicElements {
+		'amp-ad': any;
+		'amp-auto-ads': any;
+	}
+}
+
+declare global {
+	interface Window {
+		networkDev: boolean;
+	}
+}
+
+declare module 'google-spreadsheet' {
 	// #region API definitions
 	interface Border {
 		style: Style;
@@ -72,7 +56,7 @@ declare module "google-spreadsheet" {
 	interface Borders extends Record<direction, Border> {}
 
 	interface CellFormat {
-		numberFormat: numberFormat;
+		NumberFormat: NumberFormat;
 		backgroundColor: Color;
 		backgroundColorStyle: ColorStyle;
 		borders: Borders;
@@ -86,7 +70,7 @@ declare module "google-spreadsheet" {
 		textRotation: TextRotation;
 	}
 
-	interface Color extends Record<"red" | "green" | "blue" | "alpha", number> {}
+	interface Color extends Record<'red' | 'green' | 'blue' | 'alpha', number> {}
 
 	interface ColorStyle {
 		rgbColor: Color;
@@ -142,7 +126,7 @@ declare module "google-spreadsheet" {
 		endIndex: number;
 	}
 
-	type direction = "top" | "bottom" | "left" | "right";
+	type direction = 'top' | 'bottom' | 'left' | 'right';
 
 	interface GridProperties {
 		rowCount: number;
@@ -155,7 +139,7 @@ declare module "google-spreadsheet" {
 	}
 
 	interface GridRange
-		extends Record<"sheetId" | "startRowIndex" | "endRowIndex" | "startColumnIndex" | "endColumnIndex", number> {}
+		extends Record<'sheetId' | 'startRowIndex' | 'endRowIndex' | 'startColumnIndex' | 'endColumnIndex', number> {}
 
 	enum HorizontalAlign {
 		HORIZONTAL_ALIGN_UNSPECIFIED,
@@ -175,7 +159,7 @@ declare module "google-spreadsheet" {
 		convergenceThreshold: number;
 	}
 
-	interface numberFormat {
+	interface NumberFormat {
 		type: NumberFormatType;
 		pattern: string;
 	}
@@ -388,15 +372,15 @@ declare module "google-spreadsheet" {
 
 		// Updating Sheet Properties
 		updateProperties(props: GoogleSpreadsheetWorksheetBase): Promise<any>;
-		resize(props: GoogleSpreadsheetWorksheetBase["gridProperties"]): Promise<any>;
-		updateGridProperties(props: GoogleSpreadsheetWorksheetBase["gridProperties"]): Promise<any>;
+		resize(props: GoogleSpreadsheetWorksheetBase['gridProperties']): Promise<any>;
+		updateGridProperties(props: GoogleSpreadsheetWorksheetBase['gridProperties']): Promise<any>;
 		updateDimensionProperties(
-			columnsOrRows: "COLUMN" | "ROW",
+			columnsOrRows: 'COLUMN' | 'ROW',
 			props: DimensionProperties,
 			bounds?: {
 				startIndex?: number;
 				endIndex?: number;
-			}
+			},
 		): Promise<any>;
 
 		// Other
@@ -488,7 +472,7 @@ declare module "google-spreadsheet" {
 		// Cell Formatting
 		readonly userEnteredFormat: CellFormat;
 		readonly effectiveFormat: CellFormat;
-		numberFormat: numberFormat;
+		NumberFormat: NumberFormat;
 		backgroundColor: Color;
 		borders: Borders;
 		padding: Padding;

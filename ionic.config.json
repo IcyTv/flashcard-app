@@ -1,7 +1,7 @@
 {
-  "name": "flashcard-app",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
+	"name": "Flashcard App",
+	"integrations": {
+		"capacitor": {}
+	},
+	"type": "react"
 }

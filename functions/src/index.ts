@@ -1,37 +1,32 @@
-import * as cors from "cors";
-import * as express from "express";
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import { googleapi, refreshAccessToken } from "./googleapi";
-import { protectedRoute } from "./tools";
+/* eslint-disable @typescript-eslint/no-require-imports */
+import cors from 'cors';
+import express from 'express';
+import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
+import { googleapi, refreshAccessToken } from './googleapi';
+import paymentHook from './payment';
+// import { protectedRoute } from "./tools";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const serviceAccount = require('./serviceAccountKey.json');
 
 // const serviceAccount = require("./serviceAccountKey.json");
 
-admin.initializeApp();
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+	databaseURL: 'https://flashcards-1588528687957.firebaseio.com',
+});
+
+console.log(process.cwd());
+
 const app = express();
 
-app.use(cors({ origin: true }));
+app.use(cors({ origin: true, preflightContinue: true }));
 
-app.use("/auth", googleapi);
+app.use('/api/auth', googleapi);
 
-app.use("/refresh", protectedRoute(refreshAccessToken));
+app.use('/api/refresh', refreshAccessToken);
 
 // app.use("/", (req, res) => res.send("Hello"));
 
-export const googleAuth = functions.region("europe-west1").https.onRequest(app);
-
-// export const deleteOldItems = functions.pubsub.schedule("0 0 1,16 * *").onRun((context) => {
-// 	const ref = admin.database().ref("auth");
-// 	const now = Date.now();
-// 	const cutoff = now - 15552000000; // 6 Months
-// 	const oldItemsQuery = ref.orderByChild("timestamp").endAt(cutoff);
-// 	return oldItemsQuery.once("value", function (snapshot) {
-// 		// create a map with all children that need to be removed
-// 		var updates = {};
-// 		snapshot.forEach(function (child) {
-// 			updates[child.key] = null;
-// 		});
-// 		// execute all updates in one go and return the result to end the function
-// 		return ref.update(updates);
-// 	});
-// });
+export const googleAuth = functions.region('us-central1').https.onRequest(app);
+export const payment = functions.https.onRequest(paymentHook);
