@@ -51,7 +51,7 @@ declare global {
 		webkit?: {
 			messageHandlers: {
 				cordova_iab: {
-					postMessage(message: string);
+					postMessage(message: string): void;
 				};
 			};
 		};

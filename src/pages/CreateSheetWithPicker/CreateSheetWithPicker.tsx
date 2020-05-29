@@ -13,18 +13,16 @@ import { refreshToken, wait } from '../../services/firebase/auth';
 import { refreshAccess } from '../../services/store/google';
 import './CreateSheetWithPicker.scss';
 import { isPlatform } from '@ionic/core';
-import { Plugins } from '@capacitor/core';
 import queryString from 'query-string';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import fbTypes from 'firebase/app';
-const { Browser } = Plugins;
 
 declare global {
 	interface Window {
 		webkit?: {
 			messageHandlers: {
 				cordova_iab: {
-					postMessage(message: string);
+					postMessage(message: string): void;
 				};
 			};
 		};
