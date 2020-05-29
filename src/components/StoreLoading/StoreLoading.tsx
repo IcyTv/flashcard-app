@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonContent, IonIcon } from '@ionic/react';
 
-import '../../theme/variables.css';
+import '../../theme/variables.scss';
 import './StoreLoading.scss';
 import { Loading } from '../Loading/Loading';
 

@@ -17,12 +17,15 @@ export const saveNamesStore = ({ dispatch }: Store, names: string[]): void => {
 	dispatch(saveNames(names));
 };
 
-const reducer = (state: ReduxState = {}, { type, payload }: { type: string; payload: any }): any => {
+const reducer = (
+	state: ReduxState['savedSheets'] = { names: [] },
+	{ type, payload }: { type: string; payload: unknown },
+): ReduxState['savedSheets'] => {
 	switch (type) {
 		case types.SAVE_NAMES:
 			return {
 				...state,
-				names: payload,
+				names: payload as string[],
 			};
 		default:
 			return state;

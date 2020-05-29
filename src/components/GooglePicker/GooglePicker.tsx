@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IonButton, isPlatform } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { useFirebase } from 'react-redux-firebase';
-import { wait } from '../../services/firebase/auth';
+import { wait, refreshToken } from '../../services/firebase/auth';
 import config from '../../services/googleapis_config.json';
 import { Loading } from '../Loading/Loading';
 import './GooglePicker.scss';
+import { refreshAccess } from '../../services/store/google';
+import { analytics } from '../../services/firebase';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { parse } from 'query-string';
+import { useLocation } from 'react-router';
 
 interface GooglePickerProps {
 	onPick: (ev: any) => void;
@@ -29,6 +34,12 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 	const [pickerLoaded, setPickerLoaded] = useState(false);
 	const firebase = useFirebase();
 	const [isAuth, setIsAuth] = useState(false);
+	const [refresh, setRefresh] = useState(null);
+	const store = useStore();
+
+	const location = useLocation();
+
+	const oauthToken = parse(location.search).oauthToken as string;
 
 	useEffect(() => {
 		if (gapi) {
@@ -41,7 +52,21 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		wait(firebase, setIsAuth);
 	}, []);
 
-	if (!isAuth) {
+	if (refresh) {
+		refreshAccess(store)(refresh);
+		setRefresh(null);
+		return <Loading>Loading access</Loading>;
+	}
+
+	if (auth.expiresIn - Date.now() < 0) {
+		console.log('Picker refresh');
+		refreshToken(auth.tokenId, setRefresh);
+		return <Loading>Refreshing access to google</Loading>;
+	}
+
+	console.log('picker gaccess', auth);
+
+	if (!isAuth && !oauthToken) {
 		return <Loading>Loading authentication</Loading>;
 	}
 
@@ -69,30 +94,65 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 			props.onPick(ev.docs);
 		} else if (ev.action === 'cancel') {
 			props.onError(ev.driveError || ev);
+		} else if (ev.action === 'loaded') {
+			console.log('Loaded');
 		} else {
-			console.log(ev);
+			console.error(ev);
+			analytics.logEvent('exception', {
+				description: ev,
+				fatal: true,
+			});
 		}
 	};
 
+	console.log('Oauth', oauthToken);
+
 	const pickerBuilder = new google.picker.PickerBuilder()
 		.setCallback(pickerCallback)
+		// .setAppId(145284732434 + '')
 		.setAppId(config.web.client_id)
 		.setTitle('Select your spreadsheet')
 		.setDeveloperKey('AIzaSyAL67LyqvrD7jaf278aS4fluD_vzaq4vVM')
-		.addView(view)
 		.setOrigin(window.location.protocol + '//' + window.location.host)
+		.addView(view)
 		.enableFeature(google.picker.Feature.NAV_HIDDEN)
 		.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-		.enableFeature(google.picker.Feature.SUPPORT_TEAM_DRIVES)
-		.setOAuthToken(auth.accessToken);
+		.enableFeature(google.picker.Feature.SUPPORT_TEAM_DRIVES);
 
-	if (isPlatform('mobile')) {
+	if (oauthToken) {
+		pickerBuilder.setOAuthToken(oauthToken);
+	} else {
+		pickerBuilder.setOAuthToken(auth.accessToken);
+	}
+
+	if (window.matchMedia('(max-width: 600px)').matches) {
 		pickerBuilder.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	const picker = pickerBuilder.build();
+	// if (isPlatform('mobile')) {
+	// 	pickerBuilder.setSize(window.innerWidth, window.innerHeight).setOAuthToken(auth.accessToken);
+	// 	pickerBuilder.setCallback((ev) => {
+	// 		alert(ev);
+	// 		console.log(ev);
+	// 	});
+	// 	const url = pickerBuilder.toUri().toString();
+	// 	// Browser.open({ url: url }).then(() => {
+	// 	// 	console.log('Browser');
+	// 	// });
+	// 	const br = InAppBrowser.create(url);
 
-	if (props.autoOpen) {
+	// 	return (
+	// 		<div>
+	// 			{(props.children && React.cloneElement(props.children as any, {})) || (
+	// 				<IonButton>Select a document</IonButton>
+	// 			)}
+	// 		</div>
+	// 	);
+	// }
+
+	const picker = pickerBuilder.setOAuthToken(auth.accessToken).build();
+
+	if ((props.autoOpen && auth.expiresIn - Date.now() > 0) || oauthToken) {
 		picker.setVisible(true);
 	}
 

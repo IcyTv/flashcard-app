@@ -1,4 +1,9 @@
 ion-icon {
+	box-shadow: none;
+	--border-width: 0px;
+	--inner-box-shadow: none;
+	--highlight-height: 0px;
+	border: none;
 	&.connected {
 		color: var(--ion-color-success);
 	}

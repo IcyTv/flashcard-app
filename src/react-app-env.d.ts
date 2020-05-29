@@ -29,6 +29,14 @@ interface ReduxState {
 		expiresIn: number;
 	};
 	history?: any;
+	debug?: {
+		networkDev: boolean;
+		firstTime: boolean;
+	};
+	settings?: {
+		advanced: boolean;
+		theme: 'dark' | 'light' | 'auto';
+	};
 }
 
 declare namespace JSX {
@@ -40,9 +48,57 @@ declare namespace JSX {
 
 declare global {
 	interface Window {
-		networkDev: boolean;
+		webkit?: {
+			messageHandlers: {
+				cordova_iab: {
+					postMessage(message: string);
+				};
+			};
+		};
 	}
 }
+
+// declare module 'react-ads' {
+// 	interface Provider {
+// 		bidProviders?: string[]; //		Array of bidder implementations of the Bidder class that makes the request to handle the bids
+// 		bidders?: string[]; //[]	Set the prebid bidders that you want to use. The bidders will be lazyloaded via script tags. This allows us to only import bidders that we want to use.
+// 		adIframeTitle?: string; //		Sets that title for all ad container iframes created by pubads service, from this point onwards.
+// 		chunkSize?: number; //		This will fetch ads in chunks of the specified number.
+// 		networkId?: number; //		DFP network id.
+// 		bidHandler({ id, sizes }): any; //	Function		Function used to handle the prebid bids. The function must return a prebid formatted object.
+// 		adUnitPath?: string; //		This will set The network Id for all of the ads. The,can overwrite this.
+// 		refreshDelay?: number; //		Time to wait before refreshing ads. This allows ads to be added to a queue beforebeing defined and refreshed. This multiple ads to be refreshed at the same time.
+// 		setCentering?: boolean; //		Enables/disables centering of ads. This mode must be set before the service is enabled. Centering is disabled by default. In legacy gpt_mobile.js, centering is enabled by default.
+// 		targeting?: any; //	Object		Sets page level targeting for all slots. This targeting will apply to all slots.
+// 		bidTimeout?: number; //	Max amount of time a bid request can take before requesting ads.
+// 		enableVideoAds?: boolean; //		Signals to GPT that video ads will be present on the page. This enables competitive exclusion constraints on display and video ads. If the video content is known, call setVideoContent in order to be able to use content exclusion for display ads.
+// 		collapseEmptyDivs?: boolean; //		If you're using the asynchronous mode of Google Publisher Tags (GPT) and know that one or more ad slots on your page don't always get filled, you can instruct the browser to collapse empty divs by adding the collapseEmptyDivs(),method to your tags. This method may trigger a reflow of the content of your,page, so how you use it depends on how often you expect an ad slot to be,filled.
+// 		divider?: string; //Divider used when generating the ad id. This is used only if no id is set on the ad.
+// 		enableAds?: boolean; //Disables or enables all ads.
+// 		lazyOffset?: string; //Amount of pixels an ad has to be relative to the window before lazy loading them.
+// 		initTimeout?: number;
+// 	} //Amount the bidder initiation script can take. This is used for scripts appended to the page. If no scripts are appendedi n the page then this timeout will end automatically.
+// 	interface Ad {
+// 		id?: string; //	Id that DFP will use to identify this ad. When not set it will create a default id.
+// 		size?: any; //		Defines the size of the GPT slot. This value will be passed to the googletag.defineSlot() fn.
+// 		lazy?: boolean;
+// 		style?: CSSStyleDeclaration;
+// 		lazyOffset?: number; //		Use a value > 0 to lazy load ads x pixels before they show in the window.
+// 		networkId?: number; //		Sets the networkId, If the parent has a network id defined it will be overwritten
+// 		className?: string; //
+// 		priority?: number;
+// 		targeting?: any; //		Sets a custom targeting parameter for this slot.
+// 		adUnitPath?: string; //	Provider's unitPathId	This will set The network Id for this . This overwrites the value from the .
+// 		bidHandler(props, code): any; //Function		Function that generates the bidder code for this ad unit. If the Provider has a bidHandler defined then this ad will receive the generated bids.
+// 		sizeMap?: [number, number]; //		Define the the viewport size and the slots allowed to be rendered in the viewportSize.This value is an array so you can define multiple ads per viewport size.
+// 		onSlotOnLoad?: any; //	Function		This event is fired when the creative's iframe fires its load event. When rendering rich media ads in sync rendering mode, no iframe is used so no SlotOnloadEvent will be fired.ex.
+// 		outOfPageSlot?: boolean; //When set to true it sets the ad as an out of page slot.
+// 		setCollapseEmpty?: boolean; //		Sets whether the slot div should be hidden when there is no ad in the slot. This overrides the global,settings.
+// 		onSlotRenderEnded?: any; //	Function		This event is fired when the creative code is injected into a slot. This event will occur before the creative's resources are fetched, so the creative may not be visible yet. The event is fired by the service that rendered the slot. Example: To listen to companion ads, add a listener to the companion ads service, not the pubads service. Note: If you need to know when the creative hasfired its load event, consider the SlotOnloadEvent.
+// 		onImpressionViewable?: any; //	Function		This event is fired when an impression becomes viewable, according to the ActiveView criteria.
+// 		onSlotVisibilityChanged?: any; //	Function		This event is fired whenever the on-screen percentage of an ad slot's area changes. The event is throttled and will not fire more often than once every 200ms.
+// 	}
+// }
 
 declare module 'google-spreadsheet' {
 	// #region API definitions

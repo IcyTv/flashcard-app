@@ -7,6 +7,8 @@ import localStorage from 'redux-persist/lib/storage'; // defaults to localStorag
 import authReducer from './google';
 import downloadReducer from './downloader';
 import savedSheetsReducer from './savedSheets';
+import debugReducer from './debug';
+import settingsReducer from './settings';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeRootReducer() {
@@ -49,6 +51,20 @@ export default function makeRootReducer() {
 				storage: localStorage,
 			},
 			savedSheetsReducer,
+		),
+		debug: persistReducer(
+			{
+				key: 'debug',
+				storage: localStorage,
+			},
+			debugReducer,
+		),
+		settings: persistReducer(
+			{
+				key: 'settings',
+				storage: localStorage,
+			},
+			settingsReducer,
 		),
 	});
 }

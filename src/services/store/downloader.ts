@@ -56,16 +56,15 @@ export const deleteSavedStore = ({ dispatch }: Store) => (id: string): void => {
 };
 
 const downloadReducer = (
-	state: ReduxState,
+	state: ReduxState['download'],
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	{ type, payload, id }: { type: string; payload: any; id: string },
-): ReduxState => {
+): ReduxState['download'] => {
 	if (state === undefined) {
 		return {};
 	}
 	switch (type) {
 		case types.SAVE_PROGRESS:
-			console.log(type, payload);
 			return { ...state, [id]: { ...state[id], done: payload } };
 		case types.SAVE_SPREADSHEET:
 			return { ...state, [id]: payload };

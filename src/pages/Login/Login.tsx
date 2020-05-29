@@ -1,16 +1,27 @@
 import { Plugins } from '@capacitor/core';
-import { IonButton, IonIcon, isPlatform, IonRouterLink, IonContent } from '@ionic/react';
+import {
+	IonButton,
+	IonCard,
+	IonCardContent,
+	IonCardHeader,
+	IonContent,
+	IonImg,
+	IonTitle,
+	isPlatform,
+} from '@ionic/react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { logoGoogle } from 'ionicons/icons';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
-import { useStore, useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { Redirect, RouterProps } from 'react-router';
 import { Loading } from '../../components/Loading/Loading';
 import { analytics } from '../../services/firebase';
 import { setAuth } from '../../services/store/google';
+import './Login.scss';
+import { Flip } from 'react-awesome-reveal';
+import { setFirstTime } from '../../services/store/debug';
 
 const { Browser } = Plugins;
 
@@ -18,7 +29,7 @@ interface LoginProps extends RouterProps {
 	isLoggedIn?: boolean;
 }
 
-//TODO save expires_at
+// TODO save expires_at
 
 const openInSameTab = (url: string): null => {
 	if (isPlatform('mobile')) {
@@ -76,6 +87,8 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 			.then((user: firebase.auth.UserCredential) => {
 				setAuth(store)(token);
 
+				setFirstTime(store)(user.additionalUserInfo.isNewUser);
+
 				analytics.setUserProperties({
 					email: user.user.email,
 					displayName: user.user.displayName,
@@ -90,9 +103,8 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 						console.log('created user');
 						setRedirect('/select');
 					});
-
-				console.log(store.getState());
 			});
+		return <Loading>Processing login details</Loading>;
 	}
 
 	if (props.history.location.search && !token) {
@@ -107,18 +119,33 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 	}
 
 	return (
-		<IonContent>
-			<IonButton
-				onClick={(): null => {
-					const redirect = window.location.href.slice();
-					console.log(redirect);
-					openInSameTab('https://flashcards.icytv.de/api/auth?redirect_uri=' + redirect);
-					return null;
-				}}
-			>
-				<IonIcon icon={logoGoogle} />
-				Sign in with google
-			</IonButton>
+		<IonContent className="login ion-align-items-center ion-justify-content-center">
+			<Flip>
+				<IonCard>
+					<IonCardHeader>
+						<IonTitle>Login</IonTitle>
+						<br />
+					</IonCardHeader>
+					<IonCardContent>
+						<IonButton
+							color="tertiary"
+							className="ion-align-self-center ion-justify-content-center"
+							onClick={(): null => {
+								const redirect = window.location.href.slice();
+								console.log(redirect);
+								openInSameTab('https://flashcards.icytv.de/api/auth?redirect_uri=' + redirect);
+								return null;
+							}}
+						>
+							<IonImg
+								src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+								alt="Google image"
+							></IonImg>
+							Sign in with google
+						</IonButton>
+					</IonCardContent>
+				</IonCard>
+			</Flip>
 		</IonContent>
 	);
 };

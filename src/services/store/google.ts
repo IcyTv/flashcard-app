@@ -35,10 +35,10 @@ export const refreshAccess = ({ dispatch }: Store) => {
 const initialState = null;
 export default function authReducer(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	state: any = initialState,
+	state: ReduxState['google'] = initialState,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	{ type, payload }: { type: string; payload: any },
-): ReduxState {
+): ReduxState['google'] {
 	if (type === types.AUTH_SET) {
 		return {
 			...payload,

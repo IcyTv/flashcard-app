@@ -3,6 +3,10 @@ ion-menu {
 		--padding-top: 0px;
 	}
 
+	ion-icon {
+		margin-right: 1rem;
+	}
+
 	ion-button.main-btn {
 		width: 100%;
 		border-radius: 0px;
@@ -21,8 +25,14 @@ ion-menu {
 	ion-footer.menu-footer {
 		// --background: inherit;
 		cursor: pointer;
-		ion-list * {
+		ion-list {
 			--background: inherit;
+			background: inherit;
+			padding: 0;
+		}
+		ion-item {
+			margin: 0;
+			--padding-bottom: 0px;
 		}
 	}
 }

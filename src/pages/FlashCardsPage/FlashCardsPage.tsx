@@ -7,34 +7,23 @@ import { useFirebase } from 'react-redux-firebase';
 import { Redirect, useHistory } from 'react-router';
 import { FlashCard } from '../../components/FlashCard/FlashCard';
 import { Loading } from '../../components/Loading/Loading';
+import { saveDone } from '../../services/download';
 import { analytics } from '../../services/firebase';
 import { refreshToken, wait } from '../../services/firebase/auth';
-import { refreshAccess } from '../../services/store/google';
-import { useTraceUpdate } from '../../tools/debug';
-import './FlashCardsPage.scss';
-import { Network, Connection } from '@ionic-native/network';
 import { useNetwork } from '../../services/network';
-import { saveDone } from '../../services/download';
+import { refreshAccess } from '../../services/store/google';
+import './FlashCardsPage.scss';
 
 let numCorrect = 0;
 let numTotal = 0;
 
-declare global {
-	interface Window {
-		networkDev: boolean;
-	}
-}
-//TODO optimize firebase data structure for scaling (maybe toplevel sheets?)
+//TODO optimize firebase data structure for scaling
 
 let done = [];
 
 let isRefreshing = false;
 
-window.networkDev = true;
-
-const FlashCardsPageComponent: React.FC = (props: { children?: React.ReactNode }) => {
-	useTraceUpdate(props);
-
+const FlashCardsPageComponent: React.FC = () => {
 	const store = useStore();
 	const firebase = useFirebase();
 
@@ -54,9 +43,9 @@ const FlashCardsPageComponent: React.FC = (props: { children?: React.ReactNode }
 	const [refreshErrors, setRefreshErrors] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
-	const id = (history.location.state as any).id;
+	const id = (history.location.state as { id: string }).id;
 
-	const doneOffline = useSelector((state: ReduxState) => state.download[id].done);
+	const doneOffline = useSelector((state: ReduxState) => (state.download[id] || {}).done);
 
 	const online = useNetwork();
 
@@ -70,18 +59,11 @@ const FlashCardsPageComponent: React.FC = (props: { children?: React.ReactNode }
 		let listener;
 		let doc;
 		if (online) {
-			doc = firebase
-				.firestore()
-				.collection('users')
-				.doc(uid)
-				.collection('sheets')
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				.doc(id);
+			doc = firebase.firestore().collection('users').doc(uid).collection('sheets').doc(id);
 
 			doc.get().then((snap: DocumentSnapshot<DocumentData>) => (done = snap.data().done));
 			listener = (): Promise<void> => doc.update({ done: done });
 		} else {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			listener = (): Promise<void> => saveDone(id, done, store);
 			done = doneOffline || [];
 			console.log(done, doneOffline);
@@ -164,7 +146,7 @@ const FlashCardsPageComponent: React.FC = (props: { children?: React.ReactNode }
 		numTotal = 0;
 
 		if (!online) {
-			const sheet = dl[id].data
+			const sheet = ((dl[id] || {}).data || [])
 				.map((v, i) => ({
 					front: v[0],
 					back: v[1],
@@ -174,7 +156,6 @@ const FlashCardsPageComponent: React.FC = (props: { children?: React.ReactNode }
 			setCards(sheet);
 			console.log('no network');
 		} else {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const sheet = new GoogleSpreadsheet(id);
 			sheet.useRawAccessToken(googleAccess.accessToken).then(() => {
 				isRefreshing = false;
@@ -274,7 +255,6 @@ const FlashCardsPageComponent: React.FC = (props: { children?: React.ReactNode }
 		);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const flashcards = cards.map((v: { front: string; back: string; row: number }, i: number) => {
 		let v1: string | JSX.Element = v.front;
 		if (('' + v.front).startsWith('http')) {

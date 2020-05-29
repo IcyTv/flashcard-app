@@ -8,21 +8,21 @@ interface NotFoundProps {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const NotFound: React.FC<NotFoundProps> = (_props: NotFoundProps) => {
-    useEffect(() => {
-        analytics.setCurrentScreen('404_screen');
-    }, []);
+	useEffect(() => {
+		analytics.setCurrentScreen('404_screen');
+	}, []);
 
-    return (
-        <div className="not-found">
-            <IonHeader>
-                <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonBackButton icon={arrowBack} defaultHref="select" />
-                    </IonButtons>
-                </IonToolbar>
-            </IonHeader>
-            <IonTitle color="danger">404</IonTitle>
-            <IonText>Not found</IonText>
-        </div>
-    );
+	return (
+		<div className="not-found">
+			<IonHeader>
+				<IonToolbar>
+					<IonButtons slot="start">
+						<IonBackButton icon={arrowBack} defaultHref="select" />
+					</IonButtons>
+				</IonToolbar>
+			</IonHeader>
+			<IonTitle color="danger">404</IonTitle>
+			<IonText>Not found</IonText>
+		</div>
+	);
 };

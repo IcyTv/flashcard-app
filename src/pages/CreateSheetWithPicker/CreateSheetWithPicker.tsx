@@ -1,27 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IonBackButton, IonButtons, IonHeader, IonItem, IonToolbar } from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
-import { Redirect } from 'react-router';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import GooglePicker from '../../components/GooglePicker';
 import { Loading } from '../../components/Loading/Loading';
-import './CreateSheetWithPicker.scss';
 import { analytics } from '../../services/firebase';
-import { isExpired, wait, refreshToken } from '../../services/firebase/auth';
-import { useSelector, useStore } from 'react-redux';
+import { refreshToken, wait } from '../../services/firebase/auth';
 import { refreshAccess } from '../../services/store/google';
+import './CreateSheetWithPicker.scss';
+import { isPlatform } from '@ionic/core';
+import { Plugins } from '@capacitor/core';
+import queryString from 'query-string';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+const { Browser } = Plugins;
 
-interface CreateSheetWithPickerProps {}
+interface CreateSheetWithPickerProps {
+	disableAutoOpen?: boolean;
+}
+
+// const url = "https://flashcards.icytv.de/create";
+const url = 'http://192.168.178.60:8100/create';
+
+const isDarkMode = document.querySelector('body').classList.contains('dark');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (_props: CreateSheetWithPickerProps) => {
+export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (props: CreateSheetWithPickerProps) => {
 	const [picked, setPicked] = useState(null);
 	const [errors, setErrors] = useState(null);
 	const [doneLoading, setDoneLoading] = useState(false);
 	const [forceReload, setForceReload] = useState(0);
 
 	const store = useStore();
+	const location = useLocation();
+	const history = useHistory();
 	const firestore = useFirestore();
 	const firebase = useFirebase();
 
@@ -32,17 +46,51 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (_pro
 	const [refresh, setRefresh] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
+	const redirectToQuery = queryString.parse(location.search).redirectTo as string;
+	// const accessToken = queryString.parse(location.search).oauthToken as string;
+	const theme = queryString.parse(location.search).theme as string;
+
+	if (theme === 'dark' && !isDarkMode) {
+		document.querySelector('body').classList.add('dark');
+	}
+
 	useEffect(() => wait(firebase, setIsAuth), []);
 
 	useEffect(() => {
 		analytics.setCurrentScreen('create_screen');
 	}, []);
 
+	if (isPlatform('mobile') && !isPlatform('mobileweb') && !redirectToQuery) {
+		let urlBuilder = `${url}?redirectTo=flashcards://select&oauthToken=${googleAcccess.accessToken}`;
+		if (isDarkMode) {
+			urlBuilder += '&theme=dark';
+		}
+		// Browser.open({ url: urlBuilder });
+		const browser = InAppBrowser.create(urlBuilder, '_blank', {
+			footer: 'no',
+			hidenavigationbuttons: 'yes',
+			toolbar: 'no',
+			hardwareback: 'no',
+			location: 'no',
+		});
+		browser.on('exit').subscribe(() => {
+			console.log('exited browser');
+			history.push('/select');
+		});
+
+		browser.on('message').subscribe((event) => {
+			console.log(event);
+			if (event.data && event.data.my_message === 'close') {
+				browser.close();
+			}
+		});
+	}
+
 	firebase.auth().onAuthStateChanged(() => {
 		setLoaded(true);
 	});
 
-	if (!isLoaded || !isAuth) {
+	if ((!isLoaded || !isAuth) && !redirectToQuery) {
 		return <Loading>Waiting for storage</Loading>;
 	}
 
@@ -51,13 +99,25 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (_pro
 		setRefresh(null);
 	}
 
-	if (isExpired(googleAcccess.tokenId)) {
+	if (googleAcccess.expiresIn - Date.now() < 0) {
 		refreshToken(googleAcccess.tokenId, setRefresh);
+		console.log('Refreshing access');
 		return <Loading>Refreshing access to google</Loading>;
 	}
 
 	if (doneLoading) {
-		return <Redirect to="/select" />;
+		if (redirectToQuery) {
+			// return <Redirect to={redirectToQuery} />;
+			// history.push(redirectToQuery);
+			console.log('Done loading, redirecting');
+			// window.close();
+			if ((window as any).webkit) {
+				// eslint-disable-next-line @typescript-eslint/camelcase
+				(window as any).webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify({ my_message: 'close' }));
+			}
+		} else {
+			return <Redirect to="/select" />;
+		}
 	}
 
 	//firestore.collection("users").doc(user.user.uid).collection("sheets").
@@ -104,7 +164,10 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (_pro
 
 	const onError = (err: any): void => {
 		console.log(err);
-		if (err.action === google.picker.Action.CANCEL) {
+		if (redirectToQuery && (window as any).webkit) {
+			// eslint-disable-next-line @typescript-eslint/camelcase
+			(window as any).webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify({ my_message: 'close' }));
+		} else if (err.action === google.picker.Action.CANCEL) {
 			setErrors('You did not select anything!');
 		} else {
 			analytics.logEvent('exception', { description: err, fatal: true });
@@ -124,7 +187,12 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (_pro
 			</IonHeader>
 			{/* <IonContent > */}
 			<IonItem>
-				<GooglePicker exclude={sSheets} onPick={onPick} onError={onError} autoOpen={!picked && !errors} />
+				<GooglePicker
+					exclude={sSheets}
+					onPick={onPick}
+					onError={onError}
+					autoOpen={!picked && !errors && !props.disableAutoOpen && !isPlatform('mobile')}
+				/>
 			</IonItem>
 			{errors && <IonItem color="danger">{errors}</IonItem>}
 			{/* </IonContent> */}

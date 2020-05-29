@@ -8,8 +8,10 @@ ion-list.sheet-list {
 	--border-size: 1em;
 
 	ion-item {
+		color: var(--ion-color-light-contrast);
 		p {
 			cursor: pointer;
+			color: var(--ion-color-light-contrast);
 		}
 		margin: 0px !important;
 		padding: 0px !important;
@@ -49,6 +51,7 @@ ion-list.sheet-list {
 		}
 	}
 	ion-button.more-options {
+		color: var(--ion-color-light-contrast);
 		--background: inherit;
 		--border-radius: 0px;
 		--border-width: 0px;
@@ -80,15 +83,14 @@ ion-button.new-sheet {
 	}
 }
 
-ion-header {
-	ion-button.logout {
-		--box-shadow: none;
-		--border-size: 0px;
-		--background: inherit;
-		--color: var(--ion-color-danger);
-		ion-icon {
-			color: var(--ion-color-danger);
-		}
-		margin-right: 10px !important;
+@media only screen and (min-width: 800px) {
+	ion-list.sheet-list {
+		margin-left: 20% !important;
+		margin-right: 20% !important;
+	}
+
+	ion-button.new-sheet {
+		margin-left: 20%;
+		margin-right: 20%;
 	}
 }

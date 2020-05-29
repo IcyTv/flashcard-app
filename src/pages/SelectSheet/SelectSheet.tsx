@@ -1,7 +1,17 @@
 import { DocumentData, QueryDocumentSnapshot, QuerySnapshot } from '@firebase/firestore-types';
-import { Network } from '@ionic-native/network';
-import { ActionSheetButton } from '@ionic/core';
-import { IonActionSheet, IonButton, IonContent, IonIcon, IonItem, IonList, IonSpinner, IonText } from '@ionic/react';
+import { ActionSheetButton, isPlatform, RefresherEventDetail } from '@ionic/core';
+import {
+	IonActionSheet,
+	IonButton,
+	IonContent,
+	IonIcon,
+	IonItem,
+	IonList,
+	IonSpinner,
+	IonText,
+	IonRefresher,
+	IonRefresherContent,
+} from '@ionic/react';
 import {
 	arrowDown,
 	closeOutline,
@@ -16,8 +26,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
-import { Redirect } from 'react-router-dom';
-import { Loading } from '../../components/Loading/Loading';
+import { Redirect, useHistory } from 'react-router-dom';
 import { downloadSpreadsheet } from '../../services/download';
 import { analytics } from '../../services/firebase';
 import { refreshToken, wait } from '../../services/firebase/auth';
@@ -26,12 +35,29 @@ import { refreshAccess } from '../../services/store/google';
 import './SelectSheet.scss';
 import { useNetwork } from '../../services/network';
 import { saveNamesStore } from '../../services/store/savedSheets';
+import { Flip, Zoom } from 'react-awesome-reveal';
+import { Plugins } from '@capacitor/core';
+import { AnyAction } from 'redux';
+import { setFirstTime } from '../../services/store/debug';
+const { Browser } = Plugins;
+
+// import { Loading } from '../../components/Loading/Loading';
+const Loading = React.lazy(() => import('../../components/Loading'));
 
 const openInNewTab = (url: string): void => {
-	window.open(url, '_blank');
+	if (isPlatform('mobile')) {
+		console.log('HERE');
+		Browser.open({ url: url });
+	} else {
+		window.open(url, '_blank');
+	}
 };
 
-function formatBytes(a, b = 2): string {
+const edit = (id: string): void => {
+	openInNewTab('https://docs.google.com/spreadsheets/d/' + id);
+};
+
+function formatBytes(a: number, b = 2): string {
 	if (0 === a) return '0 Bytes';
 	const c = 0 > b ? 0 : b,
 		d = Math.floor(Math.log(a) / Math.log(1024));
@@ -42,8 +68,14 @@ function formatBytes(a, b = 2): string {
 	);
 }
 
-export const SelectSheet: React.FC = () => {
+interface SelectSheetProps {
+	className?: string;
+	hidden?: boolean;
+}
+
+export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps) => {
 	const [sheets, setSheets] = useState<{ id: string; name: string }[]>(null);
+	const [action, setAction] = useState(null);
 	const [selectedSheet, setSelected] = useState<{
 		id: string;
 		name: string;
@@ -52,7 +84,7 @@ export const SelectSheet: React.FC = () => {
 
 	const firebase = useFirebase();
 	const firestore = useFirestore();
-	const store = useStore();
+	const store = useStore<ReduxState, AnyAction>();
 
 	const [redirectTo, setRedirectTo] = useState('');
 
@@ -71,17 +103,39 @@ export const SelectSheet: React.FC = () => {
 	const [forceReload, setForceReload] = useState(false);
 
 	const online = useNetwork();
+	const history = useHistory();
+
+	useEffect(() => {
+		console.log('FirstTime triggered');
+		if (store.getState().debug.firstTime) {
+			setFirstTime(store)(false);
+			history.push('/joyride');
+		}
+	}, [store, history]);
+
+	useEffect(() => {
+		setSheets(null);
+	}, [online]);
+
+	useEffect(() => {
+		if (action && sheets) {
+			action.detail.complete();
+			setAction(null);
+		}
+	}, [action, sheets]);
 
 	useEffect(() => wait(firebase, setIsAuth), []);
 	useEffect(() => {
 		analytics.setCurrentScreen('select_sheet');
-	}, []);
+	}, [firebase]);
 
 	useEffect(() => {
 		if (downloaded.indexOf(downloading) >= 0) {
 			setDownloading(null);
 		}
 	}, [downloaded]);
+
+	//TODO Refresher
 
 	if (!isAuth) {
 		return <Loading>Loading authentication</Loading>;
@@ -91,8 +145,6 @@ export const SelectSheet: React.FC = () => {
 		console.log('Refreshing');
 		refreshToken(googleAccess.tokenId, setRefresh);
 	}
-
-	analytics.setUserId(firebase.auth().currentUser.uid);
 
 	if (refresh) {
 		refreshAccess(store)(refresh);
@@ -115,14 +167,14 @@ export const SelectSheet: React.FC = () => {
 		);
 	}
 
-	if (sheets == undefined || sheets == null) {
+	if (sheets === undefined || sheets === null) {
 		console.log('loading sheets');
 		if (!online) {
 			if (downloaded.length === 0) {
 				return <p>No downloads</p>;
 			} else {
 				const tmp = [];
-				downloaded.forEach((v, i) => {
+				downloaded.forEach((v) => {
 					const t = dlSheets[v];
 					tmp.push({ id: v, name: t.name });
 				});
@@ -181,7 +233,7 @@ export const SelectSheet: React.FC = () => {
 				onDelete(id, '', index);
 				break;
 			case 'edit':
-				openInNewTab('https://docs.google.com/spreadsheets/d/' + id);
+				edit(id);
 				break;
 			case 'download':
 				setDownloading(id);
@@ -198,87 +250,102 @@ export const SelectSheet: React.FC = () => {
 		}
 	};
 
+	const onRefresh = (ev: CustomEvent<RefresherEventDetail>): void => {
+		setSheets(null);
+		setAction(ev);
+	};
+
 	return (
-		<IonContent key={'sheet-list-length-' + sheets.length}>
+		<IonContent key={'sheet-list-length-' + sheets.length} hidden={props.hidden} className={props.className}>
+			<IonRefresher slot="fixed" onIonRefresh={onRefresh}>
+				<IonRefresherContent refreshingSpinner="crescent"></IonRefresherContent>
+			</IonRefresher>
 			<IonList className="sheet-list" lines="full">
-				{sheets.map(
-					(
-						v: {
-							id: string;
-							name: string;
+				<Flip cascade>
+					{sheets.map(
+						(
+							v: {
+								id: string;
+								name: string;
+							},
+							i: number,
+						) => {
+							const isDownloaded = downloaded.indexOf(v.id) >= 0;
+							const dlBtn: ActionSheetButton = isDownloaded
+								? {
+										cssClass: 'download',
+										text: 'Remove saved',
+										icon: remove,
+										handler: actionHandler(v.id, i, 'deleteSaved'),
+								  }
+								: downloaded.length < 2
+								? {
+										text: 'Download',
+										icon: arrowDown,
+										handler: actionHandler(v.id, i, 'download'),
+										cssClass: 'download',
+								  }
+								: {
+										cssClass: 'download',
+										text: 'Download limit reached',
+										icon: cashOutline,
+										handler: actionHandler(v.id, i, 'pay'),
+								  };
+							const buttons = [];
+							buttons.push({
+								text: 'Delete',
+								icon: trashOutline,
+								role: 'destructive',
+								handler: actionHandler(v.id, i, 'delete'),
+								cssClass: 'delete',
+							});
+							if (online) {
+								buttons.push({
+									text: 'Edit',
+									icon: pencilOutline,
+									handler: actionHandler(v.id, i, 'edit'),
+									cssClass: 'edit',
+								});
+								buttons.push(dlBtn);
+							}
+							buttons.push({
+								text: 'Cancel',
+								icon: closeOutline,
+								role: 'cancel',
+							});
+							return (
+								<IonItem key={'parsed-' + v.id}>
+									<IonButton onClick={onClick(v.id, v.name)} className="list-item-sheet">
+										<p>{v.name}</p>{' '}
+										{downloading === v.id && <IonSpinner name="crescent" color="primary" />}
+										{downloaded.indexOf(v.id) >= 0 && [
+											<IonIcon icon={arrowDown} color="primary" key={v.id + '-dl'} />,
+											<p key={'bytes-p-' + v.id}>{formatBytes(sizeof(dlSheets[v.id]))}</p>,
+										]}
+									</IonButton>
+									<IonButton onClick={(): void => setActionSheet(i)} className="more-options">
+										<IonIcon icon={ellipsisVertical} />
+									</IonButton>
+									<IonActionSheet
+										isOpen={selectedActionSheet === i}
+										animated
+										onDidDismiss={(): void => setActionSheet(-1)}
+										header="More options"
+										cssClass="action-sheets-more-options"
+										buttons={buttons}
+									/>
+								</IonItem>
+							);
 						},
-						i: number,
-					) => {
-						const isDownloaded = downloaded.indexOf(v.id) >= 0;
-						const dlBtn: ActionSheetButton = isDownloaded
-							? {
-									cssClass: 'download',
-									text: 'Remove saved',
-									icon: remove,
-									handler: actionHandler(v.id, i, 'deleteSaved'),
-							  }
-							: downloaded.length < 2
-							? {
-									text: 'Download',
-									icon: arrowDown,
-									handler: actionHandler(v.id, i, 'download'),
-									cssClass: 'download',
-							  }
-							: {
-									cssClass: 'download',
-									text: 'Download limit reached',
-									icon: cashOutline,
-									handler: actionHandler(v.id, i, 'pay'),
-							  };
-						return (
-							<IonItem key={'parsed-' + v.id}>
-								<IonButton onClick={onClick(v.id, v.name)} className="list-item-sheet">
-									<p>{v.name}</p> {downloading === v.id && <IonSpinner name="crescent" />}
-									{downloaded.indexOf(v.id) >= 0 && [
-										<IonIcon icon={arrowDown} color="primary" key={v.id + '-dl'} />,
-										formatBytes(sizeof(dlSheets[v.id])),
-									]}
-								</IonButton>
-								<IonButton onClick={(): void => setActionSheet(i)} className="more-options">
-									<IonIcon icon={ellipsisVertical} />
-								</IonButton>
-								<IonActionSheet
-									isOpen={selectedActionSheet === i}
-									animated
-									onDidDismiss={(): void => setActionSheet(-1)}
-									header="More options"
-									cssClass="action-sheets-more-options"
-									buttons={[
-										{
-											text: 'Delete',
-											icon: trashOutline,
-											role: 'destructive',
-											handler: actionHandler(v.id, i, 'delete'),
-											cssClass: 'delete',
-										},
-										{
-											text: 'Edit',
-											icon: pencilOutline,
-											handler: actionHandler(v.id, i, 'edit'),
-											cssClass: 'edit',
-										},
-										dlBtn,
-										{
-											text: 'Cancel',
-											icon: closeOutline,
-											role: 'cancel',
-										},
-									]}
-								/>
-							</IonItem>
-						);
-					},
-				)}
+					)}
+				</Flip>
 			</IonList>
 			{online && (
-				<IonButton onClick={(): void => setRedirectTo('/create')} className="new-sheet">
-					Add new sheet
-				</IonButton>
+				<Zoom>
+					<IonButton onClick={(): void => setRedirectTo('/create')} className="new-sheet">
+						Add new sheet
+					</IonButton>
+				</Zoom>
 			)}
 		</IonContent>
 	);

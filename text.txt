@@ -1,0 +1,269 @@
+yarn run v1.22.4
+$ yarn react-app-rewired build --prod
+$ C:\Users\michael\Desktop\Programming\flashcard-app\node_modules\.bin\react-app-rewired build --prod
+Creating an optimized production build...
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+ionicons
+ionicons
+ionicons
+ionicons
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+@ionic
+Compiled with warnings.
+
+./src/pages/CreateSheetWithPicker/CreateSheetWithPicker.tsx
+  Line 11:10:  'isExpired' is defined but never used                                                                        @typescript-eslint/no-unused-vars
+  Line 35:45:  React Hook useEffect has a missing dependency: 'firebase'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+./src/components/Menu/Menu.tsx
+  Line 12:2:   'IonToggle' is defined but never used         @typescript-eslint/no-unused-vars
+  Line 14:2:   'IonRouterLink' is defined but never used     @typescript-eslint/no-unused-vars
+  Line 17:36:  'useState' is defined but never used          @typescript-eslint/no-unused-vars
+  Line 18:10:  'useSelector' is defined but never used       @typescript-eslint/no-unused-vars
+  Line 18:23:  'useStore' is defined but never used          @typescript-eslint/no-unused-vars
+  Line 19:10:  'toggleNetworkDev' is defined but never used  @typescript-eslint/no-unused-vars
+
+./src/components/AppUrlListener/AppUrlListener.tsx
+  Line 15:5:  React Hook useEffect has a missing dependency: 'history'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+./src/App.tsx
+  Line 16:28:  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+./src/components/StoreLoading/StoreLoading.tsx
+  Line 2:10:  'IonContent' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 2:22:  'IonIcon' is defined but never used     @typescript-eslint/no-unused-vars
+
+./src/pages/PaymentCancel/PaymentCancel.tsx
+  Line 2:22:  'IonIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+./src/pages/Logout/Logout.tsx
+  Line 30:5:  React Hook useEffect has missing dependencies: 'firebase' and 'store'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+./src/components/Header/Header.tsx
+  Line 37:5:  React Hook useEffect has missing dependencies: 'history' and 'location.pathname'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+./src/components/Loading/Loading.tsx
+  Line 3:8:  'BounceLoader' is defined but never used  @typescript-eslint/no-unused-vars
+
+./src/pages/SelectSheet/SelectSheet.tsx
+  Line 41:10:   'AppAvailability' is defined but never used                                                                     @typescript-eslint/no-unused-vars
+  Line 110:45:  React Hook useEffect has a missing dependency: 'firebase'. Either include it or remove the dependency array     react-hooks/exhaustive-deps
+  Line 119:5:   React Hook useEffect has a missing dependency: 'downloading'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 153:13:  Expected '===' and instead saw '=='                                                                             eqeqeq
+
+./src/services/store/downloader.ts
+  Line 46:63:  Expected '!==' and instead saw '!='  eqeqeq
+
+./src/components/GooglePicker/GooglePicker.tsx
+  Line 49:5:   React Hook useEffect has a missing dependency: 'firebase'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 126:9:  'br' is assigned a value but never used                                                                      @typescript-eslint/no-unused-vars
+
+./src/components/StripePayment/StripePayment.tsx
+  Line 4:8:  'CreditCardPage' is defined but never used  @typescript-eslint/no-unused-vars
+
+./src/components/PrebidAdUnit/PrebidAdUnit.tsx
+  Line 4:8:  'config' is defined but never used  @typescript-eslint/no-unused-vars
+
+./src/pages/FlashCardsPage/FlashCardsPage.tsx
+  Line 52:45:  React Hook useEffect has a missing dependency: 'firebase'. Either include it or remove the dependency array                                                       react-hooks/exhaustive-deps
+  Line 84:5:   React Hook useEffect has missing dependencies: 'doneOffline', 'firebase', 'id', 'online', 'store', and 'uid'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+./src/pages/PaymentPage/PaymentPage.tsx
+  Line 6:10:  'useFirebase' is defined but never used   @typescript-eslint/no-unused-vars
+  Line 7:10:  'PayPalButton' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  681.73 KB  build\static\js\main.599fe1e6.chunk.js
+  211.71 KB  build\static\js\npm.ionic.28325d8e.chunk.js
+  11.53 KB   build\static\js\npm.ionicons.40a16ba6.chunk.js
+  7.2 KB     build\static\css\main.a824118e.chunk.css
+  1.18 KB    build\static\js\runtime-main.c1698303.js
+
+The bundle size is significantly larger than recommended.
+Consider reducing it with code splitting: https://goo.gl/9VhYWB
+You can also analyze the project dependencies: https://goo.gl/LeUzfb
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  yarn global add serve
+  serve -s build
+
+Find out more about deployment here:
+
+  bit.ly/CRA-deploy
+
+Done in 36.06s.
