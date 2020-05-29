@@ -23,7 +23,6 @@ import StoreLoading from './components/StoreLoading';
 import Router from './pages/Router';
 import firebase, { analytics, auth } from './services/firebase';
 import createStore from './services/store/createStore';
-import { UserAgent } from '@ionic-native/user-agent';
 /* Theme variables */
 import './theme/variables.scss';
 import Loading from './components/Loading';

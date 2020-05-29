@@ -1508,13 +1508,6 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/user-agent@^5.26.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/user-agent/-/user-agent-5.26.0.tgz#a276161d10b7641e89ae394abc5eb994db06bf49"
-  integrity sha512-rlRwfJzOlEWp+uVso6HkSqFTAWDvd7oUblX8fTb1/i9/60dsHzNo1ahazhV0/jhsORwY2K+5dZIPxg4cWXLTEA==
-  dependencies:
-    "@types/cordova" latest
-
 "@ionic/app-scripts@^3.2.4":
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/@ionic/app-scripts/-/app-scripts-3.2.4.tgz#db3f6a215ba226099db2a9af41f0f6bb5d4cc368"
@@ -5521,11 +5514,6 @@ cordova-plugin-theme-detection@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/cordova-plugin-theme-detection/-/cordova-plugin-theme-detection-1.2.1.tgz#8ff887a27fd25d497e82660c971b26086a3c54f6"
   integrity sha512-UsvXFKbbBqLuFkk6cQ1s+uIvLvXxNN3y4zwgBmTr5JwzCf8HlrHH4f6IWTsLLfRIsbfM6KdO7xvQ5EwDgS1LhQ==
-
-cordova-plugin-useragent@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-useragent/-/cordova-plugin-useragent-1.0.6.tgz#19cc4fa01f5c91b64f1ad4258547228603aec239"
-  integrity sha512-Oh5QaIonlI7UjUJ1dxXTRYRYBO1QWQNjhDXIR+J9b5BByg57nSFSjWffhY1DAHBnjewggkh2ZV88LBBp3zjPvg==
 
 cordova-serve@^3.0.0:
   version "3.0.0"
