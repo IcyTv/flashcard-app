@@ -31,3 +31,4 @@ googleapis_config.json
 .firebase
 .settings
 !AndroidManifest.xml
+google-services.json
