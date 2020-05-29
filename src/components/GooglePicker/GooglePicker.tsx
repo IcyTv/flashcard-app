@@ -29,17 +29,22 @@ interface GooglePickerProps {
  * @param props
  */
 export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerProps) => {
-	const auth = useSelector((state: ReduxState) => state.google);
 	const [loaded, setLoaded] = useState(false);
 	const [pickerLoaded, setPickerLoaded] = useState(false);
 	const firebase = useFirebase();
 	const [isAuth, setIsAuth] = useState(false);
-	const [refresh, setRefresh] = useState(null);
 	const store = useStore();
+	const auth = useSelector((state: ReduxState) => state.google);
 
 	const location = useLocation();
 
-	const oauthToken = parse(location.search).oauthToken as string;
+	const parsed = parse(location.search);
+
+	let oauthToken = null;
+
+	if (parsed.oauthToken) {
+		oauthToken = atob(parsed.oauthToken as string);
+	}
 
 	useEffect(() => {
 		if (gapi) {
@@ -52,15 +57,9 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		wait(firebase, setIsAuth);
 	}, []);
 
-	if (refresh) {
-		refreshAccess(store)(refresh);
-		setRefresh(null);
-		return <Loading>Loading access</Loading>;
-	}
-
 	if (auth.expiresIn - Date.now() < 0) {
 		console.log('Picker refresh');
-		refreshToken(auth.tokenId, setRefresh);
+		refreshToken(auth.tokenId, store);
 		return <Loading>Refreshing access to google</Loading>;
 	}
 
@@ -120,6 +119,7 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		.enableFeature(google.picker.Feature.SUPPORT_TEAM_DRIVES);
 
 	if (oauthToken) {
+		console.log('Setting token from query param', oauthToken);
 		pickerBuilder.setOAuthToken(oauthToken);
 	} else {
 		pickerBuilder.setOAuthToken(auth.accessToken);
@@ -129,28 +129,7 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		pickerBuilder.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	// if (isPlatform('mobile')) {
-	// 	pickerBuilder.setSize(window.innerWidth, window.innerHeight).setOAuthToken(auth.accessToken);
-	// 	pickerBuilder.setCallback((ev) => {
-	// 		alert(ev);
-	// 		console.log(ev);
-	// 	});
-	// 	const url = pickerBuilder.toUri().toString();
-	// 	// Browser.open({ url: url }).then(() => {
-	// 	// 	console.log('Browser');
-	// 	// });
-	// 	const br = InAppBrowser.create(url);
-
-	// 	return (
-	// 		<div>
-	// 			{(props.children && React.cloneElement(props.children as any, {})) || (
-	// 				<IonButton>Select a document</IonButton>
-	// 			)}
-	// 		</div>
-	// 	);
-	// }
-
-	const picker = pickerBuilder.setOAuthToken(auth.accessToken).build();
+	const picker = pickerBuilder.build();
 
 	if ((props.autoOpen && auth.expiresIn - Date.now() > 0) || oauthToken) {
 		picker.setVisible(true);

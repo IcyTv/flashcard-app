@@ -39,7 +39,6 @@ const FlashCardsPageComponent: React.FC = () => {
 	const [doReset, setDoReset] = useState(false);
 
 	const history = useHistory();
-	const [refresh, setRefresh] = useState(null);
 	const [refreshErrors, setRefreshErrors] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
@@ -87,13 +86,6 @@ const FlashCardsPageComponent: React.FC = () => {
 		return <Loading>Loading authentication</Loading>;
 	}
 
-	if (refresh && !isRefreshing) {
-		refreshAccess(store)(refresh);
-		setRefresh(null);
-		isRefreshing = true;
-		return <Loading>Refreshing access</Loading>;
-	}
-
 	if (doReturn) {
 		return <Redirect to="/select" push />;
 	}
@@ -113,9 +105,9 @@ const FlashCardsPageComponent: React.FC = () => {
 	}
 
 	if (errors) {
-		if (errors.indexOf('401') >= 0 && !refresh && !refreshErrors && !isRefreshing) {
+		if (errors.indexOf('401') >= 0 && !refreshErrors && !isRefreshing) {
 			console.log('refreshing');
-			refreshToken(googleAccess.tokenId, setRefresh, setRefreshErrors);
+			refreshToken(googleAccess.tokenId, store, setRefreshErrors);
 			return <Loading>Refreshing access</Loading>;
 		} else if (isRefreshing) {
 			console.log(isRefreshing ? 'refreshing!' : 'not refreshing');

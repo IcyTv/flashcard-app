@@ -5,6 +5,7 @@ import { Store } from 'redux';
 export const types = {
 	AUTH_SET: 'AUTH_SET',
 	ACCESS_REFRESH: 'AUTH_REFRESH',
+	ID_TOKEN_REFRESH: 'ID_TOKEN_REFRESH',
 };
 
 export function authChange(auth: GoogleAuth): { type: string; payload: GoogleAuth } {
@@ -31,10 +32,13 @@ export const refreshAccess = ({ dispatch }: Store) => {
 	return (token: string) => dispatch(accessRefresh(token));
 };
 
+export const idTokenRefresh = ({ dispatch }: Store) => (idToken: string): void => {
+	dispatch({ type: types.ID_TOKEN_REFRESH, payload: idToken });
+};
+
 // Reducer
 const initialState = null;
 export default function authReducer(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	state: ReduxState['google'] = initialState,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	{ type, payload }: { type: string; payload: any },
@@ -50,6 +54,8 @@ export default function authReducer(
 			accessToken: payload,
 			expiresIn: Date.now() + 60 * 60 * 1000,
 		};
+	} else if (type === types.ID_TOKEN_REFRESH) {
+		return { ...state, tokenId: payload };
 	} else {
 		return state;
 	}

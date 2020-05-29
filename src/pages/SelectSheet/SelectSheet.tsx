@@ -147,13 +147,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 
 	if (googleAccess.expiresIn - Date.now() < 0) {
 		console.log('Refreshing');
-		refreshToken(googleAccess.tokenId, setRefresh);
-	}
-
-	if (refresh) {
-		refreshAccess(store)(refresh);
-		setRefresh(null);
-		return <Loading>Refreshing access</Loading>;
+		refreshToken(googleAccess.tokenId, store);
 	}
 
 	if (redirectTo !== '') {

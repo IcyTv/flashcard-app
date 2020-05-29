@@ -1,7 +1,7 @@
 import { ExtendedFirebaseInstance, ExtendedAuthInstance, ExtendedStorageInstance } from 'react-redux-firebase';
 import { analytics } from './index';
 import { AnyAction, Store } from 'redux';
-import { setAuth } from '../store/google';
+import { setAuth, refreshAccess, idTokenRefresh } from '../store/google';
 import IdTokenVer from 'idtoken-verifier';
 
 const verifier = new IdTokenVer({
@@ -27,13 +27,14 @@ export const wait = (
 
 export const refreshToken = async (
 	idToken: string,
-	stateFunc: React.Dispatch<React.SetStateAction<string>>,
+	store: Store<ReduxState, AnyAction>,
 	errFunc?: React.Dispatch<React.SetStateAction<string>>,
 ): Promise<void> => {
 	fetch(url + idToken)
-		.then((data: Response) => data.text())
-		.then((data: string) => {
-			stateFunc(data);
+		.then((data: Response) => data.json())
+		.then((data: { id_token: string; access_token: string }) => {
+			idTokenRefresh(store)(data.id_token);
+			refreshAccess(store)(data.access_token);
 		})
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		.catch((err: any) => {

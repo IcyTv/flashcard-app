@@ -149,7 +149,7 @@ export const refreshAccessToken = asyncRoute(async (req, res) => {
 		res.setHeader('Content-Type', 'application/json');
 		const token = await oauth.getAccessToken();
 		console.log('New access Token', token);
-		res.send(token.token);
+		res.send({access_token: token.token, id_token: token.res.data.id_token});
 	} catch (e) {
 		console.error('Refresh Error at ' + e.lineNumber, e);
 		res.status(400);

@@ -1473,6 +1473,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/chooser@^5.26.0":
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/chooser/-/chooser-5.26.0.tgz#003798c21e5d7ea334d843f3fab51844cf4b8ca2"
+  integrity sha512-DR33sPBW8KfEeg2HE2bUxsEeflPhKFtg6742XXoi9g0Mz8UuqDCZXM5GHxkZyt2W2b3GMNVJnh6CUIpGKFWdMQ==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/core@^5.25.0":
   version "5.25.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-5.25.0.tgz#b502cd9da2772250d81c38c23dbf2f04e95a28bb"
@@ -5494,6 +5501,11 @@ cordova-plugin-appavailability@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-appavailability/-/cordova-plugin-appavailability-0.4.2.tgz#a017aaf0f8827ee599dc778b6245dcc1350bcba8"
   integrity sha1-oBeq8PiCfuWZ3HeLYkXcwTULy6g=
+
+cordova-plugin-chooser@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-chooser/-/cordova-plugin-chooser-1.3.1.tgz#0801bf0c937686ef531a5282aa0abd713e4dccc5"
+  integrity sha512-xyTgu7T1WSk4XeHVwrez1ZB+iPDThae79OYuuPTJkgHm4fVeD5QzzgJVxo2AETztAOM20OQU6txedfBYB6RHhQ==
 
 cordova-plugin-filechooser@^1.2.0:
   version "1.2.0"

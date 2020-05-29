@@ -31,7 +31,6 @@ export const Refresh: React.FC<RefreshProps> = (_props: RefreshProps) => {
 
 	if (!res) {
 		console.log('Requesting');
-		refreshToken(google.accessToken, setRes);
 	}
 	return <pre>{JSON.stringify(res, null, 4)}</pre>;
 };

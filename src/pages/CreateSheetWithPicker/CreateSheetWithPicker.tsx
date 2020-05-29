@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IonBackButton, IonButtons, IonHeader, IonItem, IonToolbar } from '@ionic/react';
 import { arrowBack } from 'ionicons/icons';
@@ -15,14 +16,27 @@ import { isPlatform } from '@ionic/core';
 import { Plugins } from '@capacitor/core';
 import queryString from 'query-string';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import fbTypes from 'firebase/app';
 const { Browser } = Plugins;
+
+declare global {
+	interface Window {
+		webkit?: {
+			messageHandlers: {
+				cordova_iab: {
+					postMessage(message: string);
+				};
+			};
+		};
+	}
+}
 
 interface CreateSheetWithPickerProps {
 	disableAutoOpen?: boolean;
 }
 
-// const url = "https://flashcards.icytv.de/create";
-const url = 'http://192.168.178.60:8100/create';
+const url = 'https://flashcards.icytv.de/create';
+// const url = 'http://192.168.178.60:8100/create';
 
 const isDarkMode = document.querySelector('body').classList.contains('dark');
 
@@ -43,12 +57,12 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 	const sSheets = useSelector((state: ReduxState) => state.savedSheets.names);
 
 	const [isLoaded, setLoaded] = useState(false);
-	const [refresh, setRefresh] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
 	const redirectToQuery = queryString.parse(location.search).redirectTo as string;
 	// const accessToken = queryString.parse(location.search).oauthToken as string;
 	const theme = queryString.parse(location.search).theme as string;
+	const tokenId = queryString.parse(location.search).tokenId as string;
 
 	if (theme === 'dark' && !isDarkMode) {
 		document.querySelector('body').classList.add('dark');
@@ -60,47 +74,76 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 		analytics.setCurrentScreen('create_screen');
 	}, []);
 
-	if (isPlatform('mobile') && !isPlatform('mobileweb') && !redirectToQuery) {
-		let urlBuilder = `${url}?redirectTo=flashcards://select&oauthToken=${googleAcccess.accessToken}`;
-		if (isDarkMode) {
-			urlBuilder += '&theme=dark';
-		}
-		// Browser.open({ url: urlBuilder });
-		const browser = InAppBrowser.create(urlBuilder, '_blank', {
-			footer: 'no',
-			hidenavigationbuttons: 'yes',
-			toolbar: 'no',
-			hardwareback: 'no',
-			location: 'no',
-		});
-		browser.on('exit').subscribe(() => {
-			console.log('exited browser');
-			history.push('/select');
-		});
-
-		browser.on('message').subscribe((event) => {
-			console.log(event);
-			if (event.data && event.data.my_message === 'close') {
-				browser.close();
+	useEffect(() => {
+		if (isPlatform('mobile') && !isPlatform('mobileweb') && !redirectToQuery) {
+			let urlBuilder = `${url}?redirectTo=flashcards://select&oauthToken=${btoa(
+				googleAcccess.accessToken,
+			)}&tokenId=${googleAcccess.tokenId}`;
+			console.log(urlBuilder);
+			if (isDarkMode) {
+				urlBuilder += '&theme=dark';
 			}
-		});
-	}
+			// Browser.open({ url: urlBuilder });
+			const browser = InAppBrowser.create(urlBuilder, '_blank', {
+				footer: 'no',
+				hidenavigationbuttons: 'yes',
+				toolbar: 'no',
+				hardwareback: 'no',
+				location: 'no',
+				fullscreen: 'no',
+			});
+			browser.on('exit').subscribe(() => {
+				console.log('exited browser');
+				if (!errors) {
+					history.push('/select');
+				}
+			});
+
+			browser.on('message').subscribe((event) => {
+				console.log(event);
+				if (event.data && event.data.my_message === 'close') {
+					if (event.data.errors) {
+						setErrors(errors);
+					}
+					browser.close();
+				}
+			});
+		}
+	}, [googleAcccess]);
+
+	useEffect(() => {
+		if (tokenId) {
+			const cred = fbTypes.auth.GoogleAuthProvider.credential(tokenId);
+			firebase
+				.auth()
+				.signInWithCredential(cred)
+				.then(() => {
+					setLoaded(true);
+				})
+				.catch((err) => {
+					console.error(err);
+					if (window.webkit) {
+						window.webkit.messageHandlers.cordova_iab.postMessage(
+							JSON.stringify({
+								my_message: 'close',
+								errors: err,
+							}),
+						);
+					}
+				});
+		}
+	}, [firebase]);
 
 	firebase.auth().onAuthStateChanged(() => {
 		setLoaded(true);
 	});
 
-	if ((!isLoaded || !isAuth) && !redirectToQuery) {
+	if (!isLoaded || !isAuth) {
 		return <Loading>Waiting for storage</Loading>;
 	}
 
-	if (refresh) {
-		refreshAccess(store)(refresh);
-		setRefresh(null);
-	}
-
 	if (googleAcccess.expiresIn - Date.now() < 0) {
-		refreshToken(googleAcccess.tokenId, setRefresh);
+		refreshToken(googleAcccess.tokenId, store);
 		console.log('Refreshing access');
 		return <Loading>Refreshing access to google</Loading>;
 	}
@@ -194,7 +237,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 					autoOpen={!picked && !errors && !props.disableAutoOpen && !isPlatform('mobile')}
 				/>
 			</IonItem>
-			{errors && <IonItem color="danger">{errors}</IonItem>}
+			{errors && <IonItem color="danger">{JSON.stringify(errors)}</IonItem>}
 			{/* </IonContent> */}
 		</div>
 	);
