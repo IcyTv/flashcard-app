@@ -53,7 +53,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = (_props: PaymentPageProps
 	return (
 		<>
 			<IonContent>
-				Currently not implemented, but thank you for your interest
+				Currently not implemented, but thank you for your interest in supporting me
 				{/* <IonList lines="none">
 					<IonItem>
 						<IonButton onClick={onCreditCardLifetime}>
