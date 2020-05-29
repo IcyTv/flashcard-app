@@ -71,6 +71,10 @@ function formatBytes(a: number, b = 2): string {
 interface SelectSheetProps {
 	className?: string;
 	hidden?: boolean;
+	predefinedSheets?: {
+		name: string;
+		id?: string;
+	}[];
 }
 
 export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps) => {
@@ -169,7 +173,14 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 
 	if (sheets === undefined || sheets === null) {
 		console.log('loading sheets');
-		if (!online) {
+		if (props.predefinedSheets) {
+			const tmp = [];
+			props.predefinedSheets.forEach((v) => {
+				tmp.push({ id: v.id, name: v.name });
+			});
+			setSheets(tmp);
+			setForceReload(!forceReload);
+		} else if (!online) {
 			if (downloaded.length === 0) {
 				return <p>No downloads</p>;
 			} else {

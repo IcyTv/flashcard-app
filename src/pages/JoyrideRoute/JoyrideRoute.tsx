@@ -33,7 +33,11 @@ const steps: Step[] = [
 		target: 'ion-icon.connected',
 	},
 	{
-		content: <h3>Select your google sheet here</h3>,
+		content: (
+			<div>
+				<h3>Select your google sheet here</h3>
+			</div>
+		),
 		placement: 'bottom',
 		target: '.step-1 ion-list ion-button',
 		title: 'Flashcards App Tour',
@@ -43,14 +47,22 @@ const steps: Step[] = [
 		content: (
 			<>
 				<h3>Add new sheets</h3>
-				{isPlatform('android') && <p color="red">Currently not working on android app</p>}
+				<span>
+					<p color="red">Warning: </p>
+					<p>Right now, the app is only using the first worksheet</p>
+				</span>
 			</>
 		),
 		target: 'ion-button.new-sheet',
 		placement: 'top',
 	},
 	{
-		content: <h1>End</h1>,
+		content: (
+			<div>
+				<h1>End</h1>
+				<p>Have fun</p>
+			</div>
+		),
 		target: 'body',
 		placement: 'center',
 	},
@@ -85,6 +97,7 @@ export const JoyrideRoute: React.FC<JoyrideRouteProps> = (_props: JoyrideRoutePr
 		} else if (status === STATUS.SKIPPED) {
 			setStepIndex(steps.length - 1);
 			setRun(true);
+			history.push('/select');
 		} else if (type === EVENTS.STEP_BEFORE && index === 0) {
 			setSHidden(false);
 		} else if (type === EVENTS.STEP_AFTER) {
@@ -116,7 +129,14 @@ export const JoyrideRoute: React.FC<JoyrideRouteProps> = (_props: JoyrideRoutePr
 	};
 	return (
 		<>
-			<SelectSheet className="step-1" hidden={sHidden} />
+			<SelectSheet
+				className="step-1"
+				hidden={sHidden}
+				predefinedSheets={[
+					{ name: 'English German Vocabulary', id: '' + Math.floor(Math.random() * Math.pow(10, 9)) },
+					{ name: 'Chemistry Elements', id: '' + Math.floor(Math.random() * Math.pow(10, 9)) },
+				]}
+			/>
 			<Joyride
 				steps={steps}
 				callback={handleJoyrideCallback}
