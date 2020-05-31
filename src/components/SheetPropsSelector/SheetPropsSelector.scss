@@ -1,0 +1,25 @@
+ion-modal.sheet-props-modal {
+	div.ion-page {
+		ion-title {
+			text-align: center;
+		}
+		div {
+			margin: 1.5em;
+			ion-checkbox {
+				margin-right: 1rem;
+			}
+
+			ion-input.has-focus {
+				--background: var(--ion-color-light);
+				input::-webkit-inner-spin-button {
+					display: block;
+					-webkit-appearance: none;
+					appearance: none;
+				}
+			}
+		}
+		ion-button {
+			margin: 1em;
+		}
+	}
+}

@@ -1,52 +1,161 @@
-import { IonModal, IonTitle, IonLabel, IonInput, IonCheckbox } from '@ionic/react';
-import React, { useMemo, useEffect, useState } from 'react';
-import { useStore } from 'react-redux';
-import { newSheetProps } from '../../services/store/savedSheets';
-import './SheetPropsSelector.scss';
+import { IonButton, IonCheckbox, IonInput, IonLabel, IonModal, IonTitle, IonText, IonIcon } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { useSelector, useStore } from 'react-redux';
+import { newSheetProps } from '../../services/store/savedSheets';
 import { useAsyncEffect } from '../../tools';
 import Loading from '../Loading';
+import './SheetPropsSelector.scss';
+import { arrowBack } from 'ionicons/icons';
 
 interface SheetPropsSelectorProps {
-	name: string;
-	id: string;
+	spreadsheet?: GoogleSpreadsheet;
+	id?: string;
 	worksheetIndex: number;
 	isOpen: boolean;
+	afterSave?: () => void;
+	onBack?: () => void;
+}
+
+interface WorksheetInfo {
+	columnCount: number;
+	rowCount: number;
+	worksheetName: string;
 }
 
 export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: SheetPropsSelectorProps) => {
 	const store = useStore();
 	const save = newSheetProps(store);
+	const savedInfo = useSelector((state: ReduxState) =>
+		Object.assign(
+			{
+				cols: [0, 1],
+				amount: 20,
+				checked: true,
+			},
+			(state.savedSheets.sheets || {})[props.id],
+		),
+	);
+	const auth = useSelector((state: ReduxState) => state.google);
 
-	const [info, setInfo] = useState(null);
-	const spreadsheet = useMemo(() => new GoogleSpreadsheet(props.id), [props]);
+	const frontRef = useRef<HTMLIonInputElement>();
+	const backRef = useRef<HTMLIonInputElement>();
+	const firstRef = useRef<HTMLIonCheckboxElement>();
+	const amountRef = useRef<HTMLIonInputElement>();
 
-	const [amount, setAmount] = useState(20);
+	const [info, setInfo] = useState<WorksheetInfo>(null);
+	const spreadsheet = useMemo(() => {
+		if (props.id) {
+			return new GoogleSpreadsheet(props.id);
+		} else {
+			return props.spreadsheet;
+		}
+	}, [props.spreadsheet, props.id]);
+
+	const [error, setError] = useState('');
 
 	useAsyncEffect(async () => {
-		await spreadsheet.loadInfo();
+		if (!props.isOpen) {
+			return;
+		}
+		if (!props.spreadsheet) {
+			await spreadsheet.useRawAccessToken(auth.accessToken);
+			await spreadsheet.loadInfo();
+		}
 		const worksheet = spreadsheet.sheetsByIndex[props.worksheetIndex];
-		const info = {
+		console.log('Worksheet', spreadsheet.sheetCount);
+		const info: WorksheetInfo = {
 			columnCount: worksheet.columnCount,
+			rowCount: worksheet.rowCount,
+			worksheetName: worksheet.title,
 		};
 		setInfo(info);
-	}, [spreadsheet]);
+	}, [spreadsheet, props.worksheetIndex]);
 
 	if (!info) {
 		return <Loading>Loading spreadsheet info</Loading>;
 	}
 
+	const onClick = (): void => {
+		const front = frontRef.current.value.valueOf() as number;
+		const back = backRef.current.value.valueOf() as number;
+		if (front !== back) {
+			save({
+				name: spreadsheet.title,
+				worksheetIndex: props.worksheetIndex,
+				amount: amountRef.current.value.valueOf() as number,
+				cols: [front, back],
+				id: spreadsheet.spreadsheetId,
+				includeFirstRow: firstRef.current.checked,
+			});
+			setError('');
+		} else {
+			setError('Front cannot be the same as back');
+		}
+	};
+
+	const clamp = (min: number, max: number) => (ev: CustomEvent<void>): void => {
+		const target = ev.target as any;
+		console.log(ev);
+
+		if (parseInt(target.value) > max) {
+			target.value = max;
+		} else if (parseInt(target.value) < min) {
+			target.value = min;
+		}
+	};
+
 	return (
-		<IonModal isOpen={props.isOpen}>
-			<IonTitle>{props.name}</IonTitle>
-			<IonLabel position="stacked">Front</IonLabel>
-			<IonInput type="number" max={info.columnCount} />
-			<IonLabel position="stacked">Back</IonLabel>
-			<IonInput type="number" max={info.columnCount} />
+		<IonModal isOpen={props.isOpen} cssClass="sheet-props-modal">
+			<IonButton onClick={props.onBack}>
+				<IonIcon icon={arrowBack} />
+				Back
+			</IonButton>
+			<IonTitle>{spreadsheet.title + ' - ' + info.worksheetName}</IonTitle>
 			<div>
-				<IonCheckbox checked />
+				<IonLabel position="stacked">Front</IonLabel>
+				<IonInput
+					type="number"
+					max={'' + info.columnCount}
+					min="0"
+					value={savedInfo.cols[0]}
+					ref={frontRef}
+					// onIonChange={clamp(0, info.columnCount - 1)}
+					onIonBlur={clamp(0, info.columnCount - 1)}
+				/>
+			</div>
+			<div>
+				<IonLabel position="stacked">Back</IonLabel>
+				<IonInput
+					type="number"
+					max={'' + info.columnCount}
+					min="0"
+					value={savedInfo.cols[1]}
+					ref={backRef}
+					// onIonChange={clamp(0, info.columnCount - 1)}
+					onIonBlur={clamp(0, info.columnCount - 1)}
+				/>
+			</div>
+			<div>
+				<IonCheckbox checked ref={firstRef} />
 				<IonLabel>Include first row?</IonLabel>
 			</div>
+			<div>
+				<IonLabel position="stacked">Amount to practice</IonLabel>
+				<IonInput
+					type="number"
+					max={'' + info.rowCount}
+					min="0"
+					value={savedInfo.amount}
+					ref={amountRef}
+					// onIonChange={clamp(0, info.rowCount - 1)}
+					onIonBlur={clamp(0, info.rowCount - 1)}
+				/>
+			</div>
+			{error && <IonText color="danger">{error}</IonText>}
+			<IonButton color="success" onClick={onClick}>
+				Okay
+			</IonButton>
 		</IonModal>
 	);
 };

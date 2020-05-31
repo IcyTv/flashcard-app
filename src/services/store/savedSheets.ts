@@ -19,24 +19,18 @@ export const saveNamesStore = ({ dispatch }: Store, names: string[]): void => {
 	dispatch(saveNames(names));
 };
 
-export const newSheetProps = ({ dispatch }: Store) => (sheetProps: ReduxState['savedSheets']['sheets'][0]): void => {
+export const newSheetProps = ({ dispatch }: Store) => (
+	sheetProps: ReduxState['savedSheets']['sheets'][0][0] & { id: string; worksheetIndex: number },
+): void => {
 	dispatch({ type: types.ADD_SHEET, payload: sheetProps });
 };
 
-export const removeSheetProps = ({ dispatch, getState }: Store<ReduxState, AnyAction>) => (id: string | number) => {
-	if (typeof id === 'number') {
-		dispatch({ type: types.REMOVE_SHEET, payload: id });
-	} else {
-		const sheets = getState().savedSheets.sheets.map((v) => v.id === id);
-		if (sheets.indexOf(true) < 0) {
-			throw new Error('No sheet with that id present');
-		}
-		dispatch({ type: types.REMOVE_SHEET, payload: sheets.indexOf(true) });
-	}
+export const removeSheetProps = ({ dispatch }: Store<ReduxState, AnyAction>) => (id: string): void => {
+	dispatch({ type: types.REMOVE_SHEET, payload: id });
 };
 
 const reducer = (
-	state: ReduxState['savedSheets'] = { names: [], sheets: [] },
+	state: ReduxState['savedSheets'] = { names: [], sheets: {} },
 	{ type, payload }: { type: string; payload: unknown },
 ): ReduxState['savedSheets'] => {
 	switch (type) {
@@ -46,12 +40,20 @@ const reducer = (
 				names: payload as string[],
 			};
 		case types.ADD_SHEET:
-			state.sheets.push(payload as any);
+			const id = (payload as { id: string }).id;
+			const index = (payload as { worksheetIndex: number }).worksheetIndex;
+			delete payload['id'];
+			delete payload['worksheetIndex'];
+			const tmp = state.sheets[id] || [];
+			tmp[index] = payload as any;
 			return {
 				...state,
+				sheets: {
+					[id]: { ...tmp },
+				},
 			};
 		case types.REMOVE_SHEET:
-			delete state.sheets[payload as number];
+			delete state.sheets[payload as string];
 			return {
 				...state,
 			};

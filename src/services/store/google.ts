@@ -49,6 +49,7 @@ export default function authReducer(
 			expiresIn: Date.now() + 60 * 60 * 1000,
 		};
 	} else if (type === types.ACCESS_REFRESH) {
+		console.log('Access Refresh', Date.now() + 60 * 60 * 1000);
 		return {
 			...state,
 			accessToken: payload,

@@ -83,6 +83,7 @@ const FlashCardsPageComponent: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log('Refresh effect triggered', googleAccess.expiresIn - Date.now() < 0);
 		if (googleAccess.expiresIn - Date.now() < 0) {
 			refreshToken(googleAccess.tokenId, store);
 		}
