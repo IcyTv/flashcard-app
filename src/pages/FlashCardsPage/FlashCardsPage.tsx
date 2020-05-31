@@ -82,6 +82,12 @@ const FlashCardsPageComponent: React.FC = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (googleAccess.expiresIn - Date.now() < 0) {
+			refreshToken(googleAccess.tokenId, store);
+		}
+	}, [store, googleAccess]);
+
 	if (!isAuth) {
 		return <Loading>Loading authentication</Loading>;
 	}
@@ -107,7 +113,7 @@ const FlashCardsPageComponent: React.FC = () => {
 	if (errors) {
 		if (errors.indexOf('401') >= 0 && !refreshErrors && !isRefreshing) {
 			console.log('refreshing');
-			refreshToken(googleAccess.tokenId, store, setRefreshErrors);
+			// refreshToken(googleAccess.tokenId, store, setRefreshErrors);
 			return <Loading>Refreshing access</Loading>;
 		} else if (isRefreshing) {
 			console.log(isRefreshing ? 'refreshing!' : 'not refreshing');

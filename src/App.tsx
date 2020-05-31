@@ -24,8 +24,13 @@ import Router from './pages/Router';
 import firebase, { analytics, auth } from './services/firebase';
 import createStore from './services/store/createStore';
 /* Theme variables */
+import { Plugins } from '@capacitor/core';
 import './theme/variables.scss';
 import Loading from './components/Loading';
+import { isPlatform } from '@ionic/core';
+
+const { SplashScreen } = Plugins;
+
 const App: React.FC = () => {
 	// console.log("RERENDERING APP", store.getState())
 
@@ -38,6 +43,14 @@ const App: React.FC = () => {
 			}
 		});
 	}, []);
+
+	// useEffect(() => {
+	// 	if (isPlatform('mobile')) {
+	// 		SplashScreen.show({
+	// 			showDuration: 10000,
+	// 		});
+	// 	}
+	// });
 
 	const { persistor, store } = createStore({});
 

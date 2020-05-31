@@ -93,7 +93,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 			browser.on('exit').subscribe(() => {
 				console.log('exited browser');
 				if (!errors) {
-					history.push('/select');
+					history.push('/create');
 				}
 			});
 
@@ -132,18 +132,19 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 		}
 	}, [firebase]);
 
+	useEffect(() => {
+		if (googleAcccess.expiresIn - Date.now() < 0) {
+			refreshToken(googleAcccess.tokenId, store);
+			setForceReload(forceReload + 1);
+		}
+	}, [store, googleAcccess]);
+
 	firebase.auth().onAuthStateChanged(() => {
 		setLoaded(true);
 	});
 
 	if (!isLoaded || !isAuth) {
 		return <Loading>Waiting for storage</Loading>;
-	}
-
-	if (googleAcccess.expiresIn - Date.now() < 0) {
-		refreshToken(googleAcccess.tokenId, store);
-		console.log('Refreshing access');
-		return <Loading>Refreshing access to google</Loading>;
 	}
 
 	if (doneLoading) {
@@ -157,7 +158,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 				(window as any).webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify({ my_message: 'close' }));
 			}
 		} else {
-			return <Redirect to="/select" />;
+			return <Redirect to="/create" />;
 		}
 	}
 

@@ -1,27 +1,34 @@
-ion-list.create-list {
-	div {
-		margin-left: auto;
+ion-content.create-sheet {
+	ion-title {
+		font-size: xx-large;
+		text-align: center;
+		margin: 3rem;
+	}
+	ion-card {
+		margin: 1rem;
+		ion-card-content {
+			text-align: center;
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: center !important;
+			justify-content: center !important;
+			margin: 0.5rem;
 
-		ion-button {
-			&.add {
-				--color-hover: blue;
-				--color-focused: blue;
-				--color-activated: darkblue;
+			ion-button {
+				width: 18em;
+				p {
+					margin-left: auto;
+				}
 			}
+		}
+	}
+}
 
-			&.edit {
-				--color-hover: lightGreen;
-				--color-focused: lightGreen;
-				--color-activated: green;
-			}
-
-			--background: transparent;
-			--background-hover: none;
-			--box-shadow: none;
-			--background-activated: none;
-			--background-activated-opacity: 0;
-			--background-focused: none;
-			--color: var(--ion-color-dark);
+@media screen and(min-width: 600px) {
+	ion-content.create-sheet {
+		ion-card {
+			margin-right: 20%;
+			margin-left: 20%;
 		}
 	}
 }

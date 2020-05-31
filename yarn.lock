@@ -2295,14 +2295,14 @@
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
 
-"@types/gapi.client.sheets@^4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@types/gapi.client.sheets/-/gapi.client.sheets-4.0.6.tgz#6773eaec7809963fdeea0178019f1a65f7fe9759"
-  integrity sha512-OR80WBtSfr3jWny234a5VY0bNHOlZN28HgpOaBUcD3hRMqztkHe++Mvq2oH3eFYA9zrvtFpj5rhxbuPeSiZXjw==
+"@types/gapi.client.sheets@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client.sheets/-/gapi.client.sheets-4.0.8.tgz#8f5be4f78a5b2b5eb381bbc6ee0a64eab24acadf"
+  integrity sha512-AAfwJV/TJQ4BH4lGrVlBZ2MID97hgYxd7dDb1yWkFPYhtMo/FEfal22w9yollJHtEiJi7rtZAGDGHAGw/s//CQ==
   dependencies:
     "@types/gapi.client" "*"
 
-"@types/gapi.client@*":
+"@types/gapi.client@*", "@types/gapi.client@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@types/gapi.client/-/gapi.client-1.0.3.tgz#6e61f4bd210440208c1ca8a64d1d1a0263e8f9ff"
   integrity sha512-XhJ45zhedkqXln75Y0XZAFmHFHNu6zCGe9EyPiu5a20Q7XnsEENR3dnUqbYvp7w9e6vjXW+uKGqb3z/ezZijDg==

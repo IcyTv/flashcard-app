@@ -6,6 +6,8 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import JoyrideRoute from '../JoyrideRoute';
 import { useSelector } from 'react-redux';
 import { ThemeDetection } from '@ionic-native/theme-detection';
+import { SplashScreen } from '@capacitor/core';
+import CreateNewSheet from '../CreateNewSheet';
 // import AppUrlListener from './components/AppUrlListener';
 const AppUrlListener = React.lazy(() => import('../../components/AppUrlListener'));
 // import { Header } from './components/Header/Header';
@@ -38,6 +40,8 @@ const Menu = React.lazy(() => import('../../components/Menu'));
 const SelectSheet = React.lazy(() => import('../SelectSheet'));
 // import Settings from './pages/Settings'
 const Settings = React.lazy(() => import('../Settings'));
+// import CreateSheet from './pages/CreateSheet'
+const CreateSheet = React.lazy(() => import('../CreateSheet'));
 
 interface RouterProps {}
 
@@ -51,6 +55,7 @@ const isDarkmode = async (): Promise<boolean> => {
 
 export const Router: React.FC<RouterProps> = (props) => {
 	const theme = useSelector((state: ReduxState) => state.settings.theme);
+	SplashScreen.hide();
 
 	useEffect(() => {
 		if (theme === 'dark') {
@@ -88,6 +93,15 @@ export const Router: React.FC<RouterProps> = (props) => {
 				<IonRouterOutlet id="main-content" animated>
 					<Switch>
 						<ProtectedRoute path="/create" exact>
+							<CreateSheet />
+						</ProtectedRoute>
+						<ProtectedRoute path="/create/new" exact>
+							<CreateNewSheet />
+						</ProtectedRoute>
+						{/* <ProtectedRoute path="/create/template" exact>
+							<CreateNewSheet />
+						</ProtectedRoute> */}
+						<ProtectedRoute path="/create/picker" exact>
 							<CreateSheetWithPicker />
 						</ProtectedRoute>
 						<ProtectedRoute path="/select" exact>

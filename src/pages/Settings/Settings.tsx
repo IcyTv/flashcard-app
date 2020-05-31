@@ -123,7 +123,7 @@ export const Settings: React.FC<SettingsProps> = () => {
 				<IonList lines="none">
 					<IonItem>
 						<IonLabel>Theme</IonLabel>
-						<IonSelect value={theme} onIonChange={onThemeChange}>
+						<IonSelect value={theme} onIonChange={onThemeChange} interface="popover">
 							<IonSelectOption value="light">Light</IonSelectOption>
 							<IonSelectOption value="dark">Dark</IonSelectOption>
 							<IonSelectOption value="auto">Auto</IonSelectOption>

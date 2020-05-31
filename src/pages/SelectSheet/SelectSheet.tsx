@@ -139,15 +139,17 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		}
 	}, [downloaded]);
 
+	useEffect(() => {
+		if (googleAccess.expiresIn - Date.now() < 0) {
+			refreshToken(googleAccess.tokenId, store);
+			setForceReload(!forceReload);
+		}
+	}, [store, googleAccess]);
+
 	//TODO Refresher
 
 	if (!isAuth) {
 		return <Loading>Loading authentication</Loading>;
-	}
-
-	if (googleAccess.expiresIn - Date.now() < 0) {
-		console.log('Refreshing');
-		refreshToken(googleAccess.tokenId, store);
 	}
 
 	if (redirectTo !== '') {

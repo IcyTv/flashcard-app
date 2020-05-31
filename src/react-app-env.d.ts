@@ -1,13 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /// <reference types="react-scripts" />
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface GoogleAuth {
 	accessToken: string;
 	tokenId: string;
-}
-
-interface Auth {
-	firebase: firebase.auth.UserCredential;
-	google: GoogleAuth;
 }
 
 interface ReduxState {
