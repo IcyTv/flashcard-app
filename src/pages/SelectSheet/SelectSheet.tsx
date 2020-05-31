@@ -21,6 +21,7 @@ import {
 	pencilOutline,
 	remove,
 	trashOutline,
+	settingsOutline,
 } from 'ionicons/icons';
 import sizeof from 'object-sizeof';
 import 'rc-tooltip/assets/bootstrap_white.css';
@@ -314,6 +315,12 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 										handler: actionHandler(v.id, i, 'pay'),
 								  };
 							const buttons = [];
+							buttons.push({
+								text: 'Settings',
+								icon: settingsOutline,
+								handler: actionHandler(v.id, i, 'settings'),
+								cssClass: 'settings',
+							});
 							buttons.push({
 								text: 'Delete',
 								icon: trashOutline,

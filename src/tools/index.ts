@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useAwait = <T>(func: (...args: any) => Promise<T>, ...args: any): T => {
 	const [callback, setCallback] = useState(null);
@@ -6,4 +6,10 @@ export const useAwait = <T>(func: (...args: any) => Promise<T>, ...args: any): T
 		setCallback(v);
 	});
 	return callback;
+};
+
+export const useAsyncEffect = (func: () => unknown, deps?: React.DependencyList): void => {
+	useEffect(() => {
+		func();
+	}, deps);
 };

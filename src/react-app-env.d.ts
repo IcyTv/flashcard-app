@@ -17,6 +17,13 @@ interface ReduxState {
 	};
 	savedSheets?: {
 		names: string[];
+		sheets: {
+			name: string;
+			id: string;
+			cols: [number, number];
+			includeFirstRow: boolean;
+			amount: number;
+		}[];
 	};
 	google?: {
 		accessToken: string;

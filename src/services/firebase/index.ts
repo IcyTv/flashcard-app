@@ -22,5 +22,8 @@ auth.useDeviceLanguage();
 export const analytics = firebase.analytics();
 analytics.setAnalyticsCollectionEnabled(process.env.NODE_ENV !== 'development');
 
-firebase.firestore();
+export const firestore = firebase.firestore();
+firestore.enablePersistence({
+	synchronizeTabs: true,
+});
 export default firebase;
