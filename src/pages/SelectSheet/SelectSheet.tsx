@@ -1,3 +1,4 @@
+import { Plugins } from '@capacitor/core';
 import { DocumentData, QueryDocumentSnapshot, QuerySnapshot } from '@firebase/firestore-types';
 import { ActionSheetButton, isPlatform, RefresherEventDetail } from '@ionic/core';
 import {
@@ -7,38 +8,38 @@ import {
 	IonIcon,
 	IonItem,
 	IonList,
-	IonSpinner,
-	IonText,
 	IonRefresher,
 	IonRefresherContent,
+	IonSpinner,
+	IonText,
 } from '@ionic/react';
 import {
 	arrowDown,
+	cashOutline,
 	closeOutline,
 	ellipsisVertical,
 	pencilOutline,
 	remove,
 	trashOutline,
-	cashOutline,
 } from 'ionicons/icons';
 import sizeof from 'object-sizeof';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import React, { useEffect, useState } from 'react';
+import { Flip, Zoom } from 'react-awesome-reveal';
 import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { Redirect, useHistory } from 'react-router-dom';
+import { AnyAction } from 'redux';
 import { downloadSpreadsheet } from '../../services/download';
 import { analytics } from '../../services/firebase';
 import { refreshToken, wait } from '../../services/firebase/auth';
-import { deleteSavedStore } from '../../services/store/downloader';
-import { refreshAccess } from '../../services/store/google';
-import './SelectSheet.scss';
 import { useNetwork } from '../../services/network';
-import { saveNamesStore } from '../../services/store/savedSheets';
-import { Flip, Zoom } from 'react-awesome-reveal';
-import { Plugins } from '@capacitor/core';
-import { AnyAction } from 'redux';
 import { setFirstTime } from '../../services/store/debug';
+import { deleteSavedStore } from '../../services/store/downloader';
+import { saveNamesStore } from '../../services/store/savedSheets';
+import Hammer from 'hammerjs';
+import './SelectSheet.scss';
+
 const { Browser } = Plugins;
 
 // import { Loading } from '../../components/Loading/Loading';
@@ -104,6 +105,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 	const [isAuth, setIsAuth] = useState(false);
 
 	const [forceReload, setForceReload] = useState(false);
+	const [hammer, setHammer] = useState(false);
 
 	const online = useNetwork();
 	const history = useHistory();
@@ -143,6 +145,17 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 			setForceReload(!forceReload);
 		}
 	}, [store, googleAccess]);
+
+	useEffect(() => {
+		const sIList = document.getElementsByClassName('sheet-list-item');
+		for (let n = 0; n < sIList.length; n++) {
+			new Hammer(sIList.item(n) as HTMLElement).on('press', (ev) => {
+				setHammer(true);
+				setActionSheet(n);
+				ev.preventDefault();
+			});
+		}
+	});
 
 	//TODO Refresher
 
@@ -212,10 +225,14 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 	}
 
 	const onClick = (id: string, name: string) => (): void => {
-		setSelected({
-			id: id,
-			name: name,
-		});
+		if (!hammer) {
+			setSelected({
+				id: id,
+				name: name,
+			});
+		} else {
+			setHammer(false);
+		}
 	};
 
 	const onDelete = (id: string, name: string, index: number): void => {
@@ -319,7 +336,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 								role: 'cancel',
 							});
 							return (
-								<IonItem key={'parsed-' + v.id}>
+								<IonItem key={'parsed-' + v.id} className="sheet-list-item">
 									<IonButton onClick={onClick(v.id, v.name)} className="list-item-sheet">
 										<p>{v.name}</p>{' '}
 										{downloading === v.id && <IonSpinner name="crescent" color="primary" />}
