@@ -2,56 +2,64 @@ $border-radius: 1rem;
 $background-color: var(--ion-color-light);
 
 body {
-    font-size: 100%;
+	font-size: 100%;
 }
 
 .flashcard {
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    width: 60%;
-    height: 70%;
-    flex-direction: column;
-    // background-color: var(--ion-color-light);
-    background-color: inherit;
+	// display: flex;
+	// justify-content: center;
+	// align-items: center;
+	width: 60%;
+	height: 70%;
+	flex-direction: column;
+	// background-color: var(--ion-color-light);
+	background-color: inherit;
 
-    .react-card-flip {
-        width: 100%;
-        height: 100%;
-        border-radius: 2px;
-        margin: 1rem;
-        background-color: inherit;
-        font-size: 1rem;
+	.react-card-flip {
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+		margin: 1rem;
+		background-color: inherit;
+		font-size: 1rem;
 
-        .react-card-flipper>div {
-            background-color: $background-color;
-            border-radius: $border-radius;
-        }
+		.react-card-flipper > div {
+			background-color: $background-color;
+			border-radius: $border-radius;
+		}
 
-        ion-button {
-            --background: var(--ion-color-light);
-            --border-radius: 1rem;
-            --box-shadow: 0;
-            --padding-start: 2vw;
-            --padding-top: 2vh;
-            --padding-end: 2vw;
-            --padding-bottom: 2vh;
-            --color: var(--ion-color-light-contrast);
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            word-wrap: break-word;
-            white-space: normal;
-            font-size: 120%;
-        }
-    }
+		ion-button {
+			--background: var(--ion-color-light);
+			--border-radius: 1rem;
+			--box-shadow: 0;
+			--padding-start: 2vw;
+			--padding-top: 2vh;
+			--padding-end: 2vw;
+			--padding-bottom: 2vh;
+			--color: var(--ion-color-light-contrast);
+			margin: 0;
+			width: 100%;
+			height: 100%;
+			word-wrap: break-word;
+			white-space: normal;
+			font-size: 120%;
+		}
+	}
 
-    ion-button.wrong {
-        --background: red;
-    }
+	ion-button.wrong {
+		--background: red;
+	}
 
-    ion-button.right {
-        --background: green;
-    }
+	ion-button.right {
+		--background: green;
+	}
+}
 
+@media screen and (max-width: 600px) {
+	.flashcard {
+		width: 94%; //Why 94? Don't ask me...
+		.react-card-flip {
+			margin: 0rem;
+		}
+	}
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import ReactCardFlip from 'react-card-flip';
 import { Plugins, HapticsImpactStyle } from '@capacitor/core';
 import './FlashCard.scss';
+import { isPlatform } from '@ionic/core';
 const { Haptics } = Plugins;
 
 interface FlashCardProps {
@@ -26,9 +27,11 @@ export const FlashCard: React.FC<FlashCardProps> = (props: FlashCardProps) => {
 			<ReactCardFlip infinite isFlipped={flipped}>
 				<IonButton
 					onClick={(): void => {
-						Haptics.impact({
-							style: HapticsImpactStyle.Light,
-						});
+						if (isPlatform('mobile')) {
+							Haptics.impact({
+								style: HapticsImpactStyle.Light,
+							});
+						}
 						setFlipped(!flipped);
 						setShowNew(true);
 					}}
