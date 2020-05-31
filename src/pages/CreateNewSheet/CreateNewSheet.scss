@@ -1,0 +1,75 @@
+ion-content.create-new-sheet-content {
+	ion-card {
+		margin: 1rem;
+		ion-card-header {
+			text-align: center;
+			margin: 1rem;
+			ion-title {
+				font-size: 2rem;
+			}
+		}
+		ion-card-content {
+			text-align: center;
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: center !important;
+			justify-content: center !important;
+			margin: 0.5rem;
+
+			ion-button {
+				width: 18em;
+				p {
+					margin-left: auto;
+				}
+			}
+		}
+	}
+}
+
+ion-modal.new-sheet-modal {
+	div.ion-page {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--ion-color-light-tint);
+		border-radius: 0.5em;
+		--color: var(--ion-color-light-contrast) !important;
+		color: var(--ion-color-light-contrast);
+
+		ion-title {
+			font-size: x-large;
+			margin-top: 3rem;
+		}
+		ion-input {
+			font-size: 1.5em;
+			// text-align: center;
+			&.has-focus {
+				input::placeholder {
+					color: transparent;
+				}
+				--background: var(--ion-color-light);
+				--color: var(--ion-color-light-contrast);
+			}
+		}
+		div {
+			margin: 3rem;
+			// box-shadow: 10px 5px 5px var(--ion-color-light);
+			// border: 4px solid var(--ion-color-light);
+
+			&.name-input-container {
+				display: flex;
+				flex-direction: column;
+				ion-label {
+					margin: 0.4em;
+				}
+			}
+
+			&.checkbox-container {
+				ion-checkbox {
+					margin-right: 1em;
+				}
+			}
+		}
+	}
+}

@@ -43,6 +43,7 @@ declare namespace JSX {
 
 declare global {
 	interface Window {
+		picker?: any;
 		webkit?: {
 			messageHandlers: {
 				cordova_iab: {

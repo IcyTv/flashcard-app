@@ -19,6 +19,7 @@ import fbTypes from 'firebase/app';
 
 declare global {
 	interface Window {
+		picker?: any;
 		webkit?: {
 			messageHandlers: {
 				cordova_iab: {
@@ -131,6 +132,14 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 				});
 		}
 	}, [firebase]);
+
+	useEffect(() => {
+		history.listen(() => {
+			if (window.picker) {
+				window.picker.setVisible(false);
+			}
+		});
+	}, [history]);
 
 	useEffect(() => {
 		if (googleAcccess.expiresIn - Date.now() < 0) {

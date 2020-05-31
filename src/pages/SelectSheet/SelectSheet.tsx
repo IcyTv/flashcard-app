@@ -101,7 +101,6 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 
 	const downloaded = Object.keys(dlSheets).filter((v) => v !== '_persist');
 
-	const [refresh, setRefresh] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
 	const [forceReload, setForceReload] = useState(false);
@@ -110,7 +109,6 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 	const history = useHistory();
 
 	useEffect(() => {
-		console.log('FirstTime triggered');
 		if (store.getState().debug.firstTime) {
 			setFirstTime(store)(false);
 			history.push('/joyride');

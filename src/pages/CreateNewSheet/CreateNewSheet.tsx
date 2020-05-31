@@ -23,6 +23,7 @@ import config from '../../services/googleapis_config.json';
 import { AnyAction } from 'redux';
 import { refreshToken } from '../../services/firebase/auth';
 import { Plugins } from '@capacitor/core';
+import { useFirestore } from 'react-redux-firebase';
 const { Browser } = Plugins;
 
 interface CreateNewSheetProps {}
@@ -97,6 +98,7 @@ const url = 'https://docs.google.com/spreadsheets/u/0/create';
 export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
 	const [loaded, setLoaded] = useState(false);
 	const gAuth = useSelector((state: ReduxState) => state.google);
+	const uid = useSelector((state: ReduxState) => state.firebase.auth.uid);
 	const store = useStore<ReduxState, AnyAction>();
 	const [refreshErr, setRefreshErr] = useState(null);
 	const [success, setSuccess] = useState(null);
@@ -104,6 +106,7 @@ export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
 	const [showModal, setShowModal] = useState(0);
 	const nameRef = useRef<HTMLIonInputElement>();
 	const openAfterRef = useRef<HTMLIonCheckboxElement>();
+	const firestore = useFirestore();
 	// const history = useHistory();
 	// history.push(url);
 	// useEffect(() => {
@@ -157,19 +160,23 @@ export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
 		setShowModal(columnCount);
 	};
 
-	const onIonModal = (type: string) => () => {
+	const onIonModal = (type: string) => (): void => {
 		if (type === 'okay') {
 			const checked = openAfterRef.current.checked;
-			createSheet(
-				gAuth.accessToken,
-				nameRef.current.value as string,
-				showModal,
-				setCreateLoading,
-				setSuccess,
-			).then((v) => {
+			const name = nameRef.current.value as string;
+			createSheet(gAuth.accessToken, name, showModal, setCreateLoading, setSuccess).then((v) => {
 				if (checked) {
 					openInNewTab(`https://docs.google.com/spreadsheets/d/${v.spreadsheetId}/edit`);
 				}
+				if (!uid) {
+					console.error('UID not found');
+					return;
+				}
+				const doc = firestore.collection('users').doc(uid).collection('sheets');
+				doc.doc(v.spreadsheetId).set({
+					name: name,
+					done: [],
+				});
 			});
 
 			setShowModal(0);
@@ -181,14 +188,23 @@ export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
 	// return <Redirect to="/create" />;
 	// return <Redirect to="https://docs.google.com/spreadsheets/u/0/create" />;
 	return (
-		<IonContent>
-			<IonModal isOpen={showModal !== 0}>
+		<IonContent className="create-new-sheet-content">
+			<IonModal isOpen={showModal !== 0} cssClass="new-sheet-modal" onDidDismiss={(): void => setShowModal(0)}>
 				<IonTitle>New Sheet</IonTitle>
-				<IonInput type="text" placeholder="name" ref={nameRef} />
-				<IonCheckbox checked ref={openAfterRef} id="open-after-checkbox" />
-				<IonLabel>Edit after creation?</IonLabel>
-				<IonButton onClick={onIonModal('okay')}>Okay</IonButton>
-				<IonButton onClick={onIonModal('cancel')}>Cancel</IonButton>
+				<div className="name-input-container">
+					<IonLabel className="name-label" position="stacked">
+						Name
+					</IonLabel>
+					<IonInput type="text" placeholder="Exaple Name" ref={nameRef} maxlength={22} />
+				</div>
+				<div className="checkbox-container">
+					<IonCheckbox checked ref={openAfterRef} id="open-after-checkbox" />
+					<IonLabel>Edit after creation?</IonLabel>
+				</div>
+				<div className="btn-container">
+					<IonButton onClick={onIonModal('okay')}>Okay</IonButton>
+					<IonButton onClick={onIonModal('cancel')}>Cancel</IonButton>
+				</div>
 			</IonModal>
 			<IonCard>
 				<IonCardHeader>

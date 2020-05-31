@@ -38,10 +38,10 @@ export const CreateSheet: React.FC = (props) => {
 						<IonIcon icon={addOutline} />
 						<p>Create new sheet</p>
 					</IonButton>
-					<IonButton onClick={redirectTo('/create/template')} color="warning" disabled>
+					{/* <IonButton onClick={redirectTo('/create/template')} color="warning" disabled>
 						<IonIcon icon={documentOutline} />
 						<p>Create from template</p>
-					</IonButton>
+					</IonButton> */}
 				</IonCardContent>
 			</IonCard>
 		</IonContent>

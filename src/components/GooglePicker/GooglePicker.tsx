@@ -135,6 +135,8 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		picker.setVisible(true);
 	}
 
+	window.picker = picker;
+
 	return (
 		<div>
 			{(props.children &&
