@@ -3,6 +3,7 @@
 	"sideEffects": false,
 	"version": "0.0.1",
 	"private": true,
+	"license": "Attribution-NonCommercial-NoDerivatives 4.0 International",
 	"dependencies": {
 		"@buttercup/googledrive-client": "^0.8.0",
 		"@capacitor/android": "2.0.2",

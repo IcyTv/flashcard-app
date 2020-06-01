@@ -66,7 +66,7 @@ export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: Worksheet
 	};
 
 	return (
-		<IonModal isOpen={props.isOpen} onDidDismiss={props.onDismiss}>
+		<IonModal isOpen={props.isOpen} onDidDismiss={props.onDismiss} swipeToClose>
 			<div className="worksheet-select">
 				<IonTitle>{spreadsheet.title}</IonTitle>
 				<p>Select your worksheet</p>

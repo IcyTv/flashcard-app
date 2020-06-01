@@ -123,7 +123,7 @@ export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
 		if (gAuth.expiresIn - Date.now() < 0) {
 			refreshToken(gAuth.tokenId, store, setRefreshErr);
 		}
-	}, [store, gAuth]);
+	}, [gAuth]);
 
 	useEffect(() => {
 		if (loaded) {

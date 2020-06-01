@@ -7,7 +7,7 @@ import 'firebase/database';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyA4KzXo_KtFruElIAlAfvM2ulNyqiuPpds',
-	authDomain: 'flashcards-1588528687957.firebaseapp.com',
+	authDomain: 'flashcards.icytv.de',
 	databaseURL: 'https://flashcards-1588528687957.firebaseio.com',
 	projectId: 'flashcards-1588528687957',
 	storageBucket: 'flashcards-1588528687957.appspot.com',

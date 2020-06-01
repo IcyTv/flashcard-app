@@ -98,7 +98,7 @@ const FlashCardsPageComponent: React.FC = () => {
 		if (googleAccess.expiresIn - Date.now() < 0) {
 			refreshToken(googleAccess.tokenId, store);
 		}
-	}, [store, googleAccess]);
+	}, [googleAccess]);
 
 	if (!isAuth) {
 		return <Loading>Loading authentication</Loading>;

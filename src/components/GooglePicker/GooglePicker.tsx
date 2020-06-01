@@ -61,7 +61,7 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		if (auth.expiresIn - Date.now() < 0) {
 			refreshToken(auth.tokenId, store);
 		}
-	}, [store, auth]);
+	}, [auth]);
 
 	console.log('picker gaccess', auth);
 

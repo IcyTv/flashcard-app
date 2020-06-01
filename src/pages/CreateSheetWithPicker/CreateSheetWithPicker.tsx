@@ -146,7 +146,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 			refreshToken(googleAcccess.tokenId, store);
 			setForceReload(forceReload + 1);
 		}
-	}, [store, googleAcccess]);
+	}, [googleAcccess]);
 
 	firebase.auth().onAuthStateChanged(() => {
 		setLoaded(true);

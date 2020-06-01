@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import { ThemeDetection } from '@ionic-native/theme-detection';
 import { SplashScreen } from '@capacitor/core';
 import CreateNewSheet from '../CreateNewSheet';
+import TermsAndConditions from '../TermsAndConditions';
+import PrivacyPolicy from '../PrivacyPolicy';
 // import AppUrlListener from './components/AppUrlListener';
 const AppUrlListener = React.lazy(() => import('../../components/AppUrlListener'));
 // import { Header } from './components/Header/Header';
@@ -130,6 +132,8 @@ export const Router: React.FC<RouterProps> = (props) => {
 						/>
 						<Route path="/settings" component={Settings} exact />
 						<Route path="/joyride" component={JoyrideRoute} exact />
+						<Route path="/legal/tos" component={TermsAndConditions} />
+						<Route path="/legal/privacy" component={PrivacyPolicy} />
 						<Route path="/test" component={Test} exact />
 						<Route component={NotFound} />
 					</Switch>

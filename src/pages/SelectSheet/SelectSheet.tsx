@@ -153,7 +153,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 			refreshToken(googleAccess.tokenId, store);
 			setForceReload(!forceReload);
 		}
-	}, [store, googleAccess]);
+	}, [googleAccess]);
 
 	useEffect(() => {
 		const sIList = document.getElementsByClassName('sheet-list-item');
@@ -426,7 +426,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 									handler: actionHandler(v.id, i, 'edit'),
 									cssClass: 'edit',
 								});
-								buttons.push(dlBtn);
+								// buttons.push(dlBtn); //TODO Reimplement download with worksheets
 							}
 							buttons.push({
 								text: 'Cancel',
