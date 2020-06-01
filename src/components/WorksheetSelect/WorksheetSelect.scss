@@ -1,11 +1,24 @@
-ion-modal.worksheet-select {
-	.ion-page {
-		ion-title {
-			text-align: center;
-		}
-		ion-list {
-			ion-item {
-				cursor: pointer;
+ion-modal {
+	.modal-wrapper {
+		.ion-page {
+			display: inline-block;
+			height: auto;
+			div.worksheet-select {
+				height: fit-content;
+				ion-title {
+					margin: 1.5rem;
+					text-align: center;
+				}
+				p {
+					text-align: center;
+					width: 100% !important;
+				}
+				ion-list {
+					margin: 1rem;
+					ion-item {
+						cursor: pointer;
+					}
+				}
 			}
 		}
 	}

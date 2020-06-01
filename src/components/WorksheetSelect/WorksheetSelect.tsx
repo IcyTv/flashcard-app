@@ -28,7 +28,6 @@ export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: Worksheet
 	}, [props.id]);
 
 	const spreadsheet = useMemo(() => {
-		console.log('memo', props.id);
 		if (props.id) {
 			return new GoogleSpreadsheet(props.id);
 		} else {
@@ -38,11 +37,9 @@ export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: Worksheet
 
 	useAsyncEffect(async () => {
 		if (props.id) {
-			console.log('loading...');
 			await spreadsheet.useRawAccessToken(accessToken);
 			await spreadsheet.loadInfo();
 			setEffectTriggered(true);
-			console.log('loading done');
 		} else if (props.spreadsheet) {
 			setEffectTriggered(true);
 		}
@@ -60,30 +57,29 @@ export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: Worksheet
 		);
 	}
 
-	console.log(!props.isOpen || !effectTriggered, props.isOpen, effectTriggered);
-
 	if (!props.isOpen || !effectTriggered) {
 		return null;
 	}
 
 	const onClick = (id: number) => (): void => {
-		console.log('Clicked', id);
 		props.onSelect(id);
 	};
 
 	return (
-		<IonModal isOpen={props.isOpen} cssClass="worksheet-select" onDidDismiss={props.onDismiss}>
-			<IonTitle>{spreadsheet.title}</IonTitle>
-			<IonText>Select your worksheet</IonText>
-			<IonList>
-				{spreadsheet.sheetsByIndex.map((v) => {
-					return (
-						<IonItem onClick={onClick(v.index)} key={'worksheet-' + v.sheetId + '-' + v.index}>
-							{v.title}
-						</IonItem>
-					);
-				})}
-			</IonList>
+		<IonModal isOpen={props.isOpen} onDidDismiss={props.onDismiss}>
+			<div className="worksheet-select">
+				<IonTitle>{spreadsheet.title}</IonTitle>
+				<p>Select your worksheet</p>
+				<IonList>
+					{spreadsheet.sheetsByIndex.map((v) => {
+						return (
+							<IonItem onClick={onClick(v.index)} key={'worksheet-' + v.sheetId + '-' + v.index}>
+								{v.title}
+							</IonItem>
+						);
+					})}
+				</IonList>
+			</div>
 		</IonModal>
 	);
 };

@@ -166,11 +166,6 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		}
 	});
 
-	useEffect(() => {
-		if (worksheetSelectIsOpen) {
-		}
-	}, [worksheetSelectIsOpen]);
-
 	//TODO Refresher
 
 	if (!isAuth) {
@@ -323,11 +318,19 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		setAction(ev);
 	};
 
-	const onDismiss = (): void => {
+	const onDismissWorksheet = (): void => {
 		setWorksheetSelectOpen('');
 		setWorksheetIndex(-1);
 		setIsSettings(false);
 		setSpreadsheet(null);
+	};
+
+	const onDismiss = (): void => {
+		setWorksheetIndex(-1);
+	};
+
+	const onBack = (ev: React.MouseEvent<HTMLIonButtonElement, MouseEvent>): void => {
+		setWorksheetIndex(-1);
 	};
 
 	return (
@@ -337,7 +340,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 				onSelect={onSelect}
 				id={worksheetSelectIsOpen}
 				onSpreadsheetLoad={onSpreadsheetLoad}
-				onDismiss={onDismiss}
+				onDismiss={onDismissWorksheet}
 			/>
 			<SheetPropsSelector
 				isOpen={isSettings && worksheetIndex !== -1 && !!spreadsheet}
@@ -345,6 +348,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 				spreadsheet={spreadsheet}
 				afterSave={afterSave}
 				onDismiss={onDismiss}
+				onBack={onBack}
 			/>
 			<IonRefresher slot="fixed" onIonRefresh={onRefresh}>
 				<IonRefresherContent refreshingSpinner="crescent"></IonRefresherContent>

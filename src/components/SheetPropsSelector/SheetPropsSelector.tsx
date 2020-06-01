@@ -14,7 +14,7 @@ interface SheetPropsSelectorProps {
 	worksheetIndex: number;
 	isOpen: boolean;
 	afterSave?: () => void;
-	onBack?: () => void;
+	onBack?: (ev?: React.MouseEvent<HTMLIonButtonElement, MouseEvent>) => void;
 	onDismiss?: () => void;
 }
 
