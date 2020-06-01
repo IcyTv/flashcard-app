@@ -44,6 +44,7 @@ const SelectSheet = React.lazy(() => import('../SelectSheet'));
 const Settings = React.lazy(() => import('../Settings'));
 // import CreateSheet from './pages/CreateSheet'
 const CreateSheet = React.lazy(() => import('../CreateSheet'));
+const CookieConsent = React.lazy(() => import('react-cookie-consent'));
 
 interface RouterProps {}
 
@@ -139,6 +140,13 @@ export const Router: React.FC<RouterProps> = (props) => {
 					</Switch>
 				</IonRouterOutlet>
 			</IonReactRouter>
+			<CookieConsent
+				location="bottom"
+				debug={process.env.NODE_ENV === 'development'}
+				buttonStyle={{ background: 'green' }}
+			>
+				We use 3rd party cookies to improve your experience <small>(And to make the site work)</small>
+			</CookieConsent>
 		</>
 	);
 };

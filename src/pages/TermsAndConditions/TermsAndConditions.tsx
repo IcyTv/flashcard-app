@@ -115,6 +115,12 @@ export const TermsAndConditions: React.FC<TermsAndConditionsProps> = () => {
 			</p>{' '}
 			<p>These terms and conditions are effective as of 2020-06-01</p>{' '}
 			<p>
+				<strong>Privacy Information</strong>
+			</p>
+			<p>
+				For privacy information click <a href="/legal/privacy">here</a>
+			</p>
+			<p>
 				<strong>Contact Us</strong>
 			</p>{' '}
 			<p>

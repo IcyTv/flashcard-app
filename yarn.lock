@@ -14527,6 +14527,13 @@ react-confetti@^5.0.1:
   dependencies:
     tween-functions "^1.2.0"
 
+react-cookie-consent@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-cookie-consent/-/react-cookie-consent-5.0.1.tgz#35b9cfe51185faa2b493b991298e0f926a31a710"
+  integrity sha512-2aqrRomONFu8mij1TjRKQKfMNhSihRR/yig4/V/ZEY4E/zzEI6RJGINLbSd6VXSM3etXiZequiBCOfVmlDeZ7w==
+  dependencies:
+    js-cookie "^2.2.1"
+
 react-credit-cards@^0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/react-credit-cards/-/react-credit-cards-0.8.2.tgz#175bdbbe3bc34f51de4566b7aaebf7fe2fe34f12"
