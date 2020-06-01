@@ -49,7 +49,7 @@ const FlashCardsPageComponent: React.FC = () => {
 	const doneOffline = useSelector((state: ReduxState) => (state.download[id] || {}).done);
 	const properties = useSelector(
 		(state: ReduxState) =>
-			(state.savedSheets.sheets[id] || [])[worksheetIndex] || {
+			((state.savedSheets.sheets || {})[id] || [])[worksheetIndex] || {
 				cols: [0, 1],
 				name: 'any', // TODO Maybe read real name?
 				amount: 20,
