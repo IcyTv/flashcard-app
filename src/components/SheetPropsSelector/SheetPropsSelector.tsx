@@ -15,6 +15,7 @@ interface SheetPropsSelectorProps {
 	isOpen: boolean;
 	afterSave?: () => void;
 	onBack?: () => void;
+	onDismiss?: () => void;
 }
 
 interface WorksheetInfo {
@@ -55,9 +56,10 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 	const [error, setError] = useState('');
 
 	useAsyncEffect(async () => {
-		if (!props.isOpen) {
+		if (props.worksheetIndex === -1) {
 			return;
 		}
+		console.log('loading');
 		if (!props.spreadsheet) {
 			await spreadsheet.useRawAccessToken(auth.accessToken);
 			await spreadsheet.loadInfo();
@@ -72,8 +74,12 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 		setInfo(info);
 	}, [spreadsheet, props.worksheetIndex]);
 
-	if (!info) {
+	if (!info && props.isOpen) {
 		return <Loading>Loading spreadsheet info</Loading>;
+	}
+
+	if (props.worksheetIndex === -1 || !info) {
+		return null;
 	}
 
 	const onClick = (): void => {
@@ -88,6 +94,9 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 				id: spreadsheet.spreadsheetId,
 				includeFirstRow: firstRef.current.checked,
 			});
+			if (props.afterSave) {
+				props.afterSave();
+			}
 			setError('');
 		} else {
 			setError('Front cannot be the same as back');
@@ -106,7 +115,7 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 	};
 
 	return (
-		<IonModal isOpen={props.isOpen} cssClass="sheet-props-modal">
+		<IonModal isOpen={props.isOpen} cssClass="sheet-props-modal" onDidDismiss={props.onDismiss}>
 			<IonButton onClick={props.onBack}>
 				<IonIcon icon={arrowBack} />
 				Back

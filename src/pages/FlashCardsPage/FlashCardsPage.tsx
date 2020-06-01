@@ -1,4 +1,4 @@
-import { DocumentData, DocumentSnapshot } from '@firebase/firestore-types';
+import { DocumentData, DocumentSnapshot, DocumentReference } from '@firebase/firestore-types';
 import { IonButton, IonContent, IonLabel, IonText, IonTitle } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import React, { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import { saveDone } from '../../services/download';
 import { analytics } from '../../services/firebase';
 import { refreshToken, wait } from '../../services/firebase/auth';
 import { useNetwork } from '../../services/network';
+import { sampleSize } from 'lodash';
 import { refreshAccess } from '../../services/store/google';
 import './FlashCardsPage.scss';
 
@@ -43,8 +44,18 @@ const FlashCardsPageComponent: React.FC = () => {
 	const [isAuth, setIsAuth] = useState(false);
 
 	const id = (history.location.state as { id: string }).id;
+	const worksheetIndex = (history.location.state as { worksheetIndex: number }).worksheetIndex;
 
 	const doneOffline = useSelector((state: ReduxState) => (state.download[id] || {}).done);
+	const properties = useSelector(
+		(state: ReduxState) =>
+			(state.savedSheets.sheets[id] || [])[worksheetIndex] || {
+				cols: [0, 1],
+				name: 'any', // TODO Maybe read real name?
+				amount: 20,
+				includeFirstRow: true,
+			},
+	);
 
 	const online = useNetwork();
 
@@ -55,8 +66,8 @@ const FlashCardsPageComponent: React.FC = () => {
 
 	useEffect(() => {
 		console.log('effect');
-		let listener;
-		let doc;
+		let listener: () => Promise<void>;
+		let doc: DocumentReference<DocumentData>;
 		if (online) {
 			doc = firebase.firestore().collection('users').doc(uid).collection('sheets').doc(id);
 
@@ -161,30 +172,29 @@ const FlashCardsPageComponent: React.FC = () => {
 				sheet
 					.loadInfo()
 					.then(() => {
-						console.log('loaded');
-						console.log(sheet);
-						const worksheet = sheet.sheetsByIndex[0];
+						const worksheet = sheet.sheetsByIndex[worksheetIndex];
 						return worksheet.loadCells();
 					})
 					.then(() => {
-						const worksheet = sheet.sheetsByIndex[0];
-						console.log('loaded cells');
+						const worksheet = sheet.sheetsByIndex[worksheetIndex];
+						const start = properties.includeFirstRow ? 0 : 1;
 						const c = [];
-						for (let i = 0; i < worksheet.rowCount; i++) {
+						for (let i = start; i < worksheet.rowCount; i++) {
 							if (done.indexOf(i) < 0) {
-								const cellLeft = worksheet.getCell(i, 0);
+								const cellLeft = worksheet.getCell(i, properties.cols[0]);
 								if (cellLeft.value) {
 									c.push({
 										front: cellLeft.value,
-										back: worksheet.getCell(i, 1).value,
+										back: worksheet.getCell(i, properties.cols[1]).value,
 										row: i,
 									});
 								}
 							}
 						}
-						setCards(c);
-						numTotal = c.length;
-						setInitialCards(c.slice());
+						const b = sampleSize(c, properties.amount);
+						setCards(b);
+						numTotal = b.length;
+						setInitialCards(b.slice());
 					})
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					.catch((err: any) => {
@@ -246,7 +256,7 @@ const FlashCardsPageComponent: React.FC = () => {
 				</IonLabel>
 				<div slot="fixed">
 					{numTotal !== 0 && <IonButton onClick={(): void => setCards(initialCards.slice())}>Yes</IonButton>}
-					{numTotal !== 0 && <IonButton onClick={(): void => setCards(null)}>Only Wrong</IonButton>}
+					{numTotal !== 0 && <IonButton onClick={(): void => setCards(null)}>New Set</IonButton>}
 					<IonButton onClick={(): void => setDoReset(true)}>{numTotal === 0 ? 'Yes' : 'Reset'}</IonButton>
 					<IonButton onClick={(): void => setDoReturn(true)}>No, return</IonButton>
 				</div>

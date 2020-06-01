@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useAwait = <T>(func: (...args: any) => Promise<T>, ...args: any): T => {
+export const useAwait = <T>(func: (...args: unknown[]) => Promise<T>, ...args: unknown[]): T => {
 	const [callback, setCallback] = useState(null);
 	func(args).then((v) => {
 		setCallback(v);

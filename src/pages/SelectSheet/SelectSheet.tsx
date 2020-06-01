@@ -40,6 +40,9 @@ import { deleteSavedStore } from '../../services/store/downloader';
 import { saveNamesStore } from '../../services/store/savedSheets';
 import Hammer from 'hammerjs';
 import './SelectSheet.scss';
+import WorksheetSelect from '../../components/WorksheetSelect';
+import SheetPropsSelector from '../../components/SheetPropsSelector';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const { Browser } = Plugins;
 
@@ -108,6 +111,11 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 	const [forceReload, setForceReload] = useState(false);
 	const [hammer, setHammer] = useState(false);
 
+	const [worksheetSelectIsOpen, setWorksheetSelectOpen] = useState<string>(null);
+	const [isSettings, setIsSettings] = useState(false);
+	const [worksheetIndex, setWorksheetIndex] = useState(-1);
+	const [spreadsheet, setSpreadsheet] = useState<GoogleSpreadsheet>(null);
+
 	const online = useNetwork();
 	const history = useHistory();
 
@@ -157,6 +165,11 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 			});
 		}
 	});
+
+	useEffect(() => {
+		if (worksheetSelectIsOpen) {
+		}
+	}, [worksheetSelectIsOpen]);
 
 	//TODO Refresher
 
@@ -227,10 +240,11 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 
 	const onClick = (id: string, name: string) => (): void => {
 		if (!hammer) {
-			setSelected({
-				id: id,
-				name: name,
-			});
+			// setSelected({
+			// 	id: id,
+			// 	name: name,
+			// });
+			setWorksheetSelectOpen(id);
 		} else {
 			setHammer(false);
 		}
@@ -250,6 +264,34 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		);
 	};
 
+	const doSettings = (id: string): void => {
+		console.log('Opening props for ' + id);
+		setWorksheetSelectOpen(id);
+		setIsSettings(true);
+	};
+
+	const onSelect = (index: number): void => {
+		console.log(index);
+		setWorksheetIndex(index);
+		if (!isSettings) {
+			history.push('/flashcard', {
+				id: worksheetSelectIsOpen,
+				worksheetIndex: index,
+			});
+		}
+	};
+
+	const afterSave = (): void => {
+		setWorksheetIndex(-1);
+		setIsSettings(false);
+		setSpreadsheet(null);
+		setWorksheetSelectOpen('');
+	};
+
+	const onSpreadsheetLoad = (spreadsheet: GoogleSpreadsheet): void => {
+		setSpreadsheet(spreadsheet);
+	};
+
 	const actionHandler = (id: string, index: number, action: string) => (): void => {
 		switch (action) {
 			case 'delete':
@@ -265,6 +307,9 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 			case 'deleteSaved':
 				deleteSavedStore(store)(id);
 				break;
+			case 'settings':
+				doSettings(id);
+				break;
 			case 'pay':
 				setRedirectTo('/payment');
 				break;
@@ -278,8 +323,29 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		setAction(ev);
 	};
 
+	const onDismiss = (): void => {
+		setWorksheetSelectOpen('');
+		setWorksheetIndex(-1);
+		setIsSettings(false);
+		setSpreadsheet(null);
+	};
+
 	return (
 		<IonContent key={'sheet-list-length-' + sheets.length} hidden={props.hidden} className={props.className}>
+			<WorksheetSelect
+				isOpen={!!worksheetSelectIsOpen}
+				onSelect={onSelect}
+				id={worksheetSelectIsOpen}
+				onSpreadsheetLoad={onSpreadsheetLoad}
+				onDismiss={onDismiss}
+			/>
+			<SheetPropsSelector
+				isOpen={isSettings && worksheetIndex !== -1 && !!spreadsheet}
+				worksheetIndex={worksheetIndex}
+				spreadsheet={spreadsheet}
+				afterSave={afterSave}
+				onDismiss={onDismiss}
+			/>
 			<IonRefresher slot="fixed" onIonRefresh={onRefresh}>
 				<IonRefresherContent refreshingSpinner="crescent"></IonRefresherContent>
 			</IonRefresher>

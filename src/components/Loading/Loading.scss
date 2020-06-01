@@ -6,6 +6,8 @@ div.loading {
 	height: 100%;
 	animation: random 8s infinite;
 
+	overflow: hidden;
+
 	.loading-content {
 		--color: var(--ion-text-color);
 	}

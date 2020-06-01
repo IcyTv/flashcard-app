@@ -1,6 +1,6 @@
 import { IonContent, IonList, IonItem, IonModal, IonTitle, IonText } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAsyncEffect } from '../../tools';
 import './WorksheetSelect.scss';
@@ -13,13 +13,22 @@ interface WorksheetSelectProps {
 	id?: string;
 	isOpen: boolean;
 	onSelect: (id: number) => void;
+	onSpreadsheetLoad?: (spreadsheet: GoogleSpreadsheet) => void;
+	onDismiss?: () => void;
 }
 
 export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: WorksheetSelectProps) => {
 	const accessToken = useSelector((state: ReduxState) => state.google.accessToken);
 	const [loaded, setLoaded] = useState(false);
+	const [effectTriggered, setEffectTriggered] = useState(false);
+
+	useEffect(() => {
+		// setLoaded(false);
+		setEffectTriggered(false);
+	}, [props.id]);
 
 	const spreadsheet = useMemo(() => {
+		console.log('memo', props.id);
 		if (props.id) {
 			return new GoogleSpreadsheet(props.id);
 		} else {
@@ -29,14 +38,32 @@ export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: Worksheet
 
 	useAsyncEffect(async () => {
 		if (props.id) {
+			console.log('loading...');
 			await spreadsheet.useRawAccessToken(accessToken);
 			await spreadsheet.loadInfo();
+			setEffectTriggered(true);
+			console.log('loading done');
+		} else if (props.spreadsheet) {
+			setEffectTriggered(true);
+		}
+		if (props.onSpreadsheetLoad) {
+			props.onSpreadsheetLoad(spreadsheet);
 		}
 		setLoaded(true);
-	}, [spreadsheet]);
+	}, [spreadsheet, props.id, props.spreadsheet]);
 
 	if (!loaded) {
-		return <Loading>Loading Spreadsheet data</Loading>;
+		return (
+			<IonModal isOpen={props.isOpen}>
+				<Loading>Loading Spreadsheet data</Loading>
+			</IonModal>
+		);
+	}
+
+	console.log(!props.isOpen || !effectTriggered, props.isOpen, effectTriggered);
+
+	if (!props.isOpen || !effectTriggered) {
+		return null;
 	}
 
 	const onClick = (id: number) => (): void => {
@@ -45,7 +72,7 @@ export const WorksheetSelect: React.FC<WorksheetSelectProps> = (props: Worksheet
 	};
 
 	return (
-		<IonModal isOpen={props.isOpen} cssClass="worksheet-select">
+		<IonModal isOpen={props.isOpen} cssClass="worksheet-select" onDidDismiss={props.onDismiss}>
 			<IonTitle>{spreadsheet.title}</IonTitle>
 			<IonText>Select your worksheet</IonText>
 			<IonList>
