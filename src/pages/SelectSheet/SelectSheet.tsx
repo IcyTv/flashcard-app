@@ -158,12 +158,33 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 	useEffect(() => {
 		const sIList = document.getElementsByClassName('sheet-list-item');
 		for (let n = 0; n < sIList.length; n++) {
-			new Hammer(sIList.item(n) as HTMLElement).on('press', (ev) => {
+			const ham = new Hammer(sIList.item(n) as HTMLElement);
+			ham.on('press', (ev) => {
 				setHammer(true);
 				setActionSheet(n);
 				ev.preventDefault();
 			});
+			ham.on('swipeleft', (ev) => {
+				setHammer(true);
+				if (ev.isFinal) {
+					console.log(ev.target.id);
+					setWorksheetSelectOpen(ev.target.id);
+					setIsSettings(true);
+				}
+			});
 		}
+		const l1 = (): void => {
+			setHammer(false);
+		};
+		document.addEventListener('mouseup', l1);
+		const l2 = (): void => {
+			setHammer(false);
+		};
+		document.addEventListener('touchend', l2);
+		return (): void => {
+			document.removeEventListener('mouseup', l1);
+			document.removeEventListener('touchend', l2);
+		};
 	});
 
 	//TODO Refresher
@@ -413,7 +434,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 								role: 'cancel',
 							});
 							return (
-								<IonItem key={'parsed-' + v.id} className="sheet-list-item">
+								<IonItem key={'parsed-' + v.id} className="sheet-list-item" id={v.id}>
 									<IonButton onClick={onClick(v.id, v.name)} className="list-item-sheet">
 										<p>{v.name}</p>{' '}
 										{downloading === v.id && <IonSpinner name="crescent" color="primary" />}

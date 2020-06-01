@@ -1,4 +1,7 @@
 ion-modal.sheet-props-modal {
+	--color: var(--ion-text-color, black);
+	color: var(--ion-text-color, black);
+
 	div.ion-page {
 		ion-title {
 			text-align: center;

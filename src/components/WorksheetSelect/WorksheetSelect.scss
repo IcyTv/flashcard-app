@@ -4,6 +4,8 @@ ion-modal {
 			display: inline-block;
 			height: auto;
 			div.worksheet-select {
+				--color: var(--ion-text-color, black);
+				color: var(--ion-text-color, black);
 				height: fit-content;
 				ion-title {
 					margin: 1.5rem;
