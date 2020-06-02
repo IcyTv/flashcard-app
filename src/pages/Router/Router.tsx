@@ -1,6 +1,6 @@
 import { IonRouterOutlet, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Router.scss';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import JoyrideRoute from '../JoyrideRoute';
@@ -10,6 +10,7 @@ import { SplashScreen } from '@capacitor/core';
 import CreateNewSheet from '../CreateNewSheet';
 import TermsAndConditions from '../TermsAndConditions';
 import PrivacyPolicy from '../PrivacyPolicy';
+import CookieConsentType from 'react-cookie-consent';
 // import AppUrlListener from './components/AppUrlListener';
 const AppUrlListener = React.lazy(() => import('../../components/AppUrlListener'));
 // import { Header } from './components/Header/Header';
@@ -58,7 +59,6 @@ const isDarkmode = async (): Promise<boolean> => {
 
 export const Router: React.FC<RouterProps> = (props) => {
 	const theme = useSelector((state: ReduxState) => state.settings.theme);
-	SplashScreen.hide();
 
 	useEffect(() => {
 		if (theme === 'dark') {
@@ -86,6 +86,31 @@ export const Router: React.FC<RouterProps> = (props) => {
 			});
 		}
 	}, [theme]);
+
+	const [cc, setCc] = useState<CookieConsentType>(null);
+	const [ruleIndex, setRuleIndex] = useState<number>(null);
+
+	useEffect(() => {
+		if (cc && (cc.state as any).visible) {
+			const styleSheet: any = document.styleSheets[0];
+			// const ccHeight = document.querySelector('.CookieConsent').clientHeight;
+			const ccHeight = 70;
+			console.log(ccHeight);
+			const ret = styleSheet.insertRule(`ion-content {--padding-bottom: ${ccHeight}px !important; }`);
+			setRuleIndex(ret);
+		}
+	}, [cc]);
+
+	const remove = (): void => {
+		if (cc && ruleIndex !== null) {
+			const styleSheet: any = document.styleSheets[0];
+			styleSheet.removeRule(ruleIndex);
+		}
+	};
+
+	if (isPlatform('mobile')) {
+		SplashScreen.hide();
+	}
 
 	return (
 		<>
@@ -144,8 +169,18 @@ export const Router: React.FC<RouterProps> = (props) => {
 				location="bottom"
 				debug={process.env.NODE_ENV === 'development'}
 				buttonStyle={{ background: 'green' }}
+				ref={(ref): void => setCc(ref)}
+				onAccept={remove}
 			>
-				We use 3rd party cookies to improve your experience <small>(And to make the site work)</small>
+				<p>
+					We use 3rd party cookies to improve your experience <small>(And to make the site work)</small>
+				</p>
+				<p>
+					<small>
+						You also accept our <a href="/legal/tos">Terms &amp; Contitions</a> as well as our{' '}
+						<a href="/legal/privacy">Privacy Policy</a> by using our site
+					</small>
+				</p>
 			</CookieConsent>
 		</>
 	);

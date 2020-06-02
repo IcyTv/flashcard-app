@@ -1,0 +1,19 @@
+ion-content.tos-page {
+	& > div {
+		margin: 2rem;
+		text-align: justify;
+		ion-title {
+			text-align: center;
+			font-size: 2rem;
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+	ion-content.tos-page {
+		& > div {
+			margin: 1rem;
+			margin-bottom: 0px;
+		}
+	}
+}
