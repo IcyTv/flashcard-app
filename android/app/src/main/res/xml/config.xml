@@ -14,8 +14,8 @@
     <param name="android-package" value="com.megster.cordova.FileChooser"/>
   </feature>
 
-  <feature name="FirebaseCrashlytics">
-    <param name="android-package" value="uk.co.reallysmall.cordova.plugin.firebase.crashlytics.FirebaseCrashlyticsPlugin"/>
+  <feature name="FirebasePlugin">
+    <param name="android-package" value="org.apache.cordova.firebase.FirebasePlugin"/>
     <param name="onload" value="true"/>
   </feature>
 
