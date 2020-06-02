@@ -1,9 +1,11 @@
 import firebase from 'firebase/app';
+import { FirebaseX } from '@ionic-native/firebase-x';
 // import "firebase/analytics";
 import 'firebase/firestore';
 import 'firebase/analytics';
 import 'firebase/auth';
 import 'firebase/database';
+import { isPlatform } from '@ionic/core';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyA4KzXo_KtFruElIAlAfvM2ulNyqiuPpds',
@@ -15,6 +17,12 @@ const firebaseConfig = {
 	appId: '1:145284732434:web:a12cf43bf534a7246a6acb',
 	measurementId: 'G-9SPSXMWG7G',
 };
+
+if (isPlatform('mobile')) {
+	FirebaseX.setCrashlyticsCollectionEnabled(true).then(() => {
+		console.log('Crashlytics enabled');
+	});
+}
 
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();

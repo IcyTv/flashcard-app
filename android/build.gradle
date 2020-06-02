@@ -17,7 +17,7 @@ buildscript {
         // in the individual module build.gradle files
         // --- Custom Dependencies --
         
-        // classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
     }
 }
 

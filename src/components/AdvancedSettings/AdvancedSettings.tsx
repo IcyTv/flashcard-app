@@ -5,7 +5,8 @@ import { useStore, useSelector } from 'react-redux';
 import { ToggleChangeEventDetail, CheckboxChangeEventDetail } from '@ionic/core';
 import { toggleNetworkDev, setFirstTime } from '../../services/store/debug';
 import { useHistory } from 'react-router';
-import { FirebaseCrashlytics } from '@ionic-native/firebase-crashlytics';
+import { FirebaseX } from '@ionic-native/firebase-x';
+import { error } from '../../tools/logger';
 
 interface AdvancedSettingsProps {}
 
@@ -34,7 +35,15 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 		console.log('crashing');
 		console.log('Dumps: ');
 		console.log(store.getState());
-		FirebaseCrashlytics.crash();
+		FirebaseX.sendCrash();
+	};
+
+	const sendMsg = (): void => {
+		try {
+			throw new Error('Test');
+		} catch (err) {
+			error('Test error', err);
+		}
 	};
 
 	return (
@@ -67,6 +76,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 				</IonItem>
 				<IonItem onClick={crashAsk}>
 					<IonLabel>Crash</IonLabel>
+				</IonItem>
+				<IonItem onClick={sendMsg}>
+					<IonLabel>Log test message to server</IonLabel>
 				</IonItem>
 			</IonList>
 		</>

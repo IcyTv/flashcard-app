@@ -115,6 +115,7 @@
 		"remote-redux-devtools": "^0.5.16",
 		"source-map-explorer": "^2.4.2",
 		"spreadsheet-to-json": "^2.0.0",
+		"stacktrace-js": "^2.0.2",
 		"stripe": "^8.52.0",
 		"ts-google-drive": "^0.0.3",
 		"verror": "^1.10.0",

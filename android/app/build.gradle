@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 // apply plugin: 'io.fabric'
-// apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.crashlytics'
 // apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 
 android {
@@ -47,6 +47,7 @@ apply from: 'capacitor.build.gradle'
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
+        logger.info("loading google services")
         apply plugin: 'com.google.gms.google-services'
     }
 } catch(Exception e) {
