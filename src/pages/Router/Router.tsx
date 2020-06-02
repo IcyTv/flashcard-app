@@ -1,16 +1,20 @@
+import { SplashScreen } from '@capacitor/core';
+import { ThemeDetection } from '@ionic-native/theme-detection';
 import { IonRouterOutlet, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import React, { useEffect, useRef, useState } from 'react';
-import './Router.scss';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import JoyrideRoute from '../JoyrideRoute';
-import { useSelector } from 'react-redux';
-import { ThemeDetection } from '@ionic-native/theme-detection';
-import { SplashScreen } from '@capacitor/core';
-import CreateNewSheet from '../CreateNewSheet';
-import TermsAndConditions from '../TermsAndConditions';
-import PrivacyPolicy from '../PrivacyPolicy';
+import React, { useEffect, useState } from 'react';
 import CookieConsentType from 'react-cookie-consent';
+import { useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import './Router.scss';
+// import CreateNewSheet from '../CreateNewSheet';
+const CreateNewSheet = React.lazy(() => import('../CreateNewSheet'));
+// import JoyrideRoute from '../JoyrideRoute';
+const JoyrideRoute = React.lazy(() => import('../JoyrideRoute'));
+// import PrivacyPolicy from '../PrivacyPolicy';
+const PrivacyPolicy = React.lazy(() => import('../PrivacyPolicy'));
+// import TermsAndConditions from '../TermsAndConditions';
+const TermsAndConditions = React.lazy(() => import('../TermsAndConditions'));
 // import AppUrlListener from './components/AppUrlListener';
 const AppUrlListener = React.lazy(() => import('../../components/AppUrlListener'));
 // import { Header } from './components/Header/Header';
@@ -45,6 +49,7 @@ const SelectSheet = React.lazy(() => import('../SelectSheet'));
 const Settings = React.lazy(() => import('../Settings'));
 // import CreateSheet from './pages/CreateSheet'
 const CreateSheet = React.lazy(() => import('../CreateSheet'));
+// import CookieConsent from "react-cookie-consent"
 const CookieConsent = React.lazy(() => import('react-cookie-consent'));
 
 interface RouterProps {}
@@ -57,7 +62,7 @@ const isDarkmode = async (): Promise<boolean> => {
 	}
 };
 
-export const Router: React.FC<RouterProps> = (props) => {
+export const Router: React.FC<RouterProps> = () => {
 	const theme = useSelector((state: ReduxState) => state.settings.theme);
 
 	useEffect(() => {
@@ -91,7 +96,9 @@ export const Router: React.FC<RouterProps> = (props) => {
 	const [ruleIndex, setRuleIndex] = useState<number>(null);
 
 	useEffect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		if (cc && (cc.state as any).visible) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const styleSheet: any = document.styleSheets[0];
 			// const ccHeight = document.querySelector('.CookieConsent').clientHeight;
 			const ccHeight = 70;
@@ -103,6 +110,7 @@ export const Router: React.FC<RouterProps> = (props) => {
 
 	const remove = (): void => {
 		if (cc && ruleIndex !== null) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const styleSheet: any = document.styleSheets[0];
 			styleSheet.removeRule(ruleIndex);
 		}
