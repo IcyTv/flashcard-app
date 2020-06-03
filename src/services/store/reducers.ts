@@ -9,6 +9,7 @@ import downloadReducer from './downloader';
 import savedSheetsReducer from './savedSheets';
 import debugReducer from './debug';
 import settingsReducer from './settings';
+import cacheReducer from './cache';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeRootReducer() {
@@ -65,6 +66,13 @@ export default function makeRootReducer() {
 				storage: localStorage,
 			},
 			settingsReducer,
+		),
+		cache: persistReducer(
+			{
+				key: 'cache',
+				storage: localStorage,
+			},
+			cacheReducer,
 		),
 	});
 }

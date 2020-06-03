@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getFirebase } from 'react-redux-firebase';
 import { applyMiddleware, compose, createStore, Store, AnyAction } from 'redux';
-import { persistReducer, persistStore, Persistor } from 'redux-persist';
+import { persistReducer, persistStore, Persistor, PersistConfig } from 'redux-persist';
 import localStorage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'remote-redux-devtools';
 import makeRootReducer from './reducers';
 
-const persistConfig = {
+const persistConfig: PersistConfig<ReduxState> = {
 	key: 'root',
 	storage: localStorage,
+	blacklist: ['cache'],
 };
 
 export default (initialState: ReduxState | {} = {}): { store: Store<any, AnyAction>; persistor: Persistor } => {

@@ -40,6 +40,23 @@ interface ReduxState {
 		advanced: boolean;
 		theme: 'dark' | 'light' | 'auto';
 	};
+	cache?: {
+		list: {
+			id: string;
+			name: string;
+			done?: number[];
+			total?: number;
+			valid?: boolean;
+		}[];
+		sheets: {
+			[id: string]: {
+				name: string;
+				data: string[][];
+				valid?: boolean;
+			};
+		};
+		valid?: boolean;
+	};
 }
 
 declare namespace JSX {
