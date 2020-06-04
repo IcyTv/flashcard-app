@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { isPlatform } from '@ionic/core';
 import { IonBackButton, IonButtons, IonHeader, IonItem, IonToolbar } from '@ionic/react';
+import fbTypes from 'firebase/app';
 import { arrowBack } from 'ionicons/icons';
+import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
@@ -10,12 +14,8 @@ import GooglePicker from '../../components/GooglePicker';
 import { Loading } from '../../components/Loading/Loading';
 import { analytics } from '../../services/firebase';
 import { refreshToken, wait } from '../../services/firebase/auth';
-import { refreshAccess } from '../../services/store/google';
+import { error } from '../../tools/logger';
 import './CreateSheetWithPicker.scss';
-import { isPlatform } from '@ionic/core';
-import queryString from 'query-string';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-import fbTypes from 'firebase/app';
 
 declare global {
 	interface Window {
@@ -128,6 +128,11 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 								errors: err,
 							}),
 						);
+					} else {
+						analytics.logEvent('exception', {
+							description: "Window.webkit not found! Couldn't close the picker browser automatically",
+						});
+						error("Window.webkit not found! Couldn't close the picker browser automatically");
 					}
 				});
 		}
@@ -171,7 +176,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 		}
 	}
 
-	//firestore.collection("users").doc(user.user.uid).collection("sheets").
+	//firestore.collection('users').doc(user.user.uid).collection('sheets').
 
 	if (picked) {
 		console.log('picked', picked);
