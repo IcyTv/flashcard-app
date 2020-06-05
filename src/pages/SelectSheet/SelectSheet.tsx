@@ -148,12 +148,12 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		}
 	}, [downloaded]);
 
-	useEffect(() => {
-		if (googleAccess.expiresIn - Date.now() < 0) {
-			refreshToken(googleAccess.tokenId, store);
-			setForceReload(!forceReload);
-		}
-	}, [googleAccess]);
+	// useEffect(() => {
+	// 	if (googleAccess.expiresIn - Date.now() < 0) {
+	// 		refreshToken(googleAccess.tokenId, store);
+	// 		setForceReload(!forceReload);
+	// 	}
+	// }, [googleAccess]);
 
 	useEffect(() => {
 		const sIList = document.getElementsByClassName('sheet-list-item');

@@ -57,11 +57,11 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 		wait(firebase, setIsAuth);
 	}, []);
 
-	useEffect(() => {
-		if (auth.expiresIn - Date.now() < 0) {
-			refreshToken(auth.tokenId, store);
-		}
-	}, [auth]);
+	// useEffect(() => {
+	// 	if (auth.expiresIn - Date.now() < 0) {
+	// 		refreshToken(auth.tokenId, store);
+	// 	}
+	// }, [auth]);
 
 	console.log('picker gaccess', auth);
 

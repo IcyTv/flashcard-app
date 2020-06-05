@@ -146,12 +146,12 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 		});
 	}, [history]);
 
-	useEffect(() => {
-		if (googleAcccess.expiresIn - Date.now() < 0) {
-			refreshToken(googleAcccess.tokenId, store);
-			setForceReload(forceReload + 1);
-		}
-	}, [googleAcccess]);
+	// useEffect(() => {
+	// 	if (googleAcccess.expiresIn - Date.now() < 0) {
+	// 		refreshToken(googleAcccess.tokenId, store);
+	// 		setForceReload(forceReload + 1);
+	// 	}
+	// }, [googleAcccess]);
 
 	firebase.auth().onAuthStateChanged(() => {
 		setLoaded(true);

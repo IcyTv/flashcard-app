@@ -29,24 +29,22 @@ export const refreshToken = async (
 	idToken: string,
 	store: Store<ReduxState, AnyAction>,
 	errFunc?: React.Dispatch<React.SetStateAction<string>>,
-): Promise<void> => {
-	fetch(url + idToken)
-		.then((data: Response) => data.json())
-		.then((data: { id_token: string; access_token: string }) => {
-			idTokenRefresh(store)(data.id_token);
-			refreshAccess(store)(data.access_token);
-		})
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		.catch((err: any) => {
-			console.error(err);
-			debugger;
-			analytics.logEvent('exception', {
-				description: 'Error while refreshing ' + err.message,
-			});
-			if (errFunc) {
-				errFunc(err);
-			}
+): Promise<boolean> => {
+	try {
+		const data = await (await fetch(url + idToken)).json();
+		idTokenRefresh(store)(data.id_token);
+		refreshAccess(store)(data.access_token);
+		return true;
+	} catch (err) {
+		console.error(err);
+		analytics.logEvent('exception', {
+			description: 'Error while refreshing token: ' + err.message,
 		});
+		if (errFunc) {
+			errFunc(err);
+		}
+		return false;
+	}
 };
 
 export const logout = async (
