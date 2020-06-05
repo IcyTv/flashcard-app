@@ -42,7 +42,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 		try {
 			throw new Error('Test');
 		} catch (err) {
-			error('Test error', err);
+			error('Test error', err, 43, 13, __filename);
 		}
 	};
 

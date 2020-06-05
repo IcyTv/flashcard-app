@@ -28,6 +28,8 @@ import { Plugins } from '@capacitor/core';
 import './theme/variables.scss';
 import Loading from './components/Loading';
 import { isPlatform } from '@ionic/core';
+import { FirebaseX } from '@ionic-native/firebase-x';
+import { overrideOnError } from './tools/logger';
 
 const { SplashScreen } = Plugins;
 
@@ -40,8 +42,14 @@ const App: React.FC = () => {
 		auth.onAuthStateChanged((user) => {
 			if (user) {
 				analytics.setUserId(user.uid);
+				if (isPlatform('mobile')) {
+					FirebaseX.setCrashlyticsUserId(user.uid);
+				}
 			}
 		});
+		if (isPlatform('mobile')) {
+			overrideOnError();
+		}
 	}, []);
 
 	// useEffect(() => {

@@ -2,17 +2,26 @@ import { FirebaseX } from '@ionic-native/firebase-x';
 import { isPlatform } from '@ionic/core';
 import { fromError } from 'stacktrace-js';
 
-export const error = (msg: string, trace?: Error): void => {
+const formatErr = (msg: string, line?: number, col?: number, source?: string): string => {
+	return `${source ? '' : source}${line ? (col ? '(' + line + ':' + col + ')' : '(' + line + ')') : ''}${
+		source || line ? ' : ' : ''
+	}${msg}`;
+};
+
+export const error = async (
+	msg: string,
+	trace?: Error,
+	line?: number,
+	col?: number,
+	source?: string,
+): Promise<void> => {
 	if (isPlatform('mobile')) {
 		let stacktrace = null;
+		const fmsg = formatErr(msg, line, col, source);
 		if (trace) {
-			fromError(trace).then((trace) => {
-				stacktrace = trace;
-				FirebaseX.logError(msg, stacktrace);
-			});
-		} else {
-			FirebaseX.logError(msg, stacktrace);
+			stacktrace = await fromError(trace);
 		}
+		FirebaseX.logError(fmsg, stacktrace);
 	} else {
 		console.error(msg, trace);
 	}
@@ -23,6 +32,7 @@ export const overrideOnError = (): void => {
 		if (isPlatform('mobile')) {
 			const trace = await fromError(error);
 			const msg = `${error.name} (${source}:[${line}:${col}]) - ${error.message}`;
+			console.error(msg);
 			FirebaseX.logError(msg, trace);
 		}
 	};
