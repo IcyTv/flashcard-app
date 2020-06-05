@@ -74,7 +74,6 @@ export default (
 				[id]: payload,
 			};
 		default:
-			console.warn('Not an accepted type!!');
 			return state;
 	}
 };

@@ -179,6 +179,7 @@ export const Router: React.FC<RouterProps> = () => {
 				buttonStyle={{ background: 'green' }}
 				ref={(ref): void => setCc(ref)}
 				onAccept={remove}
+				sameSite="strict"
 			>
 				<p>
 					We use 3rd party cookies to improve your experience <small>(And to make the site work)</small>
