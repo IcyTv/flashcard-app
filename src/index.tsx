@@ -8,6 +8,7 @@ Sentry.init({
 	dsn: 'https://4d92290421964df3bc443a8b8fba723b@o403798.ingest.sentry.io/5266816',
 	environment: process.env.NODE_ENV || 'production',
 	attachStacktrace: true,
+	// eslint-disable-next-line
 	release: '${VERSION}',
 });
 
