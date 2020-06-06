@@ -16,6 +16,7 @@ jobs:
             - name: Cache
               uses: actions/cache@v2
               with:
+                  path: '.'
                   key: files-${{ steps.get_version.outputs.VERSION }}
             - name: Checkout Code
               uses: actions/checkout@master
@@ -45,6 +46,7 @@ jobs:
             - name: Use Cache
               uses: actions/cache@v2
               with:
+                  path: '.'
                   restore-keys: files-
             - name: Test
               run: ls
@@ -64,6 +66,7 @@ jobs:
             - name: Use Cache
               uses: actions/cache@v2
               with:
+                  path: '.'
                   restore-keys: files-
             - name: Test
               run: ls
