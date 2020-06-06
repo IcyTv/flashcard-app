@@ -8,8 +8,8 @@ on:
       - released
 
 jobs:
-  install:
-    name: Install dependencies
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
