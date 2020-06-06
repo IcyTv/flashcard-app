@@ -35,7 +35,7 @@ export const Header: React.FC<HeaderProps> = () => {
 				e.preventDefault();
 			};
 		}
-	}, [ref]);
+	}, [ref, history, location.pathname]);
 
 	return (
 		<IonHeader>

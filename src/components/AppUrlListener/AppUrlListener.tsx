@@ -12,7 +12,7 @@ export const AppUrlListener: React.FC<unknown> = () => {
 				history.push(data.url.replace('flashcards:/', ''));
 			}
 		});
-	}, []);
+	}, [history]);
 
 	return null;
 };

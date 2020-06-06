@@ -10,7 +10,7 @@ import { FlashCard } from '../../components/FlashCard/FlashCard';
 import { Loading } from '../../components/Loading/Loading';
 import { saveDone } from '../../services/download';
 import { analytics } from '../../services/firebase';
-import { refreshToken, wait } from '../../services/firebase/auth';
+import { wait } from '../../services/firebase/auth';
 import { useNetwork } from '../../services/network';
 import './FlashCardsPage.scss';
 
@@ -57,7 +57,7 @@ const FlashCardsPageComponent: React.FC = () => {
 
 	const online = useNetwork();
 
-	useEffect(() => wait(firebase, setIsAuth), []);
+	useEffect(() => wait(firebase, setIsAuth), [firebase]);
 	useEffect(() => {
 		analytics.setCurrentScreen('flashcard_screen');
 	}, []);
@@ -89,14 +89,14 @@ const FlashCardsPageComponent: React.FC = () => {
 			}
 			window.removeEventListener('beforeunload', listener);
 		};
-	}, []);
+	}, [doneOffline, firebase, id, online, store, uid]);
 
-	useEffect(() => {
-		console.log('Refresh effect triggered', googleAccess.expiresIn - Date.now() < 0);
-		if (googleAccess.expiresIn - Date.now() < 0) {
-			refreshToken(googleAccess.tokenId, store);
-		}
-	}, [googleAccess]);
+	// useEffect(() => {
+	// 	console.log('Refresh effect triggered', googleAccess.expiresIn - Date.now() < 0);
+	// 	if (googleAccess.expiresIn - Date.now() < 0) {
+	// 		refreshToken(googleAccess.tokenId, store);
+	// 	}
+	// }, [googleAccess, store]);
 
 	if (!isAuth) {
 		return <Loading>Loading authentication</Loading>;

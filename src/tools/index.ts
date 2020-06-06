@@ -11,5 +11,6 @@ export const useAwait = <T>(func: (...args: unknown[]) => Promise<T>, ...args: u
 export const useAsyncEffect = (func: () => unknown, deps?: React.DependencyList): void => {
 	useEffect(() => {
 		func();
-	}, deps);
+		// eslint-disable-next-line
+	}, deps.concat(func));
 };

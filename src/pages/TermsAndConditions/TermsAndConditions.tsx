@@ -4,14 +4,12 @@ import './TermsAndConditions.scss';
 
 interface TermsAndConditionsProps {}
 
-{
-	/* <head>
+/* <head>
       <meta charset='utf-8'>
       <meta name='viewport' content='width=device-width'>
       <title>Terms &amp; Conditions</title>
       <style> body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding:1em; } </style>
     </head> */
-}
 
 export const TermsAndConditions: React.FC<TermsAndConditionsProps> = () => {
 	return (

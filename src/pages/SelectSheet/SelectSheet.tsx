@@ -138,7 +138,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		}
 	}, [action, sheets]);
 
-	useEffect(() => wait(firebase, setIsAuth), []);
+	useEffect(() => wait(firebase, setIsAuth), [firebase]);
 	useEffect(() => {
 		analytics.setCurrentScreen('select_sheet');
 	}, [firebase]);
@@ -147,7 +147,7 @@ export const SelectSheet: React.FC<SelectSheetProps> = (props: SelectSheetProps)
 		if (downloaded.indexOf(downloading) >= 0) {
 			setDownloading(null);
 		}
-	}, [downloaded]);
+	}, [downloaded, downloading]);
 
 	// useEffect(() => {
 	// 	if (googleAccess.expiresIn - Date.now() < 0) {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IonContent, IonButton } from '@ionic/react';
 import React, { useState, useMemo } from 'react';
 import GooglePayButton from '../GooglePayButton';

@@ -52,7 +52,7 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 			gapiScript.addEventListener('load', () => setLoaded(true));
 		}
 		wait(firebase, setIsAuth);
-	}, []);
+	}, [firebase]);
 
 	// useEffect(() => {
 	// 	if (auth.expiresIn - Date.now() < 0) {

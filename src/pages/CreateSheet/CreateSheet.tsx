@@ -1,22 +1,10 @@
-import { Plugins } from '@capacitor/core';
-import { isPlatform } from '@ionic/core';
-//prettier-ignore
-import { IonButton, IonContent, IonTitle, IonCard, IonCardTitle, IonCardContent, IonIcon } from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonIcon, IonTitle } from '@ionic/react';
+import { addOutline, folderOpenOutline } from 'ionicons/icons';
 import React from 'react';
 import { useHistory } from 'react-router';
 import './CreateSheet.scss';
-import { folderOpenOutline, addOutline, documentOutline } from 'ionicons/icons';
-const { Browser } = Plugins;
 
-const openInNewTab = (url: string) => {
-	if (isPlatform('mobile')) {
-		Browser.open({ url: url });
-	} else {
-		window.open(url, '_blank');
-	}
-};
-
-export const CreateSheet: React.FC = (props) => {
+export const CreateSheet: React.FC = () => {
 	const history = useHistory();
 
 	const redirectTo = (url: string) => () => {

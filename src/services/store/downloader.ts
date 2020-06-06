@@ -44,7 +44,7 @@ export const saveSpreadsheetStore = ({ dispatch }: Store) => (spreadsheet: Googl
 	const sheet = ((spreadsheet.sheetsByIndex[0] as any)._cells as GoogleSpreadsheetCell[][]).map((v) => {
 		return v.map((c) => c.value);
 	});
-	const fSheet = sheet.filter((v) => v.filter((v) => v).length != 0);
+	const fSheet = sheet.filter((v) => v.filter((v) => v).length !== 0);
 	dispatch(saveSpreadsheet(fSheet, spreadsheet.title, id));
 };
 

@@ -66,7 +66,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 		document.querySelector('body').classList.add('dark');
 	}
 
-	useEffect(() => wait(firebase, setIsAuth), []);
+	useEffect(() => wait(firebase, setIsAuth), [firebase]);
 
 	useEffect(() => {
 		analytics.setCurrentScreen('create_screen');
@@ -101,13 +101,13 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 				console.log(event);
 				if (event.data && event.data.my_message === 'close') {
 					if (event.data.errors) {
-						setErrors(errors);
+						setErrors(event.data.errors);
 					}
 					browser.close();
 				}
 			});
 		}
-	}, [googleAcccess]);
+	}, [googleAcccess, history, redirectToQuery, errors]);
 
 	useEffect(() => {
 		if (tokenId) {
@@ -135,7 +135,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 					}
 				});
 		}
-	}, [firebase]);
+	}, [firebase, tokenId]);
 
 	useEffect(() => {
 		history.listen(() => {

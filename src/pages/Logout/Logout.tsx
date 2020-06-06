@@ -27,7 +27,7 @@ export const Logout: React.FC = () => {
 			.catch((err) => {
 				setErrors(err);
 			});
-	}, []);
+	}, [firebase, store]);
 
 	if (redirect) {
 		return <Redirect to="/login" />;

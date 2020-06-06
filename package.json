@@ -6,8 +6,8 @@
 	"license": "Attribution-NonCommercial-NoDerivatives 4.0 International",
 	"dependencies": {
 		"@buttercup/googledrive-client": "^0.8.0",
-		"@capacitor/android": "2.0.2",
-		"@capacitor/core": "^2.1.0",
+		"@capacitor/android": "^2.1.2",
+		"@capacitor/core": "^2.1.2",
 		"@firebase/app": "^0.6.3",
 		"@ionic-native/app-availability": "^5.26.0",
 		"@ionic-native/chooser": "^5.26.0",
