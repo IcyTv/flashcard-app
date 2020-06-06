@@ -3,9 +3,7 @@ name: Create Release
 on:
   release:
     types:
-      - created
       - published
-      - released
 
 jobs:
   build:
@@ -18,6 +16,10 @@ jobs:
         uses: CultureHQ/actions-yarn@master
         with:
           args: install
+      - name: Restore files
+        run: |
+          echo ${{ secrets.GOOGLE_APIS_CONFIG }} | base64 -d > src/services/google/googleapis_config.json
+          echo ${{ secrets.GOOGLE_SERVICES }} | base64 -d > google-services.json
       - name: Get the tag version
         id: get_version
         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
