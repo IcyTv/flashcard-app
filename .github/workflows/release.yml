@@ -92,6 +92,3 @@ jobs:
         with:
           name: Release Apk
           path: flashcards-app-*.apk
-
-  sentry:
-    name: Add sentry release
