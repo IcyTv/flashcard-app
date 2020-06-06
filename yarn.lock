@@ -1159,16 +1159,6 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@buttercup/googledrive-client@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@buttercup/googledrive-client/-/googledrive-client-0.8.0.tgz#723f3bf3a84b21dbde2cdfd0a339a13787752fd6"
-  integrity sha512-RpT11pxpNN8ANs/8rPEq38ZRVi+JrdSugqamFphWx0O+eGZV3sWsqDamiOh2lZy9FtokNWD2hhSVBYhsBo5SHQ==
-  dependencies:
-    cowl "^0.6.0"
-    hot-patcher "^0.5.0"
-    safe-buffer "^5.2.0"
-    verror "^1.10.0"
-
 "@capacitor/android@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-2.1.2.tgz#1b46359b981753b5d0950ad0e37db223402ec0ad"
@@ -3876,11 +3866,6 @@ array.prototype.flat@^1.2.1:
     define-properties "^1.1.3"
     es-abstract "^1.17.0-next.1"
 
-arraybuffer-to-buffer@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/arraybuffer-to-buffer/-/arraybuffer-to-buffer-0.0.6.tgz#661ae5a77ca5bb954bae078242ec133327c71f37"
-  integrity sha512-j++FABbsTQFzDmPth2CWKXroTdaaDNEon30hjkhAPD0zxzHrbx5PgoZE2sjcgRwH3S9InTGoRdHoN5MnymJg4w==
-
 arraybuffer.slice@~0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/arraybuffer.slice/-/arraybuffer.slice-0.0.7.tgz#3bbc4275dd584cc1b10809b89d4e8b63a69e7675"
@@ -5040,7 +5025,7 @@ case-sensitive-paths-webpack-plugin@2.3.0:
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.3.0.tgz#23ac613cc9a856e4f88ff8bb73bbb5e989825cf7"
   integrity sha512-/4YgnZS8y1UXXmC02xD5rRrBEu6T5ub+mQHLNRj0fzTRbgdBYhsNo2V5EqwgqrExjxsjtF/OpAKAMkKsxbD5XQ==
 
-caseless@^0.12.0, caseless@~0.12.0:
+caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
@@ -5917,19 +5902,6 @@ cosmiconfig@^6.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.7.2"
-
-cowl@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/cowl/-/cowl-0.6.0.tgz#2971bcea8834c7b4adff1d91b252aa554c4e946e"
-  integrity sha512-ObsX2bMLEp7tKbybVfbp4W3SQlRVmUvH6C1XWMB7chlbO6QFgglVaVlA7uumPagmyJbnTxwN3wJ0ebgdVZPFww==
-  dependencies:
-    arraybuffer-to-buffer "0.0.6"
-    caseless "^0.12.0"
-    get-headers "^1.0.5"
-    is-array-buffer "^1.0.1"
-    is-in-browser "^1.1.3"
-    query-string "^6.8.1"
-    xhr2 "^0.2.0"
 
 create-ecdh@^4.0.0:
   version "4.0.3"
@@ -8533,11 +8505,6 @@ get-caller-file@^2.0.1:
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
 
-get-headers@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/get-headers/-/get-headers-1.0.5.tgz#aed975a92ddcbe14bea861bc3071cc50c539d8a4"
-  integrity sha1-rtl1qS3cvhS+qGG8MHHMUMU52KQ=
-
 get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/get-own-enumerable-property-symbols/-/get-own-enumerable-property-symbols-3.0.2.tgz#b5fde77f22cbe35f390b4e089922c50bce6ef664"
@@ -9240,11 +9207,6 @@ hosted-git-info@^2.1.4, hosted-git-info@^2.7.1:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
   integrity sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg==
-
-hot-patcher@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/hot-patcher/-/hot-patcher-0.5.0.tgz#9d401424585aaf3a91646b816ceff40eb6a916b9"
-  integrity sha512-2Uu2W0s8+dnqXzdlg0MRsRzPoDCs1wVjOGSyMRRaMzLDX4bgHw6xDYKccsWafXPPxQpkQfEjgW6+17pwcg60bw==
 
 hpack.js@^2.1.6:
   version "2.1.6"
@@ -9961,11 +9923,6 @@ is-arguments@^1.0.4:
   resolved "https://registry.yarnpkg.com/is-arguments/-/is-arguments-1.0.4.tgz#3faf966c7cba0ff437fb31f6250082fcf0448cf3"
   integrity sha512-xPh0Rmt8NE65sNzvyUmWgI1tz3mKq74lGA0mL8LYZcoIzKOzDh6HmrYm3d18k60nHerC8A9Km8kYu87zfSFnLA==
 
-is-array-buffer@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/is-array-buffer/-/is-array-buffer-1.0.1.tgz#a4fac0cf325c1fad3f713e2b109eb241a907cf27"
-  integrity sha512-lj035IqdAwsodoRGs9/8+Kn3HPoz9CTuZbcw63afugWonxigvUVeHY5d6Ve1O+s1N3RCk7txo2TIWQLbU0SuNA==
-
 is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
@@ -10145,11 +10102,6 @@ is-glob@^4.0.0, is-glob@^4.0.1, is-glob@~4.0.1:
   integrity sha512-5G0tKtBTFImOqDnLB2hG6Bp2qcKEFduo4tZu9MT/H6NQv/ghhy30o55ufafxJ/LdH79LLs2Kfrn85TLKyA7BUg==
   dependencies:
     is-extglob "^2.1.1"
-
-is-in-browser@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
-  integrity sha1-Vv9NtoOgeMYILrldrX3GLh0E+DU=
 
 is-installed-globally@^0.1.0:
   version "0.1.0"
@@ -14605,7 +14557,7 @@ qs@~6.5.2:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-query-string@*, query-string@^6.12.1, query-string@^6.8.1:
+query-string@*, query-string@^6.12.1:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.13.0.tgz#8d875f66581c854d7480ac79478abb847de742f6"
   integrity sha512-KJe8p8EUcixhPCp4cJoTYVfmgKHjnAB/Pq3fiqlmyNHvpHnOL5U4YE7iI2PYivGHp4HFocWz300906BAQX0H7g==
@@ -19275,11 +19227,6 @@ xdg-basedir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-3.0.0.tgz#496b2cc109eca8dbacfe2dc72b603c17c5870ad4"
   integrity sha1-SWsswQnsqNus/i3HK2A8F8WHCtQ=
-
-xhr2@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.2.0.tgz#eddeff782f3b7551061b8d75645085269396e521"
-  integrity sha512-BDtiD0i2iKPK/S8OAZfpk6tyzEDnKKSjxWHcMBVmh+LuqJ8A32qXTyOx+TVOg2dKvq6zGBq2sgKPkEeRs1qTRA==
 
 xml-js@^1.6.11:
   version "1.6.11"

@@ -13,11 +13,6 @@ jobs:
             - name: Get the tag version
               id: get_version
               run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
-            - name: Cache
-              uses: actions/cache@v2
-              with:
-                  path: '.'
-                  key: files-${{ steps.get_version.outputs.VERSION }}
             - name: Checkout Code
               uses: actions/checkout@master
             - name: Install
@@ -37,20 +32,6 @@ jobs:
               uses: CultureHQ/actions-yarn@master
               with:
                   args: build --prod
-
-    deploy:
-        name: deploy
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Use Cache
-              uses: actions/cache@v2
-              with:
-                  path: '.'
-                  key: files-
-                  restore-keys: files-
-            - name: Test
-              run: ls
             - name: Deploy to Firebase
               uses: w9jds/firebase-action@master
               with:
@@ -58,23 +39,6 @@ jobs:
               env:
                   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
                   PROJECT_PATH: .
-
-    android:
-        name: Build android
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Use Cache
-              uses: actions/cache@v2
-              with:
-                  path: '.'
-                  key: files-
-                  restore-keys: files-
-            - name: Test
-              run: ls
-            - name: Get the tag version
-              id: get_version
-              run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
             - name: Restore release Keystore
               run: |
                   echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
