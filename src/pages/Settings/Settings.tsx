@@ -18,7 +18,6 @@ import {
 import { powerOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import { Zoom } from 'react-awesome-reveal';
-import 'react-dropdown/style.css';
 import { useSelector, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { AnyAction } from 'redux';

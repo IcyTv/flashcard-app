@@ -27,7 +27,6 @@ import {
 	trashOutline,
 } from 'ionicons/icons';
 import sizeof from 'object-sizeof';
-import 'rc-tooltip/assets/bootstrap_white.css';
 import React, { useEffect, useState } from 'react';
 import { Flip, Zoom } from 'react-awesome-reveal';
 import { useSelector, useStore } from 'react-redux';

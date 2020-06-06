@@ -40,6 +40,7 @@
 		"bootstrap": "^4.5.0",
 		"brotli-webpack-plugin": "^1.1.0",
 		"classnames": "^2.2.6",
+		"cli-progress": "^3.8.2",
 		"cordova-plugin-androidx": "^2.0.0",
 		"cordova-plugin-androidx-adapter": "^1.1.1",
 		"cordova-plugin-appavailability": "^0.4.2",
