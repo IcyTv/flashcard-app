@@ -10,7 +10,6 @@ const protectedRoute = (
 	route: (req: express.Request, res: express.Response) => void
 ) => async (req: express.Request, res: express.Response) => {
 	const tokenId = req.header("Authorization")!.split("Bearer ")[1];
-	console.log("Token id", tokenId);
 	try {
 		await admin.auth().verifyIdToken(tokenId, false);
 		route(req, res);

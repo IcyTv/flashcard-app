@@ -19,9 +19,13 @@ const firebaseConfig = {
 };
 
 if (isPlatform('mobile')) {
-	FirebaseX.setCrashlyticsCollectionEnabled(true).then(() => {
-		console.log('Crashlytics enabled');
-	});
+	FirebaseX.setCrashlyticsCollectionEnabled(true)
+		.then(() => {
+			console.log('Crashlytics enabled');
+		})
+		.catch(() => {
+			console.log('Crashlytics was already enabled');
+		});
 }
 
 firebase.initializeApp(firebaseConfig);

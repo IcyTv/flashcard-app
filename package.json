@@ -138,7 +138,7 @@
 		"lint": "eslint --ext .ts --ext .tsx src/",
 		"ionic:build": "yarn build --prod",
 		"android:live": "ionic cap run android -l --external",
-		"android:run": "ionic run android && yarn android:fix",
+		"android:run": "ionic cap run android && yarn android:fix",
 		"android:fix": "yarn android:fix:debug && yarn android:fix:release",
 		"android:fix:debug": "npx copyfiles --flat android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/debug",
 		"android:fix:release": "npx copyfiles --flat android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release"
@@ -217,5 +217,8 @@
 	"description": "An Ionic project",
 	"installConfig": {
 		"pnp": false
+	},
+	"config": {
+		"ionic_generate_source_map": true
 	}
 }

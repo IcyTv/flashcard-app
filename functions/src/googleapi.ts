@@ -20,7 +20,7 @@ const config = {
 
 export const googleapi = asyncRoute(async (req: express.Request, res: express.Response) => {
 	const url = req.protocol + '://' + req.get('host') + '/googleAuth' + req.baseUrl;
-	console.log(url);
+	// console.log(url);
 	let redirectUrl = req.query.redirect_uri as string;
 	const state = req.query.state as string;
 
@@ -34,7 +34,7 @@ export const googleapi = asyncRoute(async (req: express.Request, res: express.Re
 			message: 'please provide a valid redirect_uri',
 		});
 		res.end();
-		console.log('no redirect_uri');
+		// console.log('no redirect_uri');
 		return;
 	} else if (state) {
 		try {
@@ -66,7 +66,7 @@ export const googleapi = asyncRoute(async (req: express.Request, res: express.Re
 		});
 		res.redirect(authUrl);
 	} else {
-		console.log('Processing code');
+		// console.log('Processing code');
 
 		const code: string = req.query.code as string;
 		const token = await oauth.getToken(code);
@@ -85,7 +85,7 @@ export const googleapi = asyncRoute(async (req: express.Request, res: express.Re
 				.ref('auth/' + userInfo.id + '/refresh')
 				.set(token.tokens.refresh_token);
 		} else {
-			console.log('No refresh token provided');
+			// console.log('No refresh token provided');
 			const refreshToken = await admin
 				.database()
 				.ref('auth/' + userInfo.id + '/refresh')
@@ -99,7 +99,7 @@ export const googleapi = asyncRoute(async (req: express.Request, res: express.Re
 
 		res.setHeader('access_token', (await oauth.getAccessToken()).token!);
 
-		console.log('Redirect URI', redirectUrl);
+		// console.log('Redirect URI', redirectUrl);
 
 		res.redirect(
 			redirectUrl + '?accessToken=' + (await oauth.getAccessToken()).token + '&tokenId=' + token.tokens.id_token,
@@ -116,7 +116,7 @@ export const refreshAccessToken = asyncRoute(async (req, res) => {
 			throw new Error('no access token provided');
 		}
 
-		// console.log(accessToken);
+		// // console.log(accessToken);
 
 		// const info = await oauth.getTokenInfo(accessToken);
 
@@ -124,9 +124,9 @@ export const refreshAccessToken = asyncRoute(async (req, res) => {
 		const verifier = new IdTokenVer();
 
 		const info = verifier.decode(accessToken).payload;
-		// console.log("refresh info", info);
+		// // console.log("refresh info", info);
 
-		// console.log(info);
+		// // console.log(info);
 
 		const refreshToken = await admin
 			.database()
@@ -148,7 +148,7 @@ export const refreshAccessToken = asyncRoute(async (req, res) => {
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Content-Type', 'application/json');
 		const token = await oauth.getAccessToken();
-		console.log('New access Token', token);
+		// console.log('New access Token', token);
 		res.send({access_token: token.token, id_token: token.res.data.id_token});
 	} catch (e) {
 		console.error('Refresh Error at ' + e.lineNumber, e);

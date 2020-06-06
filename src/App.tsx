@@ -62,12 +62,17 @@ const App: React.FC = () => {
 
 	const { persistor, store } = createStore({});
 
-	ThemeDetection.isDarkModeEnabled().then((v) => {
-		console.log(v);
-		if (v.value) {
+	if (isPlatform('mobile')) {
+		ThemeDetection.isDarkModeEnabled().then((v) => {
+			if (v.value) {
+				document.querySelector('body').classList.add('dark');
+			}
+		});
+	} else {
+		if (window.matchMedia('(perfers-color-scheme: dark)').matches) {
 			document.querySelector('body').classList.add('dark');
 		}
-	});
+	}
 
 	const fbProvConf = {
 		userProfile: 'users',
