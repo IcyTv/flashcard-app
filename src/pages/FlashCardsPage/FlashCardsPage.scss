@@ -1,29 +1,30 @@
 ion-content.flashcard-page {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    flex: auto;
-    contain: unset;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	flex: auto;
+	contain: unset;
 
+	ion-label {
+		margin-top: 5rem;
+	}
 
-    ion-label {
-        margin-top: 5rem;
-    }
+	ion-title.return-title {
+		margin-top: 30%;
+		word-break: break-all;
+		line-break: strict;
+	}
 
-    ion-title.return-title {
-        margin-top: 30%;
-    }
+	.score {
+		display: flex;
+		font-size: 1em;
+		justify-content: center;
+		align-items: center;
 
-    .score {
-        display: flex;
-        font-size: 1em;
-        justify-content: center;
-        align-items: center;
-
-        & * {
-            margin: 2px;
-        }
-    }
+		& * {
+			margin: 2px;
+		}
+	}
 }
