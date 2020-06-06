@@ -22,6 +22,7 @@
 		"@ionic/react": "^5.1.0",
 		"@ionic/react-router": "^5.0.7",
 		"@revolut/cra-overrides": "^0.0.4-temp2",
+		"@sentry/browser": "^5.16.1",
 		"@stripe/react-stripe-js": "^1.1.2",
 		"@stripe/stripe-js": "^1.5.0",
 		"@testing-library/jest-dom": "^5.5.0",
