@@ -10,8 +10,6 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         steps:
-            - name: Test
-              run: ls
             - name: Checkout Code
               uses: actions/checkout@master
             - name: Install
@@ -40,6 +38,8 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
+            - name: Test
+              run: ls
             - name: Deploy to Firebase
               uses: w9jds/firebase-action@master
               with:
@@ -53,6 +53,8 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
+            - name: Test
+              run: ls
             - name: Get the tag version
               id: get_version
               run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
