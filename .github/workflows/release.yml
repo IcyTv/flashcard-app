@@ -32,12 +32,15 @@ jobs:
               uses: CultureHQ/actions-yarn@master
               with:
                   args: build --prod
-
+            - name: Save files
+              run: cp ./* /github/home
     deploy:
         name: deploy
         needs: build
         runs-on: ubuntu-latest
         steps:
+            - name: Get files
+              run: cp /github/home/* .
             - name: Test
               run: ls
             - name: Deploy to Firebase
@@ -53,6 +56,8 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
+            - name: Get files
+              run: cp /github/home/* .
             - name: Test
               run: ls
             - name: Get the tag version
