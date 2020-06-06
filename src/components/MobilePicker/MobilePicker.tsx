@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { IonContent, IonIcon } from '@ionic/react';
-import { Plugins } from '@capacitor/core';
-import { FileChooser } from '@ionic-native/file-chooser';
 import { Chooser } from '@ionic-native/chooser';
+import { IonContent } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
 // import GooglePicker from 'react-google-picker';
-
 import './MobilePicker.scss';
-import { useSelector } from 'react-redux';
 
 interface MobilePickerProps {}
 
-export const MobilePicker: React.FC<MobilePickerProps> = (props) => {
+export const MobilePicker: React.FC<MobilePickerProps> = () => {
 	const [link, setLink] = useState(null);
 
 	useEffect(() => {

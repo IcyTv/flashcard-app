@@ -3,7 +3,7 @@ import './AdUnit.scss';
 
 interface AdUnitProps {}
 
-export const AdUnit: React.FC<AdUnitProps> = (props) => {
+export const AdUnit: React.FC<AdUnitProps> = () => {
 	return (
 		<div className="ad">
 			<amp-ad

@@ -5,7 +5,7 @@ import './PaymentSuccess.scss';
 
 interface PaymentSuccessProps {}
 
-export const PaymentSuccess: React.FC<PaymentSuccessProps> = (props) => {
+export const PaymentSuccess: React.FC<PaymentSuccessProps> = () => {
 	// const { width, height } = useWindowSize();
 
 	return (

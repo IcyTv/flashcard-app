@@ -5,6 +5,7 @@ import { Fade } from 'react-awesome-reveal';
 
 interface StyledListProps {
 	children: JSX.Element | JSX.Element[] | string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[prop: string]: any;
 }
 

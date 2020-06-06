@@ -1,7 +1,6 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
-import CreditCardPage from '../../pages/CreditCardPage';
 import './StripePayment.scss';
 import PaymentPage from '../../pages/PaymentPage';
 

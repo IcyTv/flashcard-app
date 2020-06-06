@@ -1,4 +1,4 @@
-import { isPlatform, menuController } from '@ionic/core';
+import { menuController } from '@ionic/core';
 import React, { useState } from 'react';
 import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from 'react-joyride';
 import { useHistory } from 'react-router';

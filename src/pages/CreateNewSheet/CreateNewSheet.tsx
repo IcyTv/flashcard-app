@@ -1,29 +1,25 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { useEffect, useState, useRef } from 'react';
+import { Plugins } from '@capacitor/core';
 import {
-	IonContent,
-	IonIcon,
 	IonButton,
-	IonText,
 	IonCard,
-	IonCardHeader,
-	IonTitle,
 	IonCardContent,
-	IonModal,
-	IonInput,
+	IonCardHeader,
 	IonCheckbox,
+	IonContent,
+	IonInput,
 	IonLabel,
+	IonModal,
+	IonText,
+	IonTitle,
 	isPlatform,
 } from '@ionic/react';
-import './CreateNewSheet.scss';
-import { Redirect, useHistory } from 'react-router-dom';
-import Loading from '../../components/Loading';
-import { useSelector, useStore } from 'react-redux';
-import config from '../../services/googleapis_config.json';
-import { AnyAction } from 'redux';
-import { refreshToken } from '../../services/firebase/auth';
-import { Plugins } from '@capacitor/core';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
+import Loading from '../../components/Loading';
+import config from '../../services/googleapis_config.json';
+import './CreateNewSheet.scss';
 const { Browser } = Plugins;
 
 interface CreateNewSheetProps {}
@@ -78,7 +74,7 @@ const createSheet = (
 			if (loadingFunc) {
 				loadingFunc(false);
 			}
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				resolve(v.result);
 			});
 		})
@@ -93,14 +89,12 @@ const openInNewTab = (url: string): void => {
 	}
 };
 
-const url = 'https://docs.google.com/spreadsheets/u/0/create';
+// const url = 'https://docs.google.com/spreadsheets/u/0/create';
 
-export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
+export const CreateNewSheet: React.FC<CreateNewSheetProps> = () => {
 	const [loaded, setLoaded] = useState(false);
 	const gAuth = useSelector((state: ReduxState) => state.google);
 	const uid = useSelector((state: ReduxState) => state.firebase.auth.uid);
-	const store = useStore<ReduxState, AnyAction>();
-	const [refreshErr, setRefreshErr] = useState(null);
 	const [success, setSuccess] = useState(null);
 	const [createLoading, setCreateLoading] = useState(false);
 	const [showModal, setShowModal] = useState(0);
@@ -143,16 +137,6 @@ export const CreateNewSheet: React.FC<CreateNewSheetProps> = (props) => {
 
 	if (createLoading) {
 		return <Loading>Creating sheet</Loading>;
-	}
-
-	if (refreshErr) {
-		return (
-			<IonContent>
-				<IonText color="danger">
-					<pre>{'' + refreshErr}</pre>
-				</IonText>
-			</IonContent>
-		);
 	}
 
 	const onClick = (columnCount: number) => (): void => {

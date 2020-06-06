@@ -1,10 +1,9 @@
+import { IonContent } from '@ionic/react';
 import React from 'react';
-import { IonContent, IonIcon } from '@ionic/react';
-
 import './PaymentCancel.scss';
 
 interface PaymentCancelProps {}
 
-export const PaymentCancel: React.FC<PaymentCancelProps> = (props) => {
+export const PaymentCancel: React.FC<PaymentCancelProps> = () => {
 	return <IonContent>Using Ionic!</IonContent>;
 };

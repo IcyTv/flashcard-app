@@ -1,12 +1,10 @@
 import React from 'react';
-import { IonContent, IonIcon } from '@ionic/react';
-
 import '../../theme/variables.scss';
-import './StoreLoading.scss';
 import { Loading } from '../Loading/Loading';
+import './StoreLoading.scss';
 
 interface StoreLoadingProps {}
 
-export const StoreLoading: React.FC<StoreLoadingProps> = (props) => {
+export const StoreLoading: React.FC<StoreLoadingProps> = () => {
 	return <Loading>Loading store</Loading>;
 };

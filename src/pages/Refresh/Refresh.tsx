@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { isEmpty, isLoaded, useFirebase } from 'react-redux-firebase';
 import { Loading } from '../../components/Loading/Loading';
-import { refreshToken, wait } from '../../services/firebase/auth';
+import { wait } from '../../services/firebase/auth';
 import './Refresh.scss';
 
 interface RefreshProps {}
@@ -17,9 +17,8 @@ export const Refresh: React.FC<RefreshProps> = (_props: RefreshProps) => {
 
 	const firebase = useFirebase();
 	const auth = useSelector((state: ReduxState) => state.firebase.auth);
-	const google = useSelector((state: ReduxState) => state.google);
 
-	const [res, setRes] = useState(null);
+	const [res] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
 	useEffect(() => wait(firebase, setIsAuth), []);

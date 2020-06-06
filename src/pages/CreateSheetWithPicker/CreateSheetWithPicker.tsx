@@ -7,13 +7,13 @@ import fbTypes from 'firebase/app';
 import { arrowBack } from 'ionicons/icons';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import GooglePicker from '../../components/GooglePicker';
 import { Loading } from '../../components/Loading/Loading';
 import { analytics } from '../../services/firebase';
-import { refreshToken, wait } from '../../services/firebase/auth';
+import { wait } from '../../services/firebase/auth';
 import { error } from '../../tools/logger';
 import './CreateSheetWithPicker.scss';
 
@@ -46,7 +46,6 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 	const [doneLoading, setDoneLoading] = useState(false);
 	const [forceReload, setForceReload] = useState(0);
 
-	const store = useStore();
 	const location = useLocation();
 	const history = useHistory();
 	const firestore = useFirestore();

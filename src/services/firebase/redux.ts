@@ -2,7 +2,6 @@
 import delay from '@redux-saga/delay-p';
 import { put, call, select } from '@redux-saga/core/effects';
 import { types } from '../store/google';
-import { REHYDRATE } from 'redux-persist/lib/constants';
 
 const url = 'https://flashcards.icytv.de/api/refresh?token=';
 

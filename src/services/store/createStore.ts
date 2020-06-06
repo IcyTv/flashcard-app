@@ -17,7 +17,8 @@ const persistConfig: PersistConfig<ReduxState> = {
 	blacklist: ['cache'],
 };
 
-export default (initialState: ReduxState | {} = {}): { store: Store<any, AnyAction>; persistor: Persistor } => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default (_initialState: ReduxState | {} = {}): { store: Store<any, AnyAction>; persistor: Persistor } => {
 	// const createStoreWithMiddleware = compose(
 	// 	typeof window === 'object' && typeof (window as any).devToolsExtension !== 'undefined'
 	// 		? (): any => (window as any).__REDUX_DEVTOOLS_EXTENSION__ // eslint-disable-line no-underscore-dangle

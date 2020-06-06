@@ -1,13 +1,12 @@
 import React from 'react';
-import './PrebidAdUnit.scss';
 import { Bling as GPT } from 'react-gpt';
-import config from './config.json';
+import './PrebidAdUnit.scss';
 // import 'src/bidders/prebid';
 
 interface PrebidAdUnitProps {}
 GPT.enableSingleRequest();
 
-export const PrebidAdUnit: React.FC<PrebidAdUnitProps> = (props) => {
+export const PrebidAdUnit: React.FC<PrebidAdUnitProps> = () => {
 	return (
 		<>
 			<div id="ad-1">

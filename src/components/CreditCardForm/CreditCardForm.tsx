@@ -75,7 +75,6 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = (props: CreditCardF
 	};
 	const onBlur = (ev: React.FocusEvent<HTMLInputElement>): void => {
 		const values = getValues();
-		const valid = true;
 		if (!validateFocusLost(ev.target.name, values[ev.target.name])) {
 			setError(ev.target.name, ev.target.name + ' is invalid!');
 		} else {

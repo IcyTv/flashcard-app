@@ -1,6 +1,6 @@
-import { IonContent, IonList, IonItem, IonModal, IonTitle, IonText } from '@ionic/react';
+import { IonItem, IonList, IonModal, IonTitle } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAsyncEffect } from '../../tools';
 import './WorksheetSelect.scss';

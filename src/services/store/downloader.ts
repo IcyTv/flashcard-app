@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GoogleSpreadsheetCell, GoogleSpreadsheet } from 'google-spreadsheet';
 import { Store } from 'redux';
 

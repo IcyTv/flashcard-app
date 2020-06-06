@@ -1,9 +1,9 @@
-import { IonItem, IonTitle } from '@ionic/react';
+import { IonItem } from '@ionic/react';
 import React from 'react';
 import './ListItem.scss';
 
 interface ListItemProps {
-	children: JSX.Element | string | any;
+	children: React.ReactElement;
 	key?: string;
 }
 

@@ -1,5 +1,4 @@
-import { ThemeDetection } from '@ionic-native/theme-detection';
-import { isPlatform, SelectChangeEventDetail, ToggleChangeEventDetail } from '@ionic/core';
+import { SelectChangeEventDetail, ToggleChangeEventDetail } from '@ionic/core';
 import {
 	IonAlert,
 	IonAvatar,
@@ -18,33 +17,16 @@ import {
 } from '@ionic/react';
 import { powerOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
-import { Option } from 'react-dropdown';
+import { Zoom } from 'react-awesome-reveal';
 import 'react-dropdown/style.css';
 import { useSelector, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { AnyAction } from 'redux';
 import AdvancedSettings from '../../components/AdvancedSettings';
 import { setTheme, toggleAdvanced } from '../../services/store/settings';
-import { useAwait } from '../../tools';
-import { Zoom } from 'react-awesome-reveal';
 import './Settings.scss';
 
 interface SettingsProps {}
-
-const options: Option[] = [
-	{
-		value: 'Dark',
-		label: 'Dark mode',
-	},
-	{
-		value: 'Light',
-		label: 'Light mode',
-	},
-	{
-		value: 'Auto',
-		label: 'Automatically choose theme',
-	},
-];
 
 export const Settings: React.FC<SettingsProps> = () => {
 	const advanced = useSelector((state: ReduxState) => state.settings.advanced);

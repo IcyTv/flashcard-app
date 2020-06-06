@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IonButton, isPlatform } from '@ionic/react';
+import { IonButton } from '@ionic/react';
+import { parse } from 'query-string';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useFirebase } from 'react-redux-firebase';
-import { wait, refreshToken } from '../../services/firebase/auth';
+import { useLocation } from 'react-router';
+import { analytics } from '../../services/firebase';
+import { wait } from '../../services/firebase/auth';
 import config from '../../services/googleapis_config.json';
 import { Loading } from '../Loading/Loading';
 import './GooglePicker.scss';
-import { refreshAccess } from '../../services/store/google';
-import { analytics } from '../../services/firebase';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { parse } from 'query-string';
-import { useLocation } from 'react-router';
 
 interface GooglePickerProps {
 	onPick: (ev: any) => void;
@@ -33,7 +31,6 @@ export const GooglePicker: React.FC<GooglePickerProps> = (props: GooglePickerPro
 	const [pickerLoaded, setPickerLoaded] = useState(false);
 	const firebase = useFirebase();
 	const [isAuth, setIsAuth] = useState(false);
-	const store = useStore();
 	const auth = useSelector((state: ReduxState) => state.google);
 
 	const location = useLocation();

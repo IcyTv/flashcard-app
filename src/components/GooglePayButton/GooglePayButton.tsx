@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { useState } from 'react';
-import './GooglePayButton.scss';
 import { Loading } from '../Loading/Loading';
+import './GooglePayButton.scss';
 
 interface GooglePayButtonProps {
 	amount: number;

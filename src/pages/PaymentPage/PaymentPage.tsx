@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IonButton, IonContent, IonIcon, IonList, isPlatform, IonItem } from '@ionic/react';
 import { useStripe } from '@stripe/react-stripe-js';
 import { cardOutline } from 'ionicons/icons';
@@ -23,7 +25,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = (_props: PaymentPageProps
 		return <Loading>Loading payment providers</Loading>;
 	}
 
-	const onCreditCardLifetime = () => {
+	const onCreditCardLifetime = (): void => {
 		(stripe as any)
 			.redirectToCheckout({
 				successUrl: isPlatform('mobile') ? 'flashcards://payment/success' : window.location.href + '/success',
@@ -39,7 +41,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = (_props: PaymentPageProps
 			});
 	};
 
-	const onCreditCardSubscribe = () => {
+	const onCreditCardSubscribe = (): void => {
 		(stripe as any).redirectToCheckout({
 			successUrl: isPlatform('mobile') ? 'flashcards://payment/success' : window.location.href + '/success',
 			cancelUrl: isPlatform('mobile') ? 'flashcards://payment/cancel' : window.location.href + '/cancel',

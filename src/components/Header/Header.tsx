@@ -15,9 +15,10 @@ import { useNetwork } from '../../services/network';
 import './Header.scss';
 interface HeaderProps {}
 
-export const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
+export const Header: React.FC<HeaderProps> = () => {
 	const history = useHistory();
 	const location = useLocation();
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const ref = useRef<any>();
 	const online = useNetwork();
 

@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useElements, useStripe } from '@stripe/react-stripe-js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from 'react';
 import { Loading } from '../Loading/Loading';
 import './StripeForm.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { StripeCardNumberElementChangeEvent } from '@stripe/stripe-js';
 
 interface StripeFormProps {
 	handleInputChange: (name: string) => (ev: any) => void;

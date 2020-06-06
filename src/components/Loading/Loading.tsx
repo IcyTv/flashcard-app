@@ -1,6 +1,4 @@
 import React from 'react';
-// import SyncLoader from 'react-spinners/SyncLoader';
-import BounceLoader from 'react-spinners/BounceLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
 import './Loading.scss';
 

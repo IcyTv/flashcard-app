@@ -4,7 +4,7 @@ import './PaypalButton.scss';
 
 interface PaypalButtonProps {}
 
-export const PaypalButton: React.FC<PaypalButtonProps> = (props) => {
+export const PaypalButton: React.FC<PaypalButtonProps> = () => {
 	return (
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 			<input type="hidden" name="cmd" value="_s-xclick" />

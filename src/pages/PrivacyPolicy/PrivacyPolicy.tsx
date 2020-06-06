@@ -1,5 +1,5 @@
 import { IonContent, IonTitle } from '@ionic/react';
-import React, { useRef } from 'react';
+import React from 'react';
 import './PrivacyPolicy.scss';
 
 interface PrivacyPolicyProps {}

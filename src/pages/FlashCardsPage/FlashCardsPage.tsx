@@ -1,6 +1,7 @@
-import { DocumentData, DocumentSnapshot, DocumentReference } from '@firebase/firestore-types';
+import { DocumentData, DocumentReference, DocumentSnapshot } from '@firebase/firestore-types';
 import { IonButton, IonContent, IonLabel, IonText, IonTitle } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { sampleSize } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { useFirebase } from 'react-redux-firebase';
@@ -11,8 +12,6 @@ import { saveDone } from '../../services/download';
 import { analytics } from '../../services/firebase';
 import { refreshToken, wait } from '../../services/firebase/auth';
 import { useNetwork } from '../../services/network';
-import { sampleSize } from 'lodash';
-import { refreshAccess } from '../../services/store/google';
 import './FlashCardsPage.scss';
 
 let numCorrect = 0;
@@ -40,7 +39,6 @@ const FlashCardsPageComponent: React.FC = () => {
 	const [doReset, setDoReset] = useState(false);
 
 	const history = useHistory();
-	const [refreshErrors, setRefreshErrors] = useState(null);
 	const [isAuth, setIsAuth] = useState(false);
 
 	const id = (history.location.state as { id: string }).id;
@@ -108,22 +106,8 @@ const FlashCardsPageComponent: React.FC = () => {
 		return <Redirect to="/select" push />;
 	}
 
-	if (refreshErrors) {
-		return (
-			<IonContent>
-				<IonText color="danger">
-					<p>{refreshErrors}</p>
-					<p>Please try logging in again</p>
-					<p>
-						<a href="/login">here</a>
-					</p>
-				</IonText>
-			</IonContent>
-		);
-	}
-
 	if (errors) {
-		if (errors.indexOf('401') >= 0 && !refreshErrors && !isRefreshing) {
+		if (errors.indexOf('401') >= 0 && !isRefreshing) {
 			console.log('refreshing');
 			// refreshToken(googleAccess.tokenId, store, setRefreshErrors);
 			return <Loading>Refreshing access</Loading>;

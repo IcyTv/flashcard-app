@@ -1,12 +1,11 @@
-import { IonList, IonItem, IonLabel, IonListHeader, IonTitle, IonToggle, IonCheckbox, IonAlert } from '@ionic/react';
-import React, { useState } from 'react';
-import './AdvancedSettings.scss';
-import { useStore, useSelector } from 'react-redux';
-import { ToggleChangeEventDetail, CheckboxChangeEventDetail, isPlatform } from '@ionic/core';
-import { toggleNetworkDev, setFirstTime } from '../../services/store/debug';
-import { useHistory } from 'react-router';
 import { FirebaseX } from '@ionic-native/firebase-x';
-import { error } from '../../tools/logger';
+import { CheckboxChangeEventDetail, isPlatform, ToggleChangeEventDetail } from '@ionic/core';
+import { IonAlert, IonCheckbox, IonItem, IonLabel, IonList, IonListHeader, IonTitle, IonToggle } from '@ionic/react';
+import React, { useState } from 'react';
+import { useSelector, useStore } from 'react-redux';
+import { useHistory } from 'react-router';
+import { setFirstTime, toggleNetworkDev } from '../../services/store/debug';
+import './AdvancedSettings.scss';
 
 interface AdvancedSettingsProps {}
 
@@ -55,7 +54,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 						text: 'Yes',
 						handler: crash,
 					},
-					{ text: 'No', handler: () => setConfirm(false) },
+					{ text: 'No', handler: (): void => setConfirm(false) },
 				]}
 			/>
 			<IonList lines="none">

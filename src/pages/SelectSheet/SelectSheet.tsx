@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Plugins } from '@capacitor/core';
 import { DocumentData, QueryDocumentSnapshot, QuerySnapshot } from '@firebase/firestore-types';
 import { ActionSheetButton, isPlatform, RefresherEventDetail } from '@ionic/core';
@@ -13,6 +14,8 @@ import {
 	IonSpinner,
 	IonText,
 } from '@ionic/react';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
+import Hammer from 'hammerjs';
 import {
 	arrowDown,
 	cashOutline,
@@ -20,8 +23,8 @@ import {
 	ellipsisVertical,
 	pencilOutline,
 	remove,
-	trashOutline,
 	settingsOutline,
+	trashOutline,
 } from 'ionicons/icons';
 import sizeof from 'object-sizeof';
 import 'rc-tooltip/assets/bootstrap_white.css';
@@ -31,18 +34,16 @@ import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { Redirect, useHistory } from 'react-router-dom';
 import { AnyAction } from 'redux';
+import SheetPropsSelector from '../../components/SheetPropsSelector';
+import WorksheetSelect from '../../components/WorksheetSelect';
 import { downloadSpreadsheet } from '../../services/download';
 import { analytics } from '../../services/firebase';
-import { refreshToken, wait } from '../../services/firebase/auth';
+import { wait } from '../../services/firebase/auth';
 import { useNetwork } from '../../services/network';
 import { setFirstTime } from '../../services/store/debug';
 import { deleteSavedStore } from '../../services/store/downloader';
 import { saveNamesStore } from '../../services/store/savedSheets';
-import Hammer from 'hammerjs';
 import './SelectSheet.scss';
-import WorksheetSelect from '../../components/WorksheetSelect';
-import SheetPropsSelector from '../../components/SheetPropsSelector';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const { Browser } = Plugins;
 

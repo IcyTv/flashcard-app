@@ -1,12 +1,12 @@
-import { IonButton, IonCheckbox, IonInput, IonLabel, IonModal, IonTitle, IonText, IonIcon } from '@ionic/react';
+import { IonButton, IonCheckbox, IonIcon, IonInput, IonLabel, IonModal, IonText, IonTitle } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { arrowBack } from 'ionicons/icons';
+import React, { useMemo, useRef, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { newSheetProps } from '../../services/store/savedSheets';
 import { useAsyncEffect } from '../../tools';
 import Loading from '../Loading';
 import './SheetPropsSelector.scss';
-import { arrowBack } from 'ionicons/icons';
 
 interface SheetPropsSelectorProps {
 	spreadsheet?: GoogleSpreadsheet;
@@ -104,6 +104,7 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 	};
 
 	const clamp = (min: number, max: number) => (ev: CustomEvent<void>): void => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const target = ev.target as any;
 		console.log(ev);
 
