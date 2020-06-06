@@ -47,6 +47,7 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: '.'
+                  key: files-
                   restore-keys: files-
             - name: Test
               run: ls
@@ -67,6 +68,7 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: '.'
+                  key: files-
                   restore-keys: files-
             - name: Test
               run: ls
