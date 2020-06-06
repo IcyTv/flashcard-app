@@ -1,0 +1,96 @@
+name: Create Release
+
+on:
+  release:
+    - released
+
+jobs:
+  install:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@master
+      - name: Install
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
+      - name: Get the tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@master
+        with:
+          find: "${TAG_NAME}"
+          replace: "${{ steps.get_version.outputs.VERSION }}"
+      - name: Build
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: build --prod
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: .
+          key: files-${{ steps.get_version.outputs.VERSION }}
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Get built files
+        uses: actions/cache@v2
+        with:
+          path: .
+          key: files-${{ steps.get_version.outputs.VERSION }}
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: .
+
+  android:
+    name: Build android
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Restore Cache
+        uses: actions/cache@v2
+        with:
+          path: .
+          key: files-${{ steps.get_version.outputs.VERSION }}
+      - name: Restore release Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
+          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > app/flashcard-app.jks
+      - name: Build android
+        working-directory: app/
+        run: ./gradlew assembleRelease
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install zipalign apksigner
+      - name: Zipalign apk
+        working-directory: app/
+        run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
+      - name: Sign file
+        working-directory: app/
+        run: apksigner sign --ks flashcard-app.jks --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
+      - name: Verify sign complete
+        working-directory: app/
+        run: apksigner verify app-release-signed.apk
+      - name: Upload apk as artifact
+        uses: actions/upload-artifact@v2
+        working-directory: app/
+        with:
+          name: Release Apk
+          path: flashcards-app-*.apk
+
+  sentry:
+    name: Add sentry release

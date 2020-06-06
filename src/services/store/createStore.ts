@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getFirebase } from 'react-redux-firebase';
 import { applyMiddleware, compose, createStore, Store, AnyAction } from 'redux';
-import { persistReducer, persistStore, Persistor, PersistConfig } from 'redux-persist';
+import { persistReducer, persistStore, Persistor, PersistConfig, REHYDRATE } from 'redux-persist';
 import localStorage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
 import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'remote-redux-devtools';
 import makeRootReducer from './reducers';
 import makeSagaMiddleware from 'redux-saga';
-import makeSagaActions from './saga';
+import reduxSentryMiddleware from 'redux-sentry-middleware';
 import { refreshContinually } from '../firebase/redux';
+import * as Sentry from '@sentry/browser';
+import sizeof from 'object-sizeof';
 
 const persistConfig: PersistConfig<ReduxState> = {
 	key: 'root',
@@ -23,9 +24,59 @@ export default (initialState: ReduxState | {} = {}): { store: Store<any, AnyActi
 	// 		: (f: any): any => f,
 	// )(createStore);
 
-	const saga = makeSagaMiddleware();
+	const saga = makeSagaMiddleware({
+		onError: (err) => Sentry.captureException(err),
+	});
 
-	const middlewares = [thunk.withExtraArgument(getFirebase), saga];
+	const middlewares = [
+		thunk.withExtraArgument(getFirebase),
+		saga,
+		reduxSentryMiddleware(Sentry, {
+			stateTransformer: ({ cache, settings, google, debug, savedSheets }: ReduxState) => {
+				return {
+					cache,
+					settings,
+					debug,
+					google: {
+						expiresIn: google.expiresIn,
+						now: Date.now(),
+						diff: google.expiresIn - Date.now(),
+					},
+					savedSheets: {
+						names: savedSheets.names,
+					},
+				};
+			},
+			actionTransformer: (action) => {
+				//TODO filter large actions
+				if (action.type.contains('@@firebase')) {
+					return {
+						type: action.type,
+					};
+				} else if (sizeof((action as any).payload) > 100000) {
+					return {
+						type: action.type,
+						payload: 'Too large for logging!',
+					};
+				}
+				return action;
+			},
+			filterBreadcrumbActions: (action) => {
+				if (action.type === REHYDRATE) {
+					return false;
+				} else {
+					return true;
+				}
+			},
+			getUserContext: (state) => {
+				return {
+					id: state.firebase.auth.uid,
+					email: state.firebase.auth.email,
+					username: state.firebase.auth.displayName,
+				};
+			},
+		}),
+	];
 
 	const persistedReducer = persistReducer(persistConfig, makeRootReducer());
 	let rehydrationComplete;

@@ -2,7 +2,7 @@ import { IonList, IonItem, IonLabel, IonListHeader, IonTitle, IonToggle, IonChec
 import React, { useState } from 'react';
 import './AdvancedSettings.scss';
 import { useStore, useSelector } from 'react-redux';
-import { ToggleChangeEventDetail, CheckboxChangeEventDetail } from '@ionic/core';
+import { ToggleChangeEventDetail, CheckboxChangeEventDetail, isPlatform } from '@ionic/core';
 import { toggleNetworkDev, setFirstTime } from '../../services/store/debug';
 import { useHistory } from 'react-router';
 import { FirebaseX } from '@ionic-native/firebase-x';
@@ -32,18 +32,17 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 	};
 
 	const crash = (): void => {
-		console.log('crashing');
-		console.log('Dumps: ');
-		console.log(store.getState());
+		console.warn('Crashing');
 		FirebaseX.sendCrash();
 	};
 
 	const sendMsg = (): void => {
-		try {
-			throw new Error('Test');
-		} catch (err) {
-			error('Test error', err, 43, 13, __filename);
-		}
+		// try {
+		// 	throw new Error('Test');
+		// } catch (err) {
+		// 	error('Test error', err, 43, 13, __filename);
+		// }
+		throw new Error('test');
 	};
 
 	return (
@@ -74,9 +73,11 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 				<IonItem onClick={(): void => history.push('/test')}>
 					<IonLabel>Test page</IonLabel>
 				</IonItem>
-				<IonItem onClick={crashAsk}>
-					<IonLabel>Crash</IonLabel>
-				</IonItem>
+				{isPlatform('mobile') && (
+					<IonItem onClick={crashAsk}>
+						<IonLabel>Crash</IonLabel>
+					</IonItem>
+				)}
 				<IonItem onClick={sendMsg}>
 					<IonLabel>Log test message to server</IonLabel>
 				</IonItem>
