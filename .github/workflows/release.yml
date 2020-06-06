@@ -75,22 +75,21 @@ jobs:
           echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
           gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > app/flashcard-app.jks
       - name: Build android
-        working-directory: app/
+        working-directory: app
         run: ./gradlew assembleRelease
       - name: Install dependencies
         run: sudo apt update && sudo apt install zipalign apksigner
       - name: Zipalign apk
-        working-directory: app/
+        working-directory: app
         run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
       - name: Sign file
-        working-directory: app/
+        working-directory: app
         run: apksigner sign --ks flashcard-app.jks --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
       - name: Verify sign complete
-        working-directory: app/
+        working-directory: app
         run: apksigner verify app-release-signed.apk
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v2
-        working-directory: app/
         with:
           name: Release Apk
-          path: flashcards-app-*.apk
+          path: app/flashcards-app-*.apk
