@@ -32,6 +32,10 @@ jobs:
               uses: CultureHQ/actions-yarn@master
               with:
                   args: build --prod
+            - name: Sync
+              uses: CultureHQ/actions-yarn@master
+              with:
+                  args: sync
             - name: Deploy to Firebase
               uses: w9jds/firebase-action@master
               with:

@@ -110,6 +110,7 @@
 		"deploy:hosting": "yarn build --prod && firebase deploy --only hosting",
 		"lint": "eslint --ext .ts --ext .tsx src/",
 		"ionic:build": "yarn build --prod",
+		"sync": "ionic cap sync",
 		"android:live": "ionic cap run android -l --external",
 		"android:run": "ionic cap run android && yarn android:fix",
 		"android:fix": "yarn android:fix:debug && yarn android:fix:release",
