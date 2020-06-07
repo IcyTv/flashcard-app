@@ -65,6 +65,12 @@ jobs:
       - name: Build android/app/
         run: sudo ./gradlew assembleRelease
         working-directory: android
+      - name: Change ownsership
+        run: sudo chown -R $USERNAME .
+      - name: Test
+        run: |
+          ls
+          ls release
       - name: Zipalign apk
         working-directory: android
         run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
