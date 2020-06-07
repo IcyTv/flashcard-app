@@ -11,10 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDROID-SDK_TOOLS: "6514223_latest"
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_API_KEY }}
-      $SENTRY_DEPLOY_ENVIRONMENT: production
-      SENTRY_ORG: icytv
-      SENTRY_PROJECT: flahscards-app
     steps:
       - name: Get the tag version
         id: get_version
@@ -85,12 +81,11 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: .
       - name: Deploy Sentry release
-        run: |
-          curl -sL https://sentry.io/get-cli/ | sudo bash
-
-          export SENTRY_RELEASE=${{ steps.get_version.outputs.VERSION }}
-          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
-          sentry-cli releases set-commits --auto $SENTRY_RELEASE
-          sentry-cli releases finalize $SENTRY_RELEASE
-
-          sentry-cli releases deploys $SENTRY_RELEASE new -e $SENTRY_DEPLOY_ENVIRONMENT
+        uses: tclindner/sentry-releases-action@master
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_API_KEY }}
+          SENTRY_ORG: icytv
+          SENTRY_PROJECT: flashcards-app
+        with:
+          tagName: "${{ steps.get_version.outputs.VERSION }}"
+          environmnent: production
