@@ -49,7 +49,7 @@ jobs:
                   gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > android/flashcard-app.jks
             - name: Build android
               working-directory: android
-              run: ./gradlew assembleRelease
+              run: sudo ./gradlew assembleRelease
             - name: Install dependencies
               run: sudo apt update && sudo apt install zipalign apksigner
             - name: Zipalign apk
