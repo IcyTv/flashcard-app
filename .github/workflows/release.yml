@@ -64,6 +64,7 @@ jobs:
         working-directory: android
         run: |
           ls -la
+          ls -la app
           ls -la app/release
       - name: Zipalign apk
         working-directory: android
