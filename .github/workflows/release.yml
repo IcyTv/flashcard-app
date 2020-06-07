@@ -63,7 +63,7 @@ jobs:
           ls
           ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
       - name: Build android
-        uses: vgaidarji/android-github-actions-build@v1.0.1
+        uses: vgaidarji/android-github-actions-build@master
         with:
           args: ./gradlew assembleRelease
           working-directory: android

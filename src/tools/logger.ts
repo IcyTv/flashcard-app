@@ -33,7 +33,7 @@ export const overrideOnError = (): void => {
 		if (isPlatform('mobile')) {
 			const trace = await fromError(error);
 			const msg = `${error.name} (${source}:[${line}:${col}]) - ${error.message}`;
-			console.error(msg);
+			console.error(msg, trace);
 			// FirebaseX.logError(msg, trace);
 		}
 	};
