@@ -9,7 +9,7 @@ Sentry.init({
 	environment: process.env.NODE_ENV || 'production',
 	attachStacktrace: true,
 	// eslint-disable-next-line
-	release: '${VERSION}',
+	release: '${TAG_NAME}',
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));
