@@ -60,6 +60,11 @@ jobs:
             - name: Build android
               working-directory: android
               run: sudo ./gradlew assembleRelease
+            - name: Fix android again
+              uses: CultureHQ/actions-yarn@master
+              with:
+                  args: 'android:fix'
+              if: ${{ failure() }}
             - name: Install dependencies
               run: sudo apt update && sudo apt install zipalign apksigner
             - name: Zipalign apk
