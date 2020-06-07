@@ -64,9 +64,9 @@ jobs:
           ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
       - name: Build android
         uses: vgaidarji/android-github-actions-build@v1.0.1
-        working-directory: android
         with:
           args: ./gradlew assembleRelease
+          working-directory: android
       - name: Zipalign apk
         working-directory: android
         run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
