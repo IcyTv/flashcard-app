@@ -42,13 +42,6 @@ jobs:
         uses: CultureHQ/actions-yarn@master
         with:
           args: sync
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: .
       - name: Restore release Keystore
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
@@ -71,10 +64,10 @@ jobs:
         working-directory: android
         run: |
           ls -la
-          ls -la release
+          ls -la app/release
       - name: Zipalign apk
         working-directory: android
-        run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
+        run: zipalign -v -p 4 app/release/app-release.apk app-release-aligned.apk
       - name: Sign file
         working-directory: android
         run: apksigner sign --ks flashcard-app.jks --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
@@ -86,3 +79,10 @@ jobs:
         with:
           name: Release Apk
           path: android/flashcards-app-*.apk
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: .
