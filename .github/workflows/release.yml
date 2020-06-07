@@ -32,8 +32,10 @@ jobs:
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@master
         with:
-          find: "${TAG_NAME}"
+          find: "%%TAG_NAME%%"
           replace: "${{ steps.get_version.outputs.VERSION }}"
+      - name: Test
+        run: cat src/index.tsx
       - name: Build
         uses: CultureHQ/actions-yarn@master
         with:
