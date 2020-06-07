@@ -76,3 +76,9 @@ jobs:
               with:
                   name: Release Apk
                   path: android/flashcards-app-*.apk
+            - name: On Error
+              if: ${{ always() }}
+              run: |
+                  ls -la android
+                  ls -la android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests
+                  ls -la android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
