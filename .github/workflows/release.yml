@@ -91,7 +91,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_API_KEY }}
           SENTRY_ORG: icytv
-          SENTRY_PROJECT: flashcards-app
+          SENTRY_PROJECT: flashcard-app
         with:
           tagName: "${{ steps.get_version.outputs.VERSION }}"
           environment: production
