@@ -3,7 +3,7 @@ name: Create Release
 on:
   release:
     types:
-      - published
+      - created
 
 jobs:
   build:
@@ -71,8 +71,14 @@ jobs:
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Release Apk
+          name: flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
           path: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
+      - name: Attach to release
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
