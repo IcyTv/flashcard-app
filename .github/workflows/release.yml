@@ -88,4 +88,4 @@ jobs:
           SENTRY_PROJECT: flashcards-app
         with:
           tagName: "${{ steps.get_version.outputs.VERSION }}"
-          environmnent: production
+          environment: production
