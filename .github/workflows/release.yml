@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDROID-SDK_TOOLS: "6514223_latest"
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_API_KEY }}
+      $SENTRY_DEPLOY_ENVIRONMENT: production
+      SENTRY_ORG: icytv
+      SENTRY_PROJECT: 5266816
     steps:
       - name: Get the tag version
         id: get_version
@@ -67,12 +71,12 @@ jobs:
         run: apksigner sign --ks flashcard-app.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --ks-key-alias key0 --key-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
       - name: Verify sign complete
         working-directory: android
-        run: apksigner verify app-release-signed.apk
+        run: apksigner verify flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v2
         with:
           name: Release Apk
-          path: android/flashcards-app-*.apk
+          path: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
@@ -80,3 +84,13 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: .
+      - name: Deploy Sentry release
+        run: |
+          curl -sL https://sentry.io/get-cli/ | sudo bash
+
+          export SENTRY_RELEASE=${{ steps.get_version.outputs.VERSION }}
+          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
+          sentry-cli releases set-commits --auto $SENTRY_RELEASE
+          sentry-cli releases finalize $SENTRY_RELEASE
+
+          sentry-cli releases deploys $SENTRY_RELEASE new -e $SENTRY_DEPLOY_ENVIRONMENT
