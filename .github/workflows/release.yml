@@ -63,7 +63,7 @@ jobs:
           ls
           ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
       - name: Build android/app/
-        run: ./gradlew assembleRelease
+        run: sudo ./gradlew assembleRelease
         working-directory: android
       - name: Zipalign apk
         working-directory: android
