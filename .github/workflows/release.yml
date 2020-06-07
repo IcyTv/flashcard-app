@@ -13,6 +13,11 @@ jobs:
             - name: Get the tag version
               id: get_version
               run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+            - name: Install dependencies
+              run: |
+                  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+                  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+                  sudo apt update && sudo apt install -y zipalign apksigner
             - name: Checkout Code
               uses: actions/checkout@master
             - name: Install
@@ -59,14 +64,7 @@ jobs:
                   ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
             - name: Build android
               working-directory: android
-              run: sudo ./gradlew assembleRelease
-            - name: Fix android again
-              uses: CultureHQ/actions-yarn@master
-              with:
-                  args: 'android:fix'
-              if: ${{ failure() }}
-            - name: Install dependencies
-              run: sudo apt update && sudo apt install zipalign apksigner
+              run: sudo ./gradlew assembleRelease || (cd .. && yarn "android:fix" && cd android && sudo ./gradlew assembleRelease)
             - name: Zipalign apk
               working-directory: android
               run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
