@@ -55,6 +55,7 @@ jobs:
             - name: Test
               run: |
                   pwd
+                  ls
                   ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
             - name: Build android
               working-directory: android
