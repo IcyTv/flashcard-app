@@ -1,87 +1,89 @@
 name: Create Release
 
 on:
-    release:
-        types:
-            - published
+  release:
+    types:
+      - published
 
 jobs:
-    build:
-        name: Build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Get the tag version
-              id: get_version
-              run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
-            - name: Install dependencies
-              run: |
-                  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-                  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-                  sudo apt update && sudo apt install -y zipalign apksigner
-            - name: Checkout Code
-              uses: actions/checkout@master
-            - name: Install
-              uses: CultureHQ/actions-yarn@master
-              with:
-                  args: install
-            - name: Restore files
-              run: |
-                  echo ${{ secrets.GOOGLE_APIS_CONFIG }} | base64 -d > src/services/googleapis_config.json
-                  echo ${{ secrets.GOOGLE_SERVICES }} | base64 -d > google-services.json
-                  cp google-services.json android/app/
-            - name: Find and Replace
-              uses: jacobtomlinson/gha-find-replace@master
-              with:
-                  find: '${TAG_NAME}'
-                  replace: '${{ steps.get_version.outputs.VERSION }}'
-            - name: Build
-              uses: CultureHQ/actions-yarn@master
-              with:
-                  args: build --prod
-            - name: Sync
-              uses: CultureHQ/actions-yarn@master
-              with:
-                  args: sync
-            - name: Deploy to Firebase
-              uses: w9jds/firebase-action@master
-              with:
-                  args: deploy --only hosting
-              env:
-                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-                  PROJECT_PATH: .
-            - name: Restore release Keystore
-              run: |
-                  echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
-                  gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > android/flashcard-app.jks
-            - name: Fix android build
-              uses: CultureHQ/actions-yarn@master
-              with:
-                  args: 'android:fix'
-            - name: Test
-              run: |
-                  pwd
-                  ls
-                  ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
-            - name: Build android
-              working-directory: android
-              run: sudo ./gradlew assembleRelease || (cd .. && sudo yarn "android:fix" && cd android && sudo ./gradlew assembleRelease)
-            - name: Zipalign apk
-              working-directory: android
-              run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
-            - name: Sign file
-              working-directory: android
-              run: apksigner sign --ks flashcard-app.jks --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
-            - name: Verify sign complete
-              working-directory: android
-              run: apksigner verify app-release-signed.apk
-            - name: Upload apk as artifact
-              uses: actions/upload-artifact@v2
-              with:
-                  name: Release Apk
-                  path: android/flashcards-app-*.apk
-            - name: On Error
-              if: ${{ always() }}
-              run: |
-                  ls -la android
-                  ls -la android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests
-                  ls -la android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      ANDROID-SDK_TOOLS: "6514223_latest"
+    steps:
+      - name: Get the tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Install dependencies
+        run: |
+          sudo apt update && sudo apt install -y zipalign apksigner
+      - name: Checkout Code
+        uses: actions/checkout@master
+      - name: Install
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
+      - name: Restore files
+        run: |
+          echo ${{ secrets.GOOGLE_APIS_CONFIG }} | base64 -d > src/services/googleapis_config.json
+          echo ${{ secrets.GOOGLE_SERVICES }} | base64 -d > google-services.json
+          cp google-services.json android/app/
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@master
+        with:
+          find: "${TAG_NAME}"
+          replace: "${{ steps.get_version.outputs.VERSION }}"
+      - name: Build
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: build --prod
+      - name: Sync
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: sync
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: .
+      - name: Restore release Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
+          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > android/flashcard-app.jks
+      - name: Fix android build
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: "android:fix"
+      - name: Test
+        run: |
+          pwd
+          ls
+          ls android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release
+      - name: Build android
+        uses: vgaidarji/android-github-actions-build@v1.0.1
+        working-directory: android
+        with:
+          args: ./gradlew assembleRelease
+      - name: Zipalign apk
+        working-directory: android
+        run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
+      - name: Sign file
+        working-directory: android
+        run: apksigner sign --ks flashcard-app.jks --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
+      - name: Verify sign complete
+        working-directory: android
+        run: apksigner verify app-release-signed.apk
+      - name: Upload apk as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Release Apk
+          path: android/flashcards-app-*.apk
+      - name: On Error
+        if: ${{ always() }}
+        run: |
+          ls -la android
+          ls -la android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests
+          ls -la android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release

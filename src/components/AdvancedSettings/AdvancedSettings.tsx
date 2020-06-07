@@ -1,4 +1,4 @@
-import { FirebaseX } from '@ionic-native/firebase-x';
+// import { FirebaseX } from '@ionic-native/firebase-x';
 import { CheckboxChangeEventDetail, isPlatform, ToggleChangeEventDetail } from '@ionic/core';
 import { IonAlert, IonCheckbox, IonItem, IonLabel, IonList, IonListHeader, IonTitle, IonToggle } from '@ionic/react';
 import React, { useState } from 'react';
@@ -31,8 +31,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 	};
 
 	const crash = (): void => {
-		console.warn('Crashing');
-		FirebaseX.sendCrash();
+		console.warn('Crashing currently not implemented');
+		// FirebaseX.sendCrash();
 	};
 
 	const sendMsg = (): void => {

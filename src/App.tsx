@@ -1,5 +1,5 @@
 /* Theme variables */
-import { FirebaseX } from '@ionic-native/firebase-x';
+// import { FirebaseX } from '@ionic-native/firebase-x';
 import { ThemeDetection } from '@ionic-native/theme-detection';
 import { isPlatform } from '@ionic/core';
 import { IonApp } from '@ionic/react';
@@ -29,6 +29,7 @@ import firebase, { analytics, auth } from './services/firebase';
 import createStore from './services/store/createStore';
 import './theme/variables.scss';
 import { overrideOnError } from './tools/logger';
+import * as Sentry from '@sentry/browser';
 
 const App: React.FC = () => {
 	// console.log("RERENDERING APP", store.getState())
@@ -39,9 +40,14 @@ const App: React.FC = () => {
 		auth.onAuthStateChanged((user) => {
 			if (user) {
 				analytics.setUserId(user.uid);
-				if (isPlatform('mobile')) {
-					FirebaseX.setCrashlyticsUserId(user.uid);
-				}
+				Sentry.setUser({
+					email: user.email,
+					id: user.uid,
+					username: user.displayName,
+				});
+				// if (isPlatform('mobile')) {
+				// 	FirebaseX.setCrashlyticsUserId(user.uid);
+				// }
 			}
 		});
 		if (isPlatform('mobile')) {

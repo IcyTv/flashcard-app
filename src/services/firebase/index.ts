@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import { FirebaseX } from '@ionic-native/firebase-x';
+// import { FirebaseX } from '@ionic-native/firebase-x';
 // import "firebase/analytics";
 import 'firebase/firestore';
 import 'firebase/analytics';
@@ -19,13 +19,13 @@ const firebaseConfig = {
 };
 
 if (isPlatform('mobile')) {
-	FirebaseX.setCrashlyticsCollectionEnabled(true)
-		.then(() => {
-			console.log('Crashlytics enabled');
-		})
-		.catch(() => {
-			console.log('Crashlytics was already enabled');
-		});
+	// FirebaseX.setCrashlyticsCollectionEnabled(true)
+	// 	.then(() => {
+	// 		console.log('Crashlytics enabled');
+	// 	})
+	// 	.catch(() => {
+	// 		console.log('Crashlytics was already enabled');
+	// 	});
 }
 
 firebase.initializeApp(firebaseConfig);

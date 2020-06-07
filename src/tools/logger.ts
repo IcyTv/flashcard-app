@@ -1,4 +1,4 @@
-import { FirebaseX } from '@ionic-native/firebase-x';
+// import { FirebaseX } from '@ionic-native/firebase-x';
 import { isPlatform } from '@ionic/core';
 import { fromError } from 'stacktrace-js';
 
@@ -21,7 +21,8 @@ export const error = async (
 		if (trace) {
 			stacktrace = await fromError(trace);
 		}
-		FirebaseX.logError(fmsg, stacktrace);
+		console.error(fmsg, stacktrace);
+		// FirebaseX.logError(fmsg, stacktrace);
 	} else {
 		console.error(msg, trace);
 	}
@@ -33,7 +34,7 @@ export const overrideOnError = (): void => {
 			const trace = await fromError(error);
 			const msg = `${error.name} (${source}:[${line}:${col}]) - ${error.message}`;
 			console.error(msg);
-			FirebaseX.logError(msg, trace);
+			// FirebaseX.logError(msg, trace);
 		}
 	};
 };

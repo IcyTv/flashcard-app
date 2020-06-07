@@ -2,21 +2,12 @@
 <widget version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <access origin="*" />
   
-  <feature name="AppAvailability">
-    <param name="android-package" value="com.ohh2ahh.appavailability.AppAvailability"/>
-  </feature>
-
   <feature name="Chooser">
     <param name="android-package" value="com.cyph.cordova.Chooser"/>
   </feature>
 
   <feature name="FileChooser">
     <param name="android-package" value="com.megster.cordova.FileChooser"/>
-  </feature>
-
-  <feature name="FirebasePlugin">
-    <param name="android-package" value="org.apache.cordova.firebase.FirebasePlugin"/>
-    <param name="onload" value="true"/>
   </feature>
 
   <feature name="InAppBrowser">
@@ -29,6 +20,11 @@
 
   <feature name="ThemeDetection">
     <param name="android-package" value="de.mariusbackes.cordova.plugin.ThemeDetection"/>
+  </feature>
+
+  <feature name="Sentry">
+    <param name="android-package" value="io.sentry.SentryCordova"/>
+    <param name="onload" value="true"/>
   </feature>
 
   
