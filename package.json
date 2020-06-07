@@ -114,8 +114,8 @@
 		"android:live": "ionic cap run android -l --external",
 		"android:run": "ionic cap run android && yarn android:fix",
 		"android:fix": "yarn android:fix:debug && yarn android:fix:release",
-		"android:fix:debug": "npx copyfiles --flat android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/debug",
-		"android:fix:release": "npx copyfiles --flat android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release"
+		"android:fix:debug": "copyfiles --flat android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/debug",
+		"android:fix:release": "copyfiles --flat android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/release"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
@@ -172,6 +172,7 @@
 		"@yarnpkg/pnpify": "^2.0.0-rc.22",
 		"babel-eslint": "^10.1.0",
 		"copy-webpack-plugin": "^6.0.1",
+		"copyfiles": "^2.3.0",
 		"cordova": "^9.0.0",
 		"eslint": "^6.6.0",
 		"eslint-config-airbnb": "^18.1.0",
