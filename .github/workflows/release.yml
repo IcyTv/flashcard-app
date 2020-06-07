@@ -63,9 +63,9 @@ jobs:
       - name: Test
         working-directory: android
         run: |
-          ls -la
-          ls -la app
-          ls -la app/release
+          find . -ls
+          echo \n\n\n---\n\n\n
+          find . -name *.apk -ls
       - name: Zipalign apk
         working-directory: android
         run: zipalign -v -p 4 app/release/app-release.apk app-release-aligned.apk
