@@ -50,7 +50,7 @@ export default (_initialState: ReduxState | {} = {}): { store: Store<any, AnyAct
 			},
 			actionTransformer: (action) => {
 				//TODO filter large actions
-				if (action.type.contains('@@firebase')) {
+				if (typeof action.type === 'string' && action.type.indexOf('@@firebase') >= 0) {
 					return {
 						type: action.type,
 					};

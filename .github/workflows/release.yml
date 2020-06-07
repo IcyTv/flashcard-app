@@ -93,5 +93,5 @@ jobs:
           SENTRY_ORG: icytv
           SENTRY_PROJECT: flashcard-app
         with:
-          tagName: "${{ steps.get_version.outputs.VERSION }}"
+          tagName: ${{ github.ref }}
           environment: production
