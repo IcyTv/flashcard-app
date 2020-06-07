@@ -68,7 +68,7 @@ jobs:
           find . -name *.apk -ls
       - name: Zipalign apk
         working-directory: android
-        run: zipalign -v -p 4 app/release/app-release.apk app-release-aligned.apk
+        run: zipalign -v -p 4 ./app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
       - name: Sign file
         working-directory: android
         run: apksigner sign --ks flashcard-app.jks --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
