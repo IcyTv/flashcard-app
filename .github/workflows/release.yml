@@ -68,9 +68,10 @@ jobs:
       - name: Change ownsership
         run: sudo chown -R $USER .
       - name: Test
+        working-directory: android
         run: |
-          ls
-          ls release
+          ls -la
+          ls -la release
       - name: Zipalign apk
         working-directory: android
         run: zipalign -v -p 4 release/app-release.apk app-release-aligned.apk
