@@ -1,10 +1,9 @@
 import { IonButton, IonCheckbox, IonIcon, IonInput, IonLabel, IonModal, IonText, IonTitle } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { arrowBack } from 'ionicons/icons';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { newSheetProps } from '../../services/store/savedSheets';
-import { useAsyncEffect } from '../../tools';
 import Loading from '../Loading';
 import './SheetPropsSelector.scss';
 
@@ -55,23 +54,26 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 
 	const [error, setError] = useState('');
 
-	useAsyncEffect(async () => {
-		if (props.worksheetIndex === -1) {
-			return;
-		}
-		console.log('loading');
-		if (!props.spreadsheet) {
-			await spreadsheet.useRawAccessToken(auth.accessToken);
-			await spreadsheet.loadInfo();
-		}
-		const worksheet = spreadsheet.sheetsByIndex[props.worksheetIndex];
-		console.log('Worksheet', spreadsheet.sheetCount);
-		const info: WorksheetInfo = {
-			columnCount: worksheet.columnCount,
-			rowCount: worksheet.rowCount,
-			worksheetName: worksheet.title,
+	useEffect(() => {
+		const func = async (): Promise<void> => {
+			if (props.worksheetIndex === -1) {
+				return;
+			}
+			console.log('loading');
+			if (!props.spreadsheet) {
+				await spreadsheet.useRawAccessToken(auth.accessToken);
+				await spreadsheet.loadInfo();
+			}
+			const worksheet = spreadsheet.sheetsByIndex[props.worksheetIndex];
+			console.log('Worksheet', spreadsheet.sheetCount);
+			const info: WorksheetInfo = {
+				columnCount: worksheet.columnCount,
+				rowCount: worksheet.rowCount,
+				worksheetName: worksheet.title,
+			};
+			setInfo(info);
 		};
-		setInfo(info);
+		func();
 	}, [spreadsheet, props.worksheetIndex]);
 
 	if (!info && props.isOpen) {
