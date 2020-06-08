@@ -1,8 +1,9 @@
 import { Store } from 'redux';
 
 export const types = {
-	SET_ADVANCED: 'SET_ADVANCED',
-	SET_THEME: 'SET_THEME',
+	SET_ADVANCED: 'SETTINGS_SET_ADVANCED',
+	SET_THEME: 'SETTINGS_SET_THEME',
+	SET_PRE_RELEASE: 'SETTIGNS_SET_PRE_RELEASE',
 };
 
 export const toggleAdvanced = ({ dispatch }: Store) => (to: boolean): void => {
@@ -13,6 +14,10 @@ export const setTheme = ({ dispatch }: Store) => (to: 'dark' | 'light' | 'auto')
 	dispatch({ type: types.SET_THEME, payload: to });
 };
 
+export const setPreReleases = ({ dispatch }: Store) => (preRelease: boolean): void => {
+	dispatch({ type: types.SET_PRE_RELEASE, payload: preRelease });
+};
+
 const reducer = (
 	state: ReduxState['settings'],
 	{ type, payload }: { type: string; payload: unknown },
@@ -21,6 +26,7 @@ const reducer = (
 		return {
 			advanced: false,
 			theme: 'auto',
+			preReleases: false,
 		};
 	}
 	switch (type) {
@@ -28,6 +34,11 @@ const reducer = (
 			return { ...state, advanced: payload as boolean };
 		case types.SET_THEME:
 			return { ...state, theme: payload as 'dark' | 'light' | 'auto' };
+		case types.SET_PRE_RELEASE:
+			return {
+				...state,
+				preReleases: payload as boolean,
+			};
 		default:
 			return state;
 	}
