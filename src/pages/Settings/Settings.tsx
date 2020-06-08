@@ -1,4 +1,4 @@
-import { SelectChangeEventDetail, ToggleChangeEventDetail } from '@ionic/core';
+import { SelectChangeEventDetail, ToggleChangeEventDetail, CheckboxChangeEventDetail } from '@ionic/core';
 import {
 	IonAlert,
 	IonAvatar,
@@ -14,6 +14,7 @@ import {
 	IonSelectOption,
 	IonTitle,
 	IonToggle,
+	IonCheckbox,
 } from '@ionic/react';
 import { powerOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
@@ -22,7 +23,7 @@ import { useSelector, useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import { AnyAction } from 'redux';
 import AdvancedSettings from '../../components/AdvancedSettings';
-import { setTheme, toggleAdvanced } from '../../services/store/settings';
+import { setTheme, toggleAdvanced, setPreReleases } from '../../services/store/settings';
 import './Settings.scss';
 
 interface SettingsProps {}
@@ -30,6 +31,7 @@ interface SettingsProps {}
 export const Settings: React.FC<SettingsProps> = () => {
 	const advanced = useSelector((state: ReduxState) => state.settings.advanced);
 	const theme = useSelector((state: ReduxState) => state.settings.theme);
+	const preRelease = useSelector((state: ReduxState) => state.settings.preReleases);
 	const store = useStore<ReduxState, AnyAction>();
 	const history = useHistory();
 
@@ -56,6 +58,10 @@ export const Settings: React.FC<SettingsProps> = () => {
 	const onThemeChange = (ev: CustomEvent<SelectChangeEventDetail>): void => {
 		console.log(ev.detail.value);
 		setTheme(store)(ev.detail.value);
+	};
+
+	const setPreReleasesCheck = (event: CustomEvent<CheckboxChangeEventDetail>): void => {
+		setPreReleases(store)(event.detail.checked);
 	};
 
 	return (
@@ -109,6 +115,10 @@ export const Settings: React.FC<SettingsProps> = () => {
 							<IonSelectOption value="dark">Dark</IonSelectOption>
 							<IonSelectOption value="auto">Auto</IonSelectOption>
 						</IonSelect>
+					</IonItem>
+					<IonItem>
+						<IonLabel>Use Pre Releases?</IonLabel>
+						<IonCheckbox checked={preRelease} onIonChange={setPreReleasesCheck} />
 					</IonItem>
 					<IonItem slot="end">
 						<IonToggle onIonChange={setAdvanced} checked={advanced} />
