@@ -74,7 +74,7 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 			setInfo(info);
 		};
 		func();
-	}, [spreadsheet, props.worksheetIndex]);
+	}, [spreadsheet, props.worksheetIndex, auth.accessToken, props.spreadsheet]);
 
 	if (!info && props.isOpen) {
 		return <Loading>Loading spreadsheet info</Loading>;
