@@ -1,99 +1,99 @@
 name: Create Release
 
 on:
-  release:
-    types:
-      - published
+    release:
+        types:
+            - published
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    env:
-      ANDROID-SDK_TOOLS: "6514223_latest"
-    steps:
-      - name: Get the tag version
-        id: get_version
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
-      - name: Install dependencies
-        run: |
-          sudo apt update && sudo apt install -y zipalign apksigner
-      - name: Checkout Code
-        uses: actions/checkout@master
-      - name: Install
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: install
-      - name: Restore files
-        run: |
-          echo ${{ secrets.GOOGLE_APIS_CONFIG }} | base64 -d > src/services/googleapis_config.json
-          echo ${{ secrets.GOOGLE_SERVICES }} | base64 -d > google-services.json
-          cp google-services.json android/app/
-      - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@master
-        with:
-          find: "%%TAG_NAME%%"
-          replace: "${{ steps.get_version.outputs.VERSION }}"
-      - name: Test
-        run: cat src/index.tsx
-      - name: Build
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: build --prod
-      - name: Sync
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: sync
-      - name: Restore release Keystore
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
-          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > android/flashcard-app.jks
-      - name: Fix android build
-        uses: CultureHQ/actions-yarn@master
-        with:
-          args: "android:fix"
-      - name: Build android/app/
-        run: sudo ./gradlew assembleRelease
-        working-directory: android
-      - name: Change ownsership
-        run: sudo chown -R $USER .
-      - name: Test
-        working-directory: android
-        run: |
-          find . -name *.apk -ls
-      - name: Zipalign apk
-        working-directory: android
-        run: zipalign -v -p 4 ./app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
-      - name: Sign file
-        working-directory: android
-        run: apksigner sign --ks flashcard-app.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --ks-key-alias key0 --key-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
-      - name: Verify sign complete
-        working-directory: android
-        run: apksigner verify flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
-      - name: Upload apk as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
-          path: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
-      - name: Attach to release
-        uses: skx/github-action-publish-binaries@master
+    build:
+        name: Build
+        runs-on: ubuntu-latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: .
-      - name: Deploy Sentry release
-        uses: tclindner/sentry-releases-action@master
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_API_KEY }}
-          SENTRY_ORG: icytv
-          SENTRY_PROJECT: flashcard-app
-        with:
-          tagName: ${{ github.ref }}
-          environment: production
+            ANDROID-SDK_TOOLS: '6514223_latest'
+        steps:
+            - name: Get the tag version
+              id: get_version
+              run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+            - name: Install dependencies
+              run: |
+                  sudo apt update && sudo apt install -y zipalign apksigner
+            - name: Checkout Code
+              uses: actions/checkout@master
+            - name: Install
+              uses: CultureHQ/actions-yarn@master
+              with:
+                  args: install
+            - name: Restore files
+              run: |
+                  echo ${{ secrets.GOOGLE_APIS_CONFIG }} | base64 -d > src/services/googleapis_config.json
+                  echo ${{ secrets.GOOGLE_SERVICES }} | base64 -d > google-services.json
+                  cp google-services.json android/app/
+            - name: Find and Replace
+              uses: jacobtomlinson/gha-find-replace@master
+              with:
+                  find: '%%TAG_NAME%%'
+                  replace: '${{ steps.get_version.outputs.VERSION }}'
+            - name: Test
+              run: cat src/index.tsx
+            - name: Build
+              uses: CultureHQ/actions-yarn@master
+              with:
+                  args: build --prod --increase-version --version "${{ steps.get_version.outputs.VERSION }}"
+            - name: Sync
+              uses: CultureHQ/actions-yarn@master
+              with:
+                  args: sync
+            - name: Restore release Keystore
+              run: |
+                  echo "${{ secrets.ANDROID_KEYSTORE }}" > flashcard-app.jks.asc
+                  gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" --batch flashcard-app.jks.asc > android/flashcard-app.jks
+            - name: Fix android build
+              uses: CultureHQ/actions-yarn@master
+              with:
+                  args: 'android:fix'
+            - name: Build android/app/
+              run: sudo ./gradlew assembleRelease
+              working-directory: android
+            - name: Change ownsership
+              run: sudo chown -R $USER .
+            - name: Test
+              working-directory: android
+              run: |
+                  find . -name *.apk -ls
+            - name: Zipalign apk
+              working-directory: android
+              run: zipalign -v -p 4 ./app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
+            - name: Sign file
+              working-directory: android
+              run: apksigner sign --ks flashcard-app.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --ks-key-alias key0 --key-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk app-release-aligned.apk
+            - name: Verify sign complete
+              working-directory: android
+              run: apksigner verify flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
+            - name: Upload apk as artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
+                  path: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
+            - name: Attach to release
+              uses: skx/github-action-publish-binaries@master
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  args: android/flashcards-app-${{ steps.get_version.outputs.VERSION }}.apk
+            - name: Deploy to Firebase
+              uses: w9jds/firebase-action@master
+              with:
+                  args: deploy --only hosting
+              env:
+                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                  PROJECT_PATH: .
+            - name: Deploy Sentry release
+              uses: tclindner/sentry-releases-action@master
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_API_KEY }}
+                  SENTRY_ORG: icytv
+                  SENTRY_PROJECT: flashcard-app
+              with:
+                  tagName: ${{ github.ref }}
+                  environment: production

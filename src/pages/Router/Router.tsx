@@ -1,4 +1,3 @@
-import { SplashScreen } from '@capacitor/core';
 import { ThemeDetection } from '@ionic-native/theme-detection';
 import { IonRouterOutlet, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -6,7 +5,11 @@ import React, { useEffect, useState } from 'react';
 import CookieConsentType from 'react-cookie-consent';
 import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { Plugins } from '@capacitor/core';
 import './Router.scss';
+
+const { SplashScreen } = Plugins;
+
 // import CreateNewSheet from '../CreateNewSheet';
 const CreateNewSheet = React.lazy(() => import('../CreateNewSheet'));
 // import JoyrideRoute from '../JoyrideRoute';
@@ -64,6 +67,12 @@ const isDarkmode = async (): Promise<boolean> => {
 
 export const Router: React.FC<RouterProps> = () => {
 	const theme = useSelector((state: ReduxState) => state.settings.theme);
+
+	useEffect(() => {
+		if (isPlatform('cordova') || isPlatform('capacitor')) {
+			SplashScreen.hide();
+		}
+	}, []);
 
 	useEffect(() => {
 		if (theme === 'dark') {

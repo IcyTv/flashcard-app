@@ -39,6 +39,7 @@ interface ReduxState {
 	settings?: {
 		advanced: boolean;
 		theme: 'dark' | 'light' | 'auto';
+		preReleases: boolean;
 	};
 	cache?: {
 		list: {
