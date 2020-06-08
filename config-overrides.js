@@ -2,7 +2,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { override } = require('customize-cra');
 const webpack = require('webpack');
 const cliProgress = require('cli-progress');
-var BrotliPlugin = require('brotli-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
+const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 const handler = (bar) => (percetage, message, ...args) => {
 	bar.update(((percetage * 10000) % 10000) / 100);
@@ -91,9 +92,44 @@ const addVerbose = (config) => {
 	return config;
 };
 
+const setAppVersion = (config) => {
+	let version = 'dev';
+	let rconfig = {
+		dir: 'android/app',
+		files: ['build.gradle'],
+		rules: [
+			{
+				search: /versionCode (\d+)/,
+				replace: (str) => {
+					if (process.argv.indexOf('--increase-version') >= 0) {
+						let versionCode = Math.min(parseInt(str.replace('versionCode ', '')) + 1, 2100000000);
+						return `versionCode ${versionCode}`;
+					} else if (process.argv.indexOf('--decrease-version') >= 0) {
+						let versionCode = Math.max(parseInt(str.replace('versionCode ', '')) - 1, 0);
+						return `versionCode ${versionCode}`;
+					}
+					return str;
+				},
+			},
+		],
+	};
+	if (process.argv.indexOf('--version') >= 0) {
+		version = process.argv[process.argv.indexOf('--version') + 1];
+	}
+	rconfig.rules.push({
+		search: /versionName (.*)/,
+		replace: `versionName "${version}"`,
+	});
+
+	config.plugins.push(new ReplaceInFileWebpackPlugin([rconfig]));
+
+	return config;
+};
+
 module.exports = override(
 	addVerbose,
 	addProgressBar,
+	setAppVersion,
 	setProd,
 	addSplitChunks,
 	addBrotli,
