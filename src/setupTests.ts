@@ -8,10 +8,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import 'fake-indexeddb/auto';
 import 'intersection-observer';
-import React from 'react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render } from '@testing-library/react';
+import { renderWithRouter as rrr } from './testTools';
 
 (global as any).matchMedia =
 	global.matchMedia ||
@@ -23,9 +20,4 @@ import { render } from '@testing-library/react';
 		};
 	};
 
-export const renderWithRouter = (
-	ui: React.ReactElement,
-	{ route = '/', history = createMemoryHistory({ initialEntries: [route] }) } = {},
-) => {
-	return { ...render(<Router history={history}>{ui}</Router>), history };
-};
+export const renderWithRouter = rrr;

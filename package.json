@@ -23,8 +23,8 @@
 		"@sentry/webpack-plugin": "^1.11.1",
 		"@stripe/react-stripe-js": "^1.1.2",
 		"@stripe/stripe-js": "^1.5.0",
-		"@testing-library/jest-dom": "^5.5.0",
-		"@testing-library/react": "^10.0.4",
+		"@testing-library/jest-dom": "^5.9.0",
+		"@testing-library/react": "^10.2.1",
 		"@testing-library/user-event": "^10.1.0",
 		"@types/gapi.client": "^1.0.3",
 		"@types/googlepay": "^0.4.0",
@@ -160,6 +160,7 @@
 		"@types/react-router": "^5.1.4",
 		"@types/react-router-dom": "^5.1.3",
 		"@types/redux": "^3.6.0",
+		"@types/redux-mock-store": "^1.0.2",
 		"@types/redux-persist": "^4.3.1",
 		"@types/remote-redux-devtools": "^0.5.4",
 		"@types/typescript": "^2.0.0",
@@ -190,9 +191,11 @@
 		"pnp-webpack-plugin": "^1.6.4",
 		"prettier": "^2.0.5",
 		"react-app-rewired": "^2.1.6",
+		"redux-mock-store": "^1.5.4",
 		"replace-in-file-webpack-plugin": "^1.0.6",
 		"rxjs": "^6.5.5",
 		"terser-webpack-plugin": "^3.0.1",
+		"ts-jest": "^26.1.0",
 		"typescript": "^3.9.3"
 	},
 	"description": "An Ionic project",
@@ -201,5 +204,10 @@
 	},
 	"config": {
 		"ionic_generate_source_map": true
+	},
+	"jest": {
+		"transformIgnorePatterns": [
+			"node_modules[/\\](?!@ngrx|@ionic-native|@ionic)"
+		]
 	}
 }
