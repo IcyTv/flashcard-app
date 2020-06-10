@@ -5,6 +5,7 @@ on: [pull_request]
 jobs:
   test:
     name: Tests
+    runs-on: ubuntu-latest
     steps:
       - name: Main Testing
         uses: mattallty/jest-github-action@v1
