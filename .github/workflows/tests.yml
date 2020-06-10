@@ -9,9 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install
-        uses: CultureHQ/actions-yarn@master
+        uses: borales/actions-yarn@v2.0.0
         with:
-          args: install
+          cmd: install
       - name: Main Testing
         uses: mattallty/jest-github-action@v1
         env:
