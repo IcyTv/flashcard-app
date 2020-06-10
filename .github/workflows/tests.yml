@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install
-        uses: borales/actions-yarn@v2.0.0
+        uses: borales/actions-yarn@master
         with:
           cmd: install
       - name: Main Testing
