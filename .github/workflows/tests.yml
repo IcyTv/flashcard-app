@@ -10,11 +10,14 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install
         uses: bahmutov/npm-install@v1
-      - name: Main Testing
-        uses: mattallty/jest-github-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # this is just an example, this could be any command that will trigger jest
-          test-command: "yarn test"
-          changes-only: true
+      - name: Tests
+        run: |
+          yarn test --changedSince=origin/${{ github.base_ref }}
+      # - name: Main Testing
+      #   uses: mattallty/jest-github-action@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     # this is just an example, this could be any command that will trigger jest
+      #     test-command: "yarn test"
+      #     changes-only: true
