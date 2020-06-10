@@ -1,10 +1,10 @@
 import { IonButton, IonCheckbox, IonIcon, IonInput, IonLabel, IonModal, IonText, IonTitle } from '@ionic/react';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { arrowBack } from 'ionicons/icons';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { newSheetProps } from '../../services/store/savedSheets';
-import { useAsyncEffect } from '../../tools';
+import { assign } from 'lodash';
 import Loading from '../Loading';
 import './SheetPropsSelector.scss';
 
@@ -27,14 +27,14 @@ interface WorksheetInfo {
 export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: SheetPropsSelectorProps) => {
 	const store = useStore();
 	const save = newSheetProps(store);
-	const savedInfo = useSelector((state: ReduxState) =>
-		Object.assign(
+	const savedInfo: ReduxState['savedSheets']['sheets'][''][0] = useSelector((state: ReduxState) =>
+		assign(
 			{
 				cols: [0, 1],
 				amount: 20,
-				checked: true,
+				includeFirstRow: true,
 			},
-			(state.savedSheets.sheets || {})[props.id],
+			(state.savedSheets.sheets || {})[props.id][props.worksheetIndex],
 		),
 	);
 	const auth = useSelector((state: ReduxState) => state.google);
@@ -55,23 +55,26 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 
 	const [error, setError] = useState('');
 
-	useAsyncEffect(async () => {
-		if (props.worksheetIndex === -1) {
-			return;
-		}
-		console.log('loading');
-		if (!props.spreadsheet) {
-			await spreadsheet.useRawAccessToken(auth.accessToken);
-			await spreadsheet.loadInfo();
-		}
-		const worksheet = spreadsheet.sheetsByIndex[props.worksheetIndex];
-		console.log('Worksheet', spreadsheet.sheetCount);
-		const info: WorksheetInfo = {
-			columnCount: worksheet.columnCount,
-			rowCount: worksheet.rowCount,
-			worksheetName: worksheet.title,
+	useEffect(() => {
+		const func = async (): Promise<void> => {
+			if (props.worksheetIndex === -1) {
+				return;
+			}
+			console.log('loading');
+			if (!props.spreadsheet) {
+				await spreadsheet.useRawAccessToken(auth.accessToken);
+				await spreadsheet.loadInfo();
+			}
+			const worksheet = spreadsheet.sheetsByIndex[props.worksheetIndex];
+			console.log('Worksheet', spreadsheet.sheetCount);
+			const info: WorksheetInfo = {
+				columnCount: worksheet.columnCount,
+				rowCount: worksheet.rowCount,
+				worksheetName: worksheet.title,
+			};
+			setInfo(info);
 		};
-		setInfo(info);
+		func();
 	}, [spreadsheet, props.worksheetIndex]);
 
 	if (!info && props.isOpen) {
@@ -147,7 +150,7 @@ export const SheetPropsSelector: React.FC<SheetPropsSelectorProps> = (props: She
 				/>
 			</div>
 			<div>
-				<IonCheckbox checked ref={firstRef} />
+				<IonCheckbox checked={savedInfo.includeFirstRow} ref={firstRef} />
 				<IonLabel>Include first row?</IonLabel>
 			</div>
 			<div>

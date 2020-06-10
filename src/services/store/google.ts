@@ -44,6 +44,7 @@ export default function authReducer(
 	{ type, payload }: { type: string; payload: any },
 ): ReduxState['google'] {
 	if (type === types.AUTH_SET) {
+		console.log(type);
 		return {
 			...payload,
 			expiresIn: Date.now() + 60 * 60 * 1000,

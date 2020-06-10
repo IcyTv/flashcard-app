@@ -1,17 +1,16 @@
 {
-	"appId": "de.icytv.flashcard_app",
-	"appName": "Flashcard App",
-	"bundledWebRuntime": false,
-	"npmClient": "yarn",
-	"webDir": "build",
-	"cordova": {},
-	"overrideUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
-	"hideLogs": true,
-	"server": {},
-	"plugins": {
-		"SplashScreen": {
-			"launchAutoHide": false,
-			"androidScaleType": "CENTER_CROP"
-		}
-	}
+  "appId": "de.icytv.flashcard_app",
+  "appName": "Flashcard App",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "build",
+  "cordova": {},
+  "overrideUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
+  "hideLogs": true,
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "androidScaleType": "CENTER_CROP"
+    }
+  }
 }

@@ -35,7 +35,9 @@ export const analytics = firebase.analytics();
 analytics.setAnalyticsCollectionEnabled(process.env.NODE_ENV !== 'development');
 
 export const firestore = firebase.firestore();
-firestore.enablePersistence({
-	synchronizeTabs: true,
-});
+if (process.env.JEST_WORKER_ID === undefined) {
+	firestore.enablePersistence({
+		synchronizeTabs: true,
+	});
+}
 export default firebase;

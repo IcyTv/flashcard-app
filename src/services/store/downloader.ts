@@ -59,7 +59,7 @@ export const deleteSavedStore = ({ dispatch }: Store) => (id: string): void => {
 const downloadReducer = (
 	state: ReduxState['download'],
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	{ type, payload, id }: { type: string; payload: any; id: string },
+	{ type, payload, id }: { type: string; payload?: any; id: string },
 ): ReduxState['download'] => {
 	if (state === undefined) {
 		return {};
