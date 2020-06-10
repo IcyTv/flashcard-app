@@ -7,6 +7,10 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
+      - name: Install
+        uses: CultureHQ/actions-yarn@master
+        with:
+          args: install
       - name: Main Testing
         uses: mattallty/jest-github-action@v1
         env:
