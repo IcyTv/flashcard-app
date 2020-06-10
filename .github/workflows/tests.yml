@@ -13,11 +13,11 @@ jobs:
       - name: Fetch base branch
         run: |
           git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
-          git checkout -b origin/${{ github.base_ref }}
+          git checkout -b ${{ github.base_ref }}
           git checkout ${{ github.event.pull_request.head.sha }}
       - name: Tests
         run: |
-          yarn test --changedSince=origin/${{ github.base_ref }}
+          yarn test --changedSince=${{ github.base_ref }}
       # - name: Main Testing
       #   uses: mattallty/jest-github-action@v1
       #   env:
