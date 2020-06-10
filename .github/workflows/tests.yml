@@ -9,9 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install
-        uses: borales/actions-yarn@master
-        with:
-          cmd: install
+        uses: bahmutov/npm-install@v1
       - name: Main Testing
         uses: mattallty/jest-github-action@v1
         env:
