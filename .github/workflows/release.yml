@@ -21,9 +21,7 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@master
             - name: Install
-              uses: CultureHQ/actions-yarn@master
-              with:
-                  args: install
+              uses: bahmutov/npm-install@v1
             - name: Restore files
               run: |
                   echo ${{ secrets.GOOGLE_APIS_CONFIG }} | base64 -d > src/services/googleapis_config.json
