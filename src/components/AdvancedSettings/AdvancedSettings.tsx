@@ -72,11 +72,12 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = () => {
 				<IonItem onClick={(): void => history.push('/test')}>
 					<IonLabel>Test page</IonLabel>
 				</IonItem>
-				{isPlatform('mobile') && (
-					<IonItem onClick={crashAsk}>
-						<IonLabel>Crash</IonLabel>
-					</IonItem>
-				)}
+				{isPlatform('cordova') ||
+					(isPlatform('capacitor') && (
+						<IonItem onClick={crashAsk}>
+							<IonLabel>Crash</IonLabel>
+						</IonItem>
+					))}
 				<IonItem onClick={sendMsg}>
 					<IonLabel>Log test message to server</IonLabel>
 				</IonItem>

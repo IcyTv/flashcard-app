@@ -58,7 +58,7 @@ const CookieConsent = React.lazy(() => import('react-cookie-consent'));
 interface RouterProps {}
 
 const isDarkmode = async (): Promise<boolean> => {
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		return (await ThemeDetection.isDarkModeEnabled()).value;
 	} else {
 		return window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -125,7 +125,7 @@ export const Router: React.FC<RouterProps> = () => {
 		}
 	};
 
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		SplashScreen.hide();
 	}
 

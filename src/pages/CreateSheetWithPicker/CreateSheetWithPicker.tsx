@@ -73,7 +73,7 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 	}, []);
 
 	useEffect(() => {
-		if (isPlatform('mobile') && !isPlatform('mobileweb') && !redirectToQuery) {
+		if ((isPlatform('cordova') || isPlatform('capacitor')) && !isPlatform('mobileweb') && !redirectToQuery) {
 			let urlBuilder = `${url}?redirectTo=flashcards://select&oauthToken=${btoa(
 				googleAcccess.accessToken,
 			)}&tokenId=${googleAcccess.tokenId}`;
@@ -246,7 +246,10 @@ export const CreateSheetWithPicker: React.FC<CreateSheetWithPickerProps> = (prop
 					exclude={sSheets}
 					onPick={onPick}
 					onError={onError}
-					autoOpen={!picked && !errors && !props.disableAutoOpen && !isPlatform('mobile')}
+					autoOpen={
+						(!picked && !errors && !props.disableAutoOpen && !isPlatform('cordova')) ||
+						isPlatform('capacitor')
+					}
 				/>
 			</IonItem>
 			{errors && <IonItem color="danger">{JSON.stringify(errors)}</IonItem>}

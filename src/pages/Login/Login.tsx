@@ -15,7 +15,7 @@ import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
-import { Redirect, RouterProps } from 'react-router';
+import { Redirect, RouterProps, useHistory } from 'react-router';
 import { Loading } from '../../components/Loading/Loading';
 import { analytics } from '../../services/firebase';
 import { setAuth } from '../../services/store/google';
@@ -25,14 +25,14 @@ import { setFirstTime } from '../../services/store/debug';
 
 const { Browser } = Plugins;
 
-interface LoginProps extends RouterProps {
+interface LoginProps extends Partial<RouterProps> {
 	isLoggedIn?: boolean;
 }
 
 // TODO save expires_at
 
 const openInSameTab = (url: string): null => {
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		url = url.replace(/\?redirect_uri=.*/, '?redirect_uri=flashcards://login');
 
 		Browser.open({ url: url });
@@ -42,7 +42,7 @@ const openInSameTab = (url: string): null => {
 	return null;
 };
 
-const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
+const LoginComp: React.FC<LoginProps> = () => {
 	const [token, setToken] = useState<{
 		accessToken: string;
 		tokenId: string;
@@ -51,24 +51,27 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 	const store = useStore();
 	const firebaseStore = useFirebase();
 	const firestore = useFirestore();
+	const history = useHistory();
 
 	const google = useSelector((state: ReduxState) => state.google);
 
-	const [isLoaded, setLoaded] = useState(false);
+	// const [isLoaded, setLoaded] = useState(false);
 
 	useEffect(() => {
 		analytics.setCurrentScreen('login_screen');
 	}, []);
-	firebase.auth().onAuthStateChanged(() => {
-		setLoaded(true);
+	firebase.auth().onAuthStateChanged((user) => {
+		// setLoaded(true);
+		if (user) {
+			setRedirect('do');
+		}
 	});
 
-	if (!isLoaded) {
-		return <Loading>Waiting for storage</Loading>;
-	}
+	// if (!isLoaded) {
+	// 	return <Loading>Waiting for storage</Loading>;
+	// }
 
 	if (redirectTo) {
-		console.log('Redirecting', redirectTo);
 		//window.location.href = redirectTo;
 		return <Redirect to="/select" />;
 	}
@@ -79,7 +82,6 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 	}
 
 	if (token) {
-		console.log('Google', token);
 		const cred = firebase.auth.GoogleAuthProvider.credential(token.tokenId);
 		firebaseStore
 			.auth()
@@ -100,15 +102,14 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 					.set({})
 					.then(() => {
 						analytics.logEvent('login', { method: 'google' });
-						console.log('created user');
 						setRedirect('/select');
 					});
 			});
 		return <Loading>Processing login details</Loading>;
 	}
 
-	if (props.history.location.search && !token) {
-		const search = queryString.parse(props.history.location.search);
+	if (history.location.search && !token) {
+		const search = queryString.parse(history.location.search);
 
 		const tokens = {
 			accessToken: search.accessToken as string,
@@ -132,7 +133,6 @@ const LoginComp: React.FC<LoginProps> = (props: LoginProps) => {
 							className="ion-align-self-center ion-justify-content-center"
 							onClick={(): null => {
 								const redirect = window.location.href.slice();
-								console.log(redirect);
 								openInSameTab('https://flashcards.icytv.de/api/auth?redirect_uri=' + redirect);
 								return null;
 							}}

@@ -28,8 +28,14 @@ export const PaymentPage: React.FC<PaymentPageProps> = (_props: PaymentPageProps
 	const onCreditCardLifetime = (): void => {
 		(stripe as any)
 			.redirectToCheckout({
-				successUrl: isPlatform('mobile') ? 'flashcards://payment/success' : window.location.href + '/success',
-				cancelUrl: isPlatform('mobile') ? 'flashcards://payment/cancel' : window.location.href + '/cancel',
+				successUrl:
+					isPlatform('cordova') || isPlatform('capacitor')
+						? 'flashcards://payment/success'
+						: window.location.href + '/success',
+				cancelUrl:
+					isPlatform('cordova') || isPlatform('capacitor')
+						? 'flashcards://payment/cancel'
+						: window.location.href + '/cancel',
 				clientReferenceId: fbauth.uid,
 				mode: 'payment',
 				lineItems: [{ price: 'price_HHEJmxh6wovNVZ', quantity: 1 }],
@@ -43,8 +49,14 @@ export const PaymentPage: React.FC<PaymentPageProps> = (_props: PaymentPageProps
 
 	const onCreditCardSubscribe = (): void => {
 		(stripe as any).redirectToCheckout({
-			successUrl: isPlatform('mobile') ? 'flashcards://payment/success' : window.location.href + '/success',
-			cancelUrl: isPlatform('mobile') ? 'flashcards://payment/cancel' : window.location.href + '/cancel',
+			successUrl:
+				isPlatform('cordova') || isPlatform('capacitor')
+					? 'flashcards://payment/success'
+					: window.location.href + '/success',
+			cancelUrl:
+				isPlatform('cordova') || isPlatform('capacitor')
+					? 'flashcards://payment/cancel'
+					: window.location.href + '/cancel',
 			clientReferenceId: fbauth.uid,
 			mode: 'subscription',
 			lineItems: [{ price: 'price_HHEJDWhXQC9E2k', quantity: 1 }],

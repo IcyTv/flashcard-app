@@ -15,7 +15,7 @@ export const error = async (
 	col?: number,
 	source?: string,
 ): Promise<void> => {
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		let stacktrace = null;
 		const fmsg = formatErr(msg, line, col, source);
 		if (trace) {
@@ -30,7 +30,7 @@ export const error = async (
 
 export const overrideOnError = (): void => {
 	window.onerror = async (ev, source, line, col, error): Promise<void> => {
-		if (isPlatform('mobile')) {
+		if (isPlatform('cordova') || isPlatform('capacitor')) {
 			const trace = await fromError(error);
 			const msg = `${error.name} (${source}:[${line}:${col}]) - ${error.message}`;
 			console.error(msg, trace);

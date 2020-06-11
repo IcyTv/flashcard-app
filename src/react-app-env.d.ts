@@ -27,9 +27,9 @@ interface ReduxState {
 		};
 	};
 	google?: {
-		accessToken: string;
-		tokenId: string;
-		expiresIn: number;
+		accessToken?: string;
+		tokenId?: string;
+		expiresIn?: number;
 	};
 	history?: any;
 	debug?: {
