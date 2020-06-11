@@ -18,7 +18,7 @@ const firebaseConfig = {
 	measurementId: 'G-9SPSXMWG7G',
 };
 
-if (isPlatform('mobile')) {
+if (isPlatform('cordova') || isPlatform('capacitor')) {
 	// FirebaseX.setCrashlyticsCollectionEnabled(true)
 	// 	.then(() => {
 	// 		console.log('Crashlytics enabled');

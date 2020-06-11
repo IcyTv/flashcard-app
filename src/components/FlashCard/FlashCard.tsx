@@ -27,7 +27,7 @@ export const FlashCard: React.FC<FlashCardProps> = (props: FlashCardProps) => {
 			<ReactCardFlip infinite isFlipped={flipped}>
 				<IonButton
 					onClick={(): void => {
-						if (isPlatform('mobile')) {
+						if (isPlatform('cordova') || isPlatform('capacitor')) {
 							Haptics.impact({
 								style: HapticsImpactStyle.Light,
 							});

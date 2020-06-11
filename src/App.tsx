@@ -45,18 +45,18 @@ const App: React.FC = () => {
 					id: user.uid,
 					username: user.displayName,
 				});
-				// if (isPlatform('mobile')) {
+				// if (isPlatform('cordova') || isPlatform('capacitor')) {
 				// 	FirebaseX.setCrashlyticsUserId(user.uid);
 				// }
 			}
 		});
-		if (isPlatform('mobile')) {
+		if (isPlatform('cordova') || isPlatform('capacitor')) {
 			overrideOnError();
 		}
 	}, []);
 
 	// useEffect(() => {
-	// 	if (isPlatform('mobile')) {
+	// 	if (isPlatform('cordova') || isPlatform('capacitor')) {
 	// 		SplashScreen.show({
 	// 			showDuration: 10000,
 	// 		});
@@ -65,7 +65,7 @@ const App: React.FC = () => {
 
 	const { persistor, store } = createStore({});
 
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		ThemeDetection.isDarkModeEnabled().then((v) => {
 			if (v.value) {
 				document.querySelector('body').classList.add('dark');

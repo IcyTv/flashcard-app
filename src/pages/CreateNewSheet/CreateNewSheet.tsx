@@ -82,7 +82,7 @@ const createSheet = (
 };
 
 const openInNewTab = (url: string): void => {
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		Browser.open({ url: url });
 	} else {
 		window.open(url, '_blank');

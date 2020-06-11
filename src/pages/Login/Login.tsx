@@ -32,7 +32,7 @@ interface LoginProps extends Partial<RouterProps> {
 // TODO save expires_at
 
 const openInSameTab = (url: string): null => {
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		url = url.replace(/\?redirect_uri=.*/, '?redirect_uri=flashcards://login');
 
 		Browser.open({ url: url });

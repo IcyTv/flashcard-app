@@ -50,7 +50,7 @@ const { Browser } = Plugins;
 const Loading = React.lazy(() => import('../../components/Loading'));
 
 const openInNewTab = (url: string): void => {
-	if (isPlatform('mobile')) {
+	if (isPlatform('cordova') || isPlatform('capacitor')) {
 		console.log('HERE');
 		Browser.open({ url: url });
 	} else {
